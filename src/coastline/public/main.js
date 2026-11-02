@@ -609,14 +609,22 @@ function decorateCity() {
       box(cx - 18, 0.05, cz + 18, 1.4, 0.6, 1.4, "#7d7f72", true);
       box(cx - 18, 0.65, cz + 18, 1.1, 0.5, 1.1, "#4a5a3a", true);
     }
-  // rooftop water tanks and air-conditioning on the generated blocks
+  // Rooftops: the source buildings ship with a near-white roof surface, which under the sun reads
+  // as snow. A thin tar/felt cap in one of two greys fixes the whole skyline for one instanced
+  // draw call, and gives a place for the tanks and AC units to sit.
+  const ROOFS = ["#6d7276", "#7c807f"];
   for (const b of buildings) {
     const bb = new T.Box3().setFromObject(b), top = bb.max.y, size = bb.getSize(new T.Vector3());
-    if (top < 7 || size.x < 5) continue;
+    if (top < 5 || size.x < 4) continue;
     const x = (bb.min.x + bb.max.x) / 2, z = (bb.min.z + bb.max.z) / 2;
+    box(x, top, z, size.x * 0.94, 0.07, size.z * 0.94, ROOFS[Math.floor(rand() * ROOFS.length)], true);
+    if (top < 7) continue;
     box(x + size.x * 0.24, top, z - size.z * 0.2, 1.7, 1.5, 1.7, "#8b9096", true);
     box(x - size.x * 0.26, top, z + size.z * 0.18, 1.5, 0.9, 1.2, "#b8bcc0", true);
     box(x, top + 1.5, z - size.z * 0.2, 0.1, 1.6, 0.1, "#6d7b84", true);
+    // parapet, so the new cap does not look like a floating slab
+    box(x, top, z, size.x * 0.96, 0.35, 0.16, "#5b5f63", true);
+    box(x, top, z, 0.16, 0.35, size.z * 0.96, "#5b5f63", true);
   }
 }
 function batchCity() {
