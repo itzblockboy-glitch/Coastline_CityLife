@@ -3004,6 +3004,11 @@ if (new URLSearchParams(location.search).has("test"))
       enter(c);
       return c.type;
     },
+    cameraInfo: () => ({
+      pos: camera.position.toArray().map((n) => +n.toFixed(2)),
+      mode: cameraMode,
+      freeCam: freeCam ? { car: freeCam.car, dist: freeCam.dist, eye: freeCam.eye.toArray().map((n) => +n.toFixed(2)) } : null,
+    }),
     // Camera that follows one car from in front of its nose - screenshots of a moving car.
     setCarCam: (id, dist = 6.5) => {
       const c = cars[id];

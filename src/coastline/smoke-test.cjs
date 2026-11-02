@@ -256,6 +256,12 @@ function check(name, ok, detail) {
       const cam = await page.evaluate((id) => coastlineTest.setCarCam(id, 6.5), info.id);
       results.orientationShots = { ...(results.orientationShots || {}), [label]: cam };
       await settle(3);
+      results.orientationShots[label] = {
+        ...cam,
+        atShot: await page.evaluate((id) => ({
+          ...coastlineTest.cameraInfo(), car: coastlineTest.carAt(id),
+        }), info.id),
+      };
       const file = `${SHOT_DIR}/orient-${label}.png`;
       await page.screenshot({ path: file, timeout: 90000 });
       results.shots.push(file);
