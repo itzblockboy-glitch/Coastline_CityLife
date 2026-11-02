@@ -854,7 +854,7 @@ function move(p, dx, dz, r, ignore = null, shape = null) {
   if (hit && p === pos && driving) speed *= 0.35;
   return !hit;
 }
-let nearest = null, freeCam = null, shadowFrame = 0, cameraShake = 0;
+let nearest = null, freeCam = null, shadowFrame = 0, cameraShake = 0, frameCount = 0;
 // Player life state. Death is a short sequence rather than an instant teleport, so the hit that
 // killed you is visible and the camera has time to settle.
 let dead = false, deadAt = 0, deaths = 0, lastDamageCause = "", punchSide = 1;
@@ -2121,6 +2121,7 @@ function frame(now) {
     renderer.shadowMap.needsUpdate = ++shadowFrame % 2 === 0;
   }
   renderer.render(scene, camera);
+  frameCount++;
 }
 drawMap();
 updateWeapons(0);
@@ -2785,6 +2786,7 @@ if (new URLSearchParams(location.search).has("test"))
       police: cops.filter((c) => c.active).length,
       policeShots,
       elapsed,
+      frameCount,
       tickError,
       copData: cops
         .filter((c) => c.active)

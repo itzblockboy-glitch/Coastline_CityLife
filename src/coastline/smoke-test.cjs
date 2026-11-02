@@ -26,6 +26,14 @@ function check(name, ok, detail) {
   page.on("pageerror", (e) => errors.push("pageerror: " + e.message));
   page.on("console", (m) => { if (m.type() === "error") errors.push("console: " + m.text()); });
 
+  // Screenshots show whatever frame was last presented. Software WebGL runs at 1-3 fps here, so a
+  // "wait 700 ms" can span zero frames and capture the state before the camera moved.
+  const settle = async (frames = 3) => {
+    const n = await page.evaluate(() => coastlineTest.getState().frameCount);
+    await page.waitForFunction(([start, need]) => coastlineTest.getState().frameCount >= start + need,
+      [n, frames], { timeout: 120000 });
+  };
+
   await page.goto("http://localhost:3000/?test");
   await page.waitForSelector("#loading", { state: "hidden", timeout: 120000 });
   await page.waitForFunction(() => window.coastlineTest?.getState().animation === "idle");
@@ -244,10 +252,10 @@ function check(name, ok, detail) {
         const c = coastlineTest.carAt(id);
         coastlineTest.setPosition(c.x - Math.sin(c.rotY) * 3, c.z - Math.cos(c.rotY) * 3);
       }, info.id);
-      await page.waitForTimeout(600);
+      await settle(2);
       const cam = await page.evaluate((id) => coastlineTest.setCarCam(id, 6.5), info.id);
       results.orientationShots = { ...(results.orientationShots || {}), [label]: cam };
-      await page.waitForTimeout(700);
+      await settle(3);
       const file = `${SHOT_DIR}/orient-${label}.png`;
       await page.screenshot({ path: file, timeout: 90000 });
       results.shots.push(file);
@@ -265,7 +273,7 @@ function check(name, ok, detail) {
       coastlineTest.setPosition(x, z);
       coastlineTest.setFreeCam([x - 30, 20, z + 46], [x, 6, z]);
     }, [c.x, c.z]);
-    await page.waitForTimeout(1500);
+    await settle(3);
     const file = `${SHOT_DIR}/v1.6-${c.kind}-${Math.round(c.x)}_${Math.round(c.z)}.png`;
     await page.screenshot({ path: file, timeout: 90000 });
     results.shots.push(file);
@@ -275,7 +283,7 @@ function check(name, ok, detail) {
     coastlineTest.setPosition(-30, 40);
     coastlineTest.setFreeCam([-95, 42, 150], [40, 0, -20]);
   });
-  await page.waitForTimeout(1500);
+  await settle(3);
   await page.screenshot({ path: `${SHOT_DIR}/v1.6-downtown.png`, timeout: 90000 });
   results.shots.push(`${SHOT_DIR}/v1.6-downtown.png`);
 
