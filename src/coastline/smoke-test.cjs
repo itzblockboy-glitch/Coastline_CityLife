@@ -225,15 +225,17 @@ function check(name, ok, detail) {
     }, type);
     const target = await page.evaluate((id) => { const c = coastlineTest.carAt(id); return c; }, info.id);
     if (target) {
-      await page.evaluate(([x, z, rotY]) => {
-        // Stand the player beside the car first (traffic cars are culled beyond 260 m), then put
-        // the camera 7 m ahead of the nose - along the car's own travel direction, not +Z, because
-        // half the fleet drives east-west lanes - looking back at it.
-        const nx = Math.sin(rotY), nz = Math.cos(rotY);
-        coastlineTest.setPosition(x - nx * 3, z - nz * 3);
-        coastlineTest.setFreeCam([x + nx * 7, 2.2, z + nz * 7], [x, 0.8, z]);
-      }, [target.x, target.z, target.rotY]);
-      await page.waitForTimeout(900);
+      // Stand the player beside the car first (traffic cars are culled beyond 260 m), then track the
+      // car from 6.5 m ahead of its nose - along its own travel direction, not +Z, because half the
+      // fleet drives east-west lanes - looking back at it.
+      await page.evaluate((id) => {
+        const c = coastlineTest.carAt(id);
+        coastlineTest.setPosition(c.x - Math.sin(c.rotY) * 3, c.z - Math.cos(c.rotY) * 3);
+      }, info.id);
+      await page.waitForTimeout(600);
+      const cam = await page.evaluate((id) => coastlineTest.setCarCam(id, 6.5), info.id);
+      results.orientationShots = { ...(results.orientationShots || {}), [label]: cam };
+      await page.waitForTimeout(700);
       const file = `${SHOT_DIR}/orient-${label}.png`;
       await page.screenshot({ path: file, timeout: 90000 });
       results.shots.push(file);
