@@ -1,0 +1,62 @@
+{
+  "car-concept": {
+    "length": 4.65,
+    "width": 2.0,
+    "height": 1.247080439082722,
+    "sourceFile": "cars/coupe.glb"
+  },
+  "suv-luxury": {
+    "length": 4.9,
+    "width": 2.1976767776825237,
+    "height": 1.8416316132815356,
+    "sourceFile": "cars/suv.glb"
+  },
+  "delivery": {
+    "length": 5.0,
+    "width": 2.0489875533647703,
+    "height": 1.9082769102249553,
+    "sourceFile": "cars/minivan.glb"
+  },
+  "truck": {
+    "length": 5.35,
+    "width": 2.1383357454072125,
+    "height": 1.7528318872393651,
+    "sourceFile": "cars/pickup.glb"
+  },
+  "milk-truck": {
+    "length": 5.1,
+    "width": 2.089967304432066,
+    "height": 1.9464424484294542,
+    "sourceFile": "cars/minivan.glb"
+  },
+  "sedan": {
+    "length": 4.7,
+    "width": 2.09572551119088,
+    "height": 1.4467342668079732,
+    "sourceFile": "cars/sedan.glb"
+  },
+  "sedan-sports": {
+    "length": 4.45,
+    "width": 2.197949384524068,
+    "height": 1.7965631566351299,
+    "sourceFile": "cars/compact.glb"
+  },
+  "hatchback-sports": {
+    "length": 4.2,
+    "width": 1.871938199755845,
+    "height": 1.4313952465455217,
+    "sourceFile": "cars/hatchback.glb"
+  },
+  "taxi": {
+    "length": 4.85,
+    "width": 2.167183431208807,
+    "height": 1.8390083417107064,
+    "sourceFile": "taxis/taxi.glb"
+  },
+  "police-car": {
+    "length": 5.25,
+    "width": 2.055642558599487,
+    "height": 2.354741564155939,
+    "sourceFile": "police/police_car.glb"
+  }
+}

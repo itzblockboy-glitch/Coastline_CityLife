@@ -1,0 +1,127 @@
+name: Build signed APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, 'arena/**']
+    paths:
+      - 'src/coastline/android/**'
+      - 'src/coastline/public/**'
+      - 'src/coastline/package.json'
+      - '.github/workflows/build-apk.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Downloads build-tools 30.0.3 + android-30 android.jar from Google / public mirror.
+      - name: Install Android build tools
+        working-directory: src/coastline
+        run: bash android/bootstrap-tools.sh
+
+      # --ignore-scripts keeps @playwright/test from pulling browser binaries we do not need.
+      # esbuild resolves its platform binary through optionalDependencies, so bundling still works.
+      - name: Install npm dependencies
+        working-directory: src/coastline
+        run: npm install --no-audit --no-fund --ignore-scripts
+
+      - name: Provide signing keystore
+        working-directory: src/coastline
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "${KEYSTORE_B64:-}" ]; then
+            echo "Using keystore from ANDROID_KEYSTORE_BASE64 secret."
+            printf '%s' "$KEYSTORE_B64" | base64 -d > "$HOME/.coastline-signing.keystore"
+          elif [ -f keystore/coastline.jks ]; then
+            echo "Using repository keystore."
+            cp keystore/coastline.jks "$HOME/.coastline-signing.keystore"
+          else
+            echo "No keystore supplied; build-apk.sh will generate a development keystore."
+          fi
+
+      - name: Build APK
+        working-directory: src/coastline
+        env:
+          APK_OUT: ${{ github.workspace }}/dist/Coastline-CityLife-v1.7-game.apk
+          COASTLINE_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || 'coastline' }}
+          COASTLINE_KEYSTORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || 'android' }}
+          COASTLINE_KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD || 'android' }}
+        run: npm run build:apk
+
+      # Diagnostics only: writes the packaged manifest + badging to verification.txt and the job
+      # summary. It must not be able to lose the APK, so failures here do not fail the job.
+      - name: Inspect packaged manifest
+        continue-on-error: true
+        working-directory: src/coastline
+        run: |
+          APK=../../dist/Coastline-CityLife-v1.7-game.apk
+          TOOLS=android-tools/android-11
+          OUT=../../dist/verification.txt
+          {
+            echo "## Packaged manifest"
+            echo '```'
+            "$TOOLS/aapt" dump badging "$APK" || true
+            echo '--- xmltree ---'
+            "$TOOLS/aapt" dump xmltree "$APK" AndroidManifest.xml || true
+            echo '--- signature ---'
+            "$TOOLS/apksigner" verify --print-certs "$APK" || true
+            echo '```'
+          } | tee "$OUT"
+          {
+            echo "### Key lines"
+            echo '```'
+            grep -Ei "appCategory|intent.category|launchable-activity|^package" "$OUT" || echo "no matches"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          if grep -qi "appCategory" "$OUT" && grep -q "android.intent.category.GAME" "$OUT"; then
+            echo "OK: appCategory present and GAME category present in packaged manifest"
+          else
+            echo "::warning::Packaged manifest does not show both markers; see verification.txt"
+          fi
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coastline-v1.7-game-apk
+          path: |
+            ${{ github.workspace }}/dist/*.apk
+            ${{ github.workspace }}/dist/verification.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      # Commits the built APK to the branch that triggered the run so it can be downloaded
+      # directly from the repository (and fetched through codeload). Skipped on main.
+      - name: Publish APK to branch
+        if: github.ref != 'refs/heads/main'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dist/Coastline-CityLife-v1.7-game.apk dist/verification.txt
+          if git diff --cached --quiet; then
+            echo "APK unchanged; nothing to commit."
+          else
+            git commit -m "Update built APK (from ${GITHUB_SHA:0:7})"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi

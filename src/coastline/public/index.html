@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
+    />
+    <title>COASTLINE — A city without limits</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "/vendor/three/build/three.module.js",
+          "three/addons/": "/vendor/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+    <div id="vignette"></div>
+    <div id="damageflash"></div>
+    <header>
+      <a class="brand" href="#"
+        ><img class="appicon" src="/assets/app-icon.png" alt="Coastline" />
+        <div>COASTLINE<small>FREE ROAM · ONLINE</small></div></a
+      >
+      <div class="topmiddle">
+        <span class="live-dot"></span> SANTA PALMA <span class="sep">/</span>
+        <span id="clock">14:32</span><span id="weather"> ☀ 28°</span>
+      </div>
+      <div class="topright">
+        <div class="policehud">
+          <span id="wanted" aria-label="Wanted level 0">☆☆☆☆☆</span>
+          <div class="healthtrack"><i id="playerhealth"></i></div>
+        </div>
+        <span class="connection" id="net">● SOLO SESSION</span
+        ><span id="statuspill">Santa Palma</span
+        ><button id="cameraCycle" aria-label="Camera: third person. Tap to cycle">Ⅲ</button><button id="garage" aria-label="Garage">▱</button
+        ><button id="weaponSwitch" aria-label="Switch weapon">✊</button
+        ><button id="ammoCount" aria-label="Reload weapon">Fists</button
+        ><button id="friends" aria-label="Play with friends">♧</button
+        ><button class="square" id="settings">☷</button>
+      </div>
+    </header>
+    <div class="location">
+      <span id="locationhint">WEST COAST, NEW STORIES.</span>
+      <h1>Make this<br />city yours<span>.</span></h1>
+      <p>No script. No limits. Just the open road.</p>
+      <div class="locline"><i></i> PALM BEACH <span> / </span> FREE ROAM</div>
+    </div>
+    <div id="mission" class="mission">
+      <div class="missiontop">
+        <span>↗ &nbsp; CITY DISCOVERY</span><small>01 / 03</small>
+      </div>
+      <h3>A little coastal detour</h3>
+      <p id="missiontext">Find a ride. The coast is calling.</p>
+      <div class="missionfoot">
+        <span id="objective">◈ &nbsp; Enter the nearby sports car</span
+        ><b id="distance">18 M</b>
+      </div>
+      <div class="progress"><div id="progress"></div></div>
+    </div>
+    <div id="toast"></div>
+    <div class="bottomleft">
+      <div
+        class="mapwrap"
+        id="mapToggle"
+        role="button"
+        aria-label="Expand minimap"
+      >
+        <canvas id="map" width="448" height="352"></canvas>
+        <div class="mapn">N ↑</div>
+        <div class="maplabel">
+          <span id="district">PALM BEACH</span><span>⌁</span>
+        </div>
+      </div>
+      <div class="vitals">
+        <span>✚</span>
+        <div><i></i></div>
+        <small>100</small><span class="armor">◈</span>
+        <div class="armorbar"><i></i></div>
+      </div>
+    </div>
+    <div class="interact" id="interact">
+      <kbd>E</kbd>
+      <div>TAKE THE WHEEL<small>Enter sports car</small></div>
+    </div>
+    <div class="bottomcenter">
+      <span class="live-dot"></span> YOUR CITY. YOUR PACE.
+    </div>
+    <div class="bottomright">
+      <div class="speed" id="speed">
+        <strong>000</strong><span>KM/H <b id="vehiclegear">N</b></span>
+      </div>
+      <div class="controlbar">
+        <span><kbd>W A S D</kbd> Move</span><span><kbd>SHIFT</kbd> Sprint</span
+        ><span><kbd>SPACE</kbd> Jump</span><span><kbd>E</kbd> Enter car</span
+        ><span><kbd>F</kbd> Punch</span>
+      </div>
+      <div class="telemetry">
+        <span id="fps">60 FPS</span><span>LOW DATA MODE <i>ON</i></span
+        ><span id="players">1 PLAYER</span>
+      </div>
+    </div>
+    <div id="crosshair">+</div>
+    <div id="mobile">
+      <div id="joystick"><div id="stick"></div></div>
+      <div class="steering">
+        <button id="steerLeft" aria-label="Steer left">◀</button
+        ><button id="steerRight" aria-label="Steer right">▶</button>
+      </div>
+      <div class="pedals">
+        <button id="touchBrake" aria-label="Brake and reverse">▰</button
+        ><button id="touchGas" aria-label="Accelerate">▥</button>
+      </div>
+      <div class="touchactions">
+        <button id="touchJump">↑<small>JUMP</small></button
+        ><button id="touchRun">⇧<small>SPRINT</small></button
+        ><button id="touchPunch">✊<small>PUNCH</small></button>
+      </div>
+      <button id="touchEnter">↪<small>ENTER</small></button>
+    </div>
+    <div class="overlay" id="garagemodal">
+      <div class="panel">
+        <button class="close">×</button>
+        <h2>Garage</h2>
+        <p>Select a vehicle to bring it to your street.</p>
+        <div id="garageList"></div>
+      </div>
+    </div>
+    <div class="overlay" id="roommodal">
+      <div class="panel">
+        <button class="close">×</button
+        ><span class="eyebrow">BETTER WITH YOUR PEOPLE</span>
+        <h2>Meet on the coast<span>.</span></h2>
+        <p>
+          A private city for you and up to 5 friends.<br />Share a room code.
+          Make some memories.
+        </p>
+        <label
+          >GAME SERVER <small>APK: enter your hosted server URL</small
+          ><input
+            id="serverurl"
+            type="url"
+            placeholder="https://your-game-server.example"
+            autocapitalize="off"
+            spellcheck="false" /></label
+        ><label
+          >YOUR NAME<input
+            id="playername"
+            maxlength="18"
+            placeholder="Traveler"
+            value="Traveler" /></label
+        ><label
+          >ROOM CODE <small>Leave empty to create a room</small
+          ><input id="roomcode" maxlength="8" placeholder="e.g. COAST" /></label
+        ><button class="primary" id="join">Create / join room ↗</button>
+        <div id="roomstatus"></div>
+        <div class="roomactions">
+          <button id="copy">Copy invite link</button
+          ><button id="voice">♩ Enable voice</button
+          ><button id="leave">Leave room</button>
+        </div>
+        <small class="fine"
+          >Position sync at 10 Hz · Assets cached locally<br />Voice uses
+          additional data. Microphone permission required.</small
+        >
+      </div>
+    </div>
+    <div class="overlay" id="settingsmodal">
+      <div class="panel">
+        <button class="close">×</button
+        ><span class="eyebrow">MAKE YOURSELF AT HOME</span>
+        <h2>Your kind of coast<span>.</span></h2>
+        <div class="audioControls">
+          <button id="musicToggle">♫ Music on</button
+          ><input
+            id="musicVolume"
+            aria-label="Music volume"
+            type="range"
+            min="0"
+            max="0.5"
+            step="0.01"
+            value="0.18"
+          />
+        </div>
+        <label
+          >FRAME RATE<select id="framerate">
+            <option value="30">30 FPS · cooler & longer battery</option>
+            <option value="60">60 FPS · smoother, device dependent</option>
+          </select></label
+        ><label
+          >TIME OF DAY<select id="time">
+            <option value="day">Endless afternoon</option>
+            <option value="sunset">Golden hour</option>
+            <option value="night">After dark</option>
+            <option value="cycle">Day / night cycle</option>
+          </select></label
+        ><label
+          >CAMERA<select id="cameraMode"><option value="third">Third person</option><option value="first">First person</option><option value="front">Second person · front</option></select></label>
+        <label>SOUND EFFECTS<input id="sfxVolume" type="range" min="0" max="1" step="0.01" value="0.28" /></label>
+        <label>GRAPHICS<select id="quality">
+            <option value="balanced">Balanced · recommended</option>
+            <option value="low">Low · battery saver</option>
+            <option value="high">High · sharper shadows</option>
+          </select></label
+        ><button class="primary" id="reset">Return to Palm Beach ↗</button>
+        <p class="fine">
+          Drag to orbit the camera. Scroll to zoom.<br />On foot: left stick
+          moves, right drag looks.<br />Driving: left arrows steer, right pedals
+          accelerate/brake. Hold brake at rest to reverse.<br />Weapon icon:
+          cycle fists/sidearm/carbine. Tap ammo to reload. Desktop: Q switch, F
+          fire, R reload.<br />Prototype · Original city · Asset credits below
+        </p>
+        <a href="/v5-notes.html" target="_blank"
+          >Asset credits & technical notes ↗</a
+        >
+      </div>
+    </div>
+    <div id="rotatehint">↻ Rotate for a wider view</div>
+    <div id="loading">
+      <div class="loadbrand">COASTLINE<span>↗</span></div>
+      <p>A city without limits.</p>
+      <div class="loadtrack"><i id="loadprogress"></i></div>
+      <small id="loadtext">Packing your bags…</small>
+    </div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

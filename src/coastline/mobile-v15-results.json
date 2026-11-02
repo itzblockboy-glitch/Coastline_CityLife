@@ -1,0 +1,29 @@
+{
+  "offline": {
+    "loaded": true,
+    "externalRequests": [],
+    "joystick": true
+  },
+  "touchDriving": true,
+  "brakeReleased": true,
+  "musicControl": "♫ Music off",
+  "networkRasterization": "Draw calls suppressed and frames throttled for network-only software-GPU test; offline High graphics and separate full scene regression tested normally",
+  "multiplayer": "2 PLAYERS",
+  "voice": [
+    [
+      {
+        "state": "connected",
+        "send": 1,
+        "receive": 1
+      }
+    ],
+    [
+      {
+        "state": "connected",
+        "send": 1,
+        "receive": 1
+      }
+    ]
+  ],
+  "errors": []
+}

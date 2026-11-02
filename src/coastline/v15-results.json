@@ -1,0 +1,1519 @@
+{
+  "baseline": {
+    "position": [
+      -57,
+      0,
+      76
+    ],
+    "heading": 3.141592653589793,
+    "speed": 0,
+    "vehicle": null,
+    "bike": false,
+    "weapon": 0,
+    "ammo": [
+      0,
+      12,
+      24
+    ],
+    "drawCalls": 436,
+    "triangles": 1427214,
+    "quality": "high",
+    "animation": "idle",
+    "transition": null,
+    "wanted": 0,
+    "health": 100,
+    "police": 4,
+    "policeShots": 0,
+    "elapsed": 0.2702780000007449,
+    "copData": [
+      {
+        "position": [
+          -46.5,
+          0,
+          92.20270850000058
+        ],
+        "distance": 19.30745355389962,
+        "mode": "Walk"
+      },
+      {
+        "position": [
+          15.5,
+          0,
+          -79.79729149999942
+        ],
+        "distance": 171.84017585749785,
+        "mode": "Walk"
+      },
+      {
+        "position": [
+          77.5,
+          0,
+          140.20270850000057
+        ],
+        "distance": 149.03770589597804,
+        "mode": "Walk"
+      },
+      {
+        "position": [
+          139.5,
+          0,
+          -164.79729149999943
+        ],
+        "distance": 310.79830371759704,
+        "mode": "Walk"
+      }
+    ],
+    "mapHeading": 3.141592653589793,
+    "actorScale": [
+      1,
+      1,
+      1
+    ],
+    "rigScale": [
+      101.01997715104388,
+      101.01997715104388,
+      101.01997715104388
+    ],
+    "treesOnRoad": 0,
+    "weaponParent": "WristR",
+    "weaponHandDistance": 0.0003535699412039961,
+    "treeColliders": 132,
+    "bikeMeshRotation": null,
+    "actorBounds": [
+      0.6557822286046004,
+      1.8467821901283983,
+      0.3780993240363415
+    ],
+    "actorBodyBounds": {
+      "height": 1.8467821901283983,
+      "minY": 0.002161018162364584,
+      "maxY": 1.8489432082907629
+    },
+    "legQuaternion": [
+      -0.003318985384287697,
+      0.9986304980211304,
+      0.05165162154343883,
+      0.007630383346956395
+    ],
+    "fireAnimating": false,
+    "citizens": 24,
+    "characterAsset": "Rocketbox Male Adult 06 / MIT",
+    "cityAsset": "Poly Haven urban apartments + factory / CC0",
+    "buildingCount": 128,
+    "playerVisible": true,
+    "cameraMode": "third",
+    "cameraPosition": [
+      -57.15825214011771,
+      3.0795937811516003,
+      83.19820507348913
+    ],
+    "cameraDistance": 7.830906580771103,
+    "responsePolice": 0,
+    "streetPolice": 4,
+    "heavyPolice": 0,
+    "policeCars": 2,
+    "civilianAggro": 0,
+    "civilianShots": 0,
+    "appearances": [
+      {
+        "id": "npc-male_adult_01-outfit-0",
+        "asset": "npc-male_adult_01",
+        "width": 0.86,
+        "height": 1.63
+      },
+      {
+        "id": "npc-male_adult_10-outfit-1",
+        "asset": "npc-male_adult_10",
+        "width": 0.86,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-male_adult_16-outfit-2",
+        "asset": "npc-male_adult_16",
+        "width": 0.86,
+        "height": 1.704
+      },
+      {
+        "id": "npc-female_adult_07-outfit-3",
+        "asset": "npc-female_adult_07",
+        "width": 0.86,
+        "height": 1.7409999999999999
+      },
+      {
+        "id": "npc-male_adult_01-outfit-4",
+        "asset": "npc-male_adult_01",
+        "width": 0.94,
+        "height": 1.7779999999999998
+      },
+      {
+        "id": "npc-male_adult_10-outfit-5",
+        "asset": "npc-male_adult_10",
+        "width": 0.94,
+        "height": 1.815
+      },
+      {
+        "id": "npc-male_adult_16-outfit-6",
+        "asset": "npc-male_adult_16",
+        "width": 0.94,
+        "height": 1.8519999999999999
+      },
+      {
+        "id": "npc-female_adult_07-outfit-7",
+        "asset": "npc-female_adult_07",
+        "width": 0.94,
+        "height": 1.63
+      },
+      {
+        "id": "npc-male_adult_01-outfit-8",
+        "asset": "npc-male_adult_01",
+        "width": 1,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-male_adult_10-outfit-9",
+        "asset": "npc-male_adult_10",
+        "width": 1,
+        "height": 1.704
+      },
+      {
+        "id": "npc-male_adult_16-outfit-10",
+        "asset": "npc-male_adult_16",
+        "width": 1,
+        "height": 1.7409999999999999
+      },
+      {
+        "id": "npc-female_adult_07-outfit-11",
+        "asset": "npc-female_adult_07",
+        "width": 1,
+        "height": 1.7779999999999998
+      },
+      {
+        "id": "npc-male_adult_01-outfit-12",
+        "asset": "npc-male_adult_01",
+        "width": 1.1,
+        "height": 1.815
+      },
+      {
+        "id": "npc-male_adult_10-outfit-13",
+        "asset": "npc-male_adult_10",
+        "width": 1.1,
+        "height": 1.8519999999999999
+      },
+      {
+        "id": "npc-male_adult_16-outfit-14",
+        "asset": "npc-male_adult_16",
+        "width": 1.1,
+        "height": 1.63
+      },
+      {
+        "id": "npc-female_adult_07-outfit-15",
+        "asset": "npc-female_adult_07",
+        "width": 1.1,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-male_adult_01-outfit-16",
+        "asset": "npc-male_adult_01",
+        "width": 1.22,
+        "height": 1.704
+      },
+      {
+        "id": "npc-male_adult_10-outfit-17",
+        "asset": "npc-male_adult_10",
+        "width": 1.22,
+        "height": 1.7409999999999999
+      },
+      {
+        "id": "npc-male_adult_16-outfit-18",
+        "asset": "npc-male_adult_16",
+        "width": 1.22,
+        "height": 1.7779999999999998
+      },
+      {
+        "id": "npc-female_adult_07-outfit-19",
+        "asset": "npc-female_adult_07",
+        "width": 1.22,
+        "height": 1.815
+      },
+      {
+        "id": "npc-male_adult_01-outfit-20",
+        "asset": "npc-male_adult_01",
+        "width": 1.3,
+        "height": 1.8519999999999999
+      },
+      {
+        "id": "npc-male_adult_10-outfit-21",
+        "asset": "npc-male_adult_10",
+        "width": 1.3,
+        "height": 1.63
+      },
+      {
+        "id": "npc-male_adult_16-outfit-22",
+        "asset": "npc-male_adult_16",
+        "width": 1.3,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-female_adult_07-outfit-23",
+        "asset": "npc-female_adult_07",
+        "width": 1.3,
+        "height": 1.704
+      }
+    ],
+    "soundStats": {
+      "shots": 0,
+      "punches": 0,
+      "engineProfiles": [],
+      "enabled": true
+    },
+    "renderInfo": {
+      "calls": 436,
+      "triangles": 1427214
+    }
+  },
+  "npcVariety": "4 base models, 24 unique outfits, thin-to-chubby widths",
+  "leftRight": "passed",
+  "joystick": "right increases X, left decreases X",
+  "walkAnimation": "leg rotation changes",
+  "punchAnimation": "punch_right active",
+  "jump": "p_jump animation active",
+  "carEntryAnimation": "interact",
+  "carExit": "passed",
+  "bikeFacingAndScale": "3 mount/dismount cycles passed",
+  "collisions": {
+    "tree": true,
+    "vehicle": true,
+    "house": true
+  },
+  "handDistance": 0.0003535699788135927,
+  "fireAnimation": true,
+  "bothWeapons": "fired",
+  "oneStar": "specific attacked civilian retaliates, health loss; no response police",
+  "twoStars": "4 response + 4 street officers; melee only",
+  "threeStars": "8 response officers + street police; firearm shots",
+  "fiveStars": {
+    "position": [
+      -57,
+      0,
+      151.74
+    ],
+    "heading": -3.141592653589793,
+    "speed": 0,
+    "vehicle": null,
+    "bike": false,
+    "weapon": 0,
+    "ammo": [
+      0,
+      11,
+      23
+    ],
+    "drawCalls": 613,
+    "triangles": 1775619,
+    "quality": "high",
+    "animation": "idle",
+    "transition": null,
+    "wanted": 5,
+    "health": 90,
+    "police": 24,
+    "policeShots": 4,
+    "elapsed": 13.475878000000826,
+    "copData": [
+      {
+        "position": [
+          -49.39284258936259,
+          0,
+          107.85557650698685
+        ],
+        "distance": 44.53887593085776,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          12.076435383665514,
+          0,
+          -62.144906260105856
+        ],
+        "distance": 224.76277950587814,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          67.29100773252809,
+          0,
+          147.77186276747946
+        ],
+        "distance": 124.35433533360819,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          133.8822108838692,
+          0,
+          -156.69507486738618
+        ],
+        "distance": 362.72332960586374,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.33970625221185,
+          0.12,
+          175.768426596347
+        ],
+        "distance": 24.03779674864991,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.33970625221185,
+          0.12,
+          175.768426596347
+        ],
+        "distance": 24.03779674864991,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.33970625221185,
+          0.12,
+          175.768426596347
+        ],
+        "distance": 24.03779674864991,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.33970625221185,
+          0.12,
+          175.768426596347
+        ],
+        "distance": 24.03779674864991,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.1,
+          0.12,
+          164.13849999999996
+        ],
+        "distance": 12.431701502610126,
+        "mode": "Gun_Shoot"
+      },
+      {
+        "position": [
+          -56.1,
+          0.12,
+          164.13849999999996
+        ],
+        "distance": 12.431701502610126,
+        "mode": "Gun_Shoot"
+      },
+      {
+        "position": [
+          -56.1,
+          0.12,
+          164.13849999999996
+        ],
+        "distance": 12.431701502610126,
+        "mode": "Gun_Shoot"
+      },
+      {
+        "position": [
+          -56.1,
+          0.12,
+          164.13849999999996
+        ],
+        "distance": 12.431701502610126,
+        "mode": "Gun_Shoot"
+      },
+      {
+        "position": [
+          -56.1,
+          0.12,
+          164.13849999999996
+        ],
+        "distance": 12.431701502610126,
+        "mode": ""
+      },
+      {
+        "position": [
+          -56.10414780513346,
+          0.12,
+          82.59693313060778
+        ],
+        "distance": 69.14897430374721,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.108910321713104,
+          0.12,
+          183.74566401488752
+        ],
+        "distance": 32.01829117627321,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.1,
+          0.12,
+          164.13849999999996
+        ],
+        "distance": 12.431701502610126,
+        "mode": ""
+      },
+      {
+        "position": [
+          -56.10414780513346,
+          0.12,
+          82.59693313060778
+        ],
+        "distance": 69.14897430374721,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.108910321713104,
+          0.12,
+          183.74566401488752
+        ],
+        "distance": 32.01829117627321,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.1,
+          0.12,
+          164.13849999999996
+        ],
+        "distance": 12.431701502610126,
+        "mode": ""
+      },
+      {
+        "position": [
+          -56.10414780513346,
+          0.12,
+          82.59693313060778
+        ],
+        "distance": 69.14897430374721,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.108910321713104,
+          0.12,
+          183.74566401488752
+        ],
+        "distance": 32.01829117627321,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.1,
+          0.12,
+          164.13849999999996
+        ],
+        "distance": 12.431701502610126,
+        "mode": ""
+      },
+      {
+        "position": [
+          -56.10414780513346,
+          0.12,
+          82.59693313060778
+        ],
+        "distance": 69.14897430374721,
+        "mode": "Run"
+      },
+      {
+        "position": [
+          -56.108910321713104,
+          0.12,
+          183.74566401488752
+        ],
+        "distance": 32.01829117627321,
+        "mode": "Run"
+      }
+    ],
+    "mapHeading": -3.141592653589793,
+    "actorScale": [
+      1,
+      1,
+      1
+    ],
+    "rigScale": [
+      101.01997715104388,
+      101.01997715104388,
+      101.01997715104388
+    ],
+    "treesOnRoad": 0,
+    "weaponParent": "WristR",
+    "weaponHandDistance": 0.00035356994154308387,
+    "treeColliders": 132,
+    "bikeMeshRotation": null,
+    "actorBounds": [
+      0.6559016081418747,
+      1.8481858432255005,
+      0.3767141048113274
+    ],
+    "actorBodyBounds": {
+      "height": 1.8481858432255005,
+      "minY": 0.001814189838552213,
+      "maxY": 1.8500000330640527
+    },
+    "legQuaternion": [
+      -0.004148320884004308,
+      0.9986621849274626,
+      0.05132945260875032,
+      0.004681786479121969
+    ],
+    "fireAnimating": false,
+    "citizens": 24,
+    "characterAsset": "Rocketbox Male Adult 06 / MIT",
+    "cityAsset": "Poly Haven urban apartments + factory / CC0",
+    "buildingCount": 128,
+    "playerVisible": true,
+    "cameraMode": "third",
+    "cameraPosition": [
+      -57.00000000012467,
+      2.6498541848947648,
+      158.73155237936572
+    ],
+    "cameraDistance": 7.476866447558006,
+    "responsePolice": 20,
+    "streetPolice": 4,
+    "heavyPolice": 10,
+    "policeCars": 6,
+    "civilianAggro": 1,
+    "civilianShots": 0,
+    "appearances": [
+      {
+        "id": "npc-male_adult_01-outfit-0",
+        "asset": "npc-male_adult_01",
+        "width": 0.86,
+        "height": 1.63
+      },
+      {
+        "id": "npc-male_adult_10-outfit-1",
+        "asset": "npc-male_adult_10",
+        "width": 0.86,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-male_adult_16-outfit-2",
+        "asset": "npc-male_adult_16",
+        "width": 0.86,
+        "height": 1.704
+      },
+      {
+        "id": "npc-female_adult_07-outfit-3",
+        "asset": "npc-female_adult_07",
+        "width": 0.86,
+        "height": 1.7409999999999999
+      },
+      {
+        "id": "npc-male_adult_01-outfit-4",
+        "asset": "npc-male_adult_01",
+        "width": 0.94,
+        "height": 1.7779999999999998
+      },
+      {
+        "id": "npc-male_adult_10-outfit-5",
+        "asset": "npc-male_adult_10",
+        "width": 0.94,
+        "height": 1.815
+      },
+      {
+        "id": "npc-male_adult_16-outfit-6",
+        "asset": "npc-male_adult_16",
+        "width": 0.94,
+        "height": 1.8519999999999999
+      },
+      {
+        "id": "npc-female_adult_07-outfit-7",
+        "asset": "npc-female_adult_07",
+        "width": 0.94,
+        "height": 1.63
+      },
+      {
+        "id": "npc-male_adult_01-outfit-8",
+        "asset": "npc-male_adult_01",
+        "width": 1,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-male_adult_10-outfit-9",
+        "asset": "npc-male_adult_10",
+        "width": 1,
+        "height": 1.704
+      },
+      {
+        "id": "npc-male_adult_16-outfit-10",
+        "asset": "npc-male_adult_16",
+        "width": 1,
+        "height": 1.7409999999999999
+      },
+      {
+        "id": "npc-female_adult_07-outfit-11",
+        "asset": "npc-female_adult_07",
+        "width": 1,
+        "height": 1.7779999999999998
+      },
+      {
+        "id": "npc-male_adult_01-outfit-12",
+        "asset": "npc-male_adult_01",
+        "width": 1.1,
+        "height": 1.815
+      },
+      {
+        "id": "npc-male_adult_10-outfit-13",
+        "asset": "npc-male_adult_10",
+        "width": 1.1,
+        "height": 1.8519999999999999
+      },
+      {
+        "id": "npc-male_adult_16-outfit-14",
+        "asset": "npc-male_adult_16",
+        "width": 1.1,
+        "height": 1.63
+      },
+      {
+        "id": "npc-female_adult_07-outfit-15",
+        "asset": "npc-female_adult_07",
+        "width": 1.1,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-male_adult_01-outfit-16",
+        "asset": "npc-male_adult_01",
+        "width": 1.22,
+        "height": 1.704
+      },
+      {
+        "id": "npc-male_adult_10-outfit-17",
+        "asset": "npc-male_adult_10",
+        "width": 1.22,
+        "height": 1.7409999999999999
+      },
+      {
+        "id": "npc-male_adult_16-outfit-18",
+        "asset": "npc-male_adult_16",
+        "width": 1.22,
+        "height": 1.7779999999999998
+      },
+      {
+        "id": "npc-female_adult_07-outfit-19",
+        "asset": "npc-female_adult_07",
+        "width": 1.22,
+        "height": 1.815
+      },
+      {
+        "id": "npc-male_adult_01-outfit-20",
+        "asset": "npc-male_adult_01",
+        "width": 1.3,
+        "height": 1.8519999999999999
+      },
+      {
+        "id": "npc-male_adult_10-outfit-21",
+        "asset": "npc-male_adult_10",
+        "width": 1.3,
+        "height": 1.63
+      },
+      {
+        "id": "npc-male_adult_16-outfit-22",
+        "asset": "npc-male_adult_16",
+        "width": 1.3,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-female_adult_07-outfit-23",
+        "asset": "npc-female_adult_07",
+        "width": 1.3,
+        "height": 1.704
+      }
+    ],
+    "soundStats": {
+      "shots": 6,
+      "punches": 4,
+      "engineProfiles": [
+        "2:motorcycle",
+        "10:sedan-sports",
+        "1:motorcycle",
+        "0:car-concept",
+        "16:taxi",
+        "23:police-car",
+        "25:police-car"
+      ],
+      "enabled": true
+    },
+    "renderInfo": {
+      "calls": 613,
+      "triangles": 1775619
+    }
+  },
+  "vehicleSpecs": [
+    {
+      "id": 0,
+      "type": "car-concept",
+      "max": 48,
+      "hw": 1.3757648577301165,
+      "hl": 2.104519568373132,
+      "sound": "0:car-concept",
+      "police": false
+    },
+    {
+      "id": 1,
+      "type": "motorcycle",
+      "max": 38,
+      "hw": 0.4345841298220648,
+      "hl": 1.0655999999999994,
+      "sound": "1:motorcycle",
+      "police": false
+    },
+    {
+      "id": 2,
+      "type": "motorcycle",
+      "max": 51,
+      "hw": 0.4345841298220648,
+      "hl": 1.0655999999999994,
+      "sound": "2:motorcycle",
+      "police": false
+    },
+    {
+      "id": 3,
+      "type": "suv-luxury",
+      "max": 36.93,
+      "hw": 1.0548848107455546,
+      "hl": 2.3520002789491263,
+      "sound": "3:suv-luxury",
+      "police": false
+    },
+    {
+      "id": 4,
+      "type": "delivery",
+      "max": 29.24,
+      "hw": 0.9835142884847228,
+      "hl": 2.4000006231641584,
+      "sound": "4:delivery",
+      "police": false
+    },
+    {
+      "id": 5,
+      "type": "truck",
+      "max": 32.55,
+      "hw": 1.0264012386068475,
+      "hl": 2.5679994894745777,
+      "sound": "5:truck",
+      "police": false
+    },
+    {
+      "id": 6,
+      "type": "milk-truck",
+      "max": 27.86,
+      "hw": 1.0031845089855596,
+      "hl": 2.44800005919036,
+      "sound": "6:milk-truck",
+      "police": false
+    },
+    {
+      "id": 7,
+      "type": "hatchback-sports",
+      "max": 39.17,
+      "hw": 0.8985304165035802,
+      "hl": 2.01600084101166,
+      "sound": "7:hatchback-sports",
+      "police": false
+    },
+    {
+      "id": 8,
+      "type": "taxi",
+      "max": 37.48,
+      "hw": 1.0402479999836123,
+      "hl": 2.328000009612624,
+      "sound": "8:taxi",
+      "police": false
+    },
+    {
+      "id": 9,
+      "type": "car-concept",
+      "max": 50.79,
+      "hw": 1.3757648577301147,
+      "hl": 2.104519568373132,
+      "sound": "9:car-concept",
+      "police": false
+    },
+    {
+      "id": 10,
+      "type": "sedan-sports",
+      "max": 47.1,
+      "hw": 1.055015683211716,
+      "hl": 2.135999966771942,
+      "sound": "10:sedan-sports",
+      "police": false
+    },
+    {
+      "id": 11,
+      "type": "sedan",
+      "max": 42.41,
+      "hw": 1.0059482261764696,
+      "hl": 2.2559998016255305,
+      "sound": "11:sedan",
+      "police": false
+    },
+    {
+      "id": 12,
+      "type": "taxi",
+      "max": 38.72,
+      "hw": 1.040247999983611,
+      "hl": 2.328000009612624,
+      "sound": "12:taxi",
+      "police": false
+    },
+    {
+      "id": 13,
+      "type": "suv-luxury",
+      "max": 40.03,
+      "hw": 1.0548848107455546,
+      "hl": 2.3520002789491263,
+      "sound": "13:suv-luxury",
+      "police": false
+    },
+    {
+      "id": 14,
+      "type": "delivery",
+      "max": 32.34,
+      "hw": 0.9835142884847163,
+      "hl": 2.40000062316416,
+      "sound": "14:delivery",
+      "police": false
+    },
+    {
+      "id": 15,
+      "type": "sedan",
+      "max": 43.65,
+      "hw": 1.0059482261764834,
+      "hl": 2.2559998016255203,
+      "sound": "15:sedan",
+      "police": false
+    },
+    {
+      "id": 16,
+      "type": "taxi",
+      "max": 39.96,
+      "hw": 1.040247999983609,
+      "hl": 2.328000009612624,
+      "sound": "16:taxi",
+      "police": false
+    },
+    {
+      "id": 17,
+      "type": "suv-luxury",
+      "max": 41.269999999999996,
+      "hw": 1.0548848107455546,
+      "hl": 2.3520002789491263,
+      "sound": "17:suv-luxury",
+      "police": false
+    },
+    {
+      "id": 18,
+      "type": "delivery",
+      "max": 33.58,
+      "hw": 0.9835142884847232,
+      "hl": 2.40000062316416,
+      "sound": "18:delivery",
+      "police": false
+    },
+    {
+      "id": 19,
+      "type": "sedan",
+      "max": 44.89,
+      "hw": 1.0059482261764834,
+      "hl": 2.2559998016255305,
+      "sound": "19:sedan",
+      "police": false
+    },
+    {
+      "id": 20,
+      "type": "taxi",
+      "max": 41.2,
+      "hw": 1.0402479999836123,
+      "hl": 2.328000009612624,
+      "sound": "20:taxi",
+      "police": false
+    },
+    {
+      "id": 21,
+      "type": "police-car",
+      "max": 52.51,
+      "hw": 0.9307098463368823,
+      "hl": 2.5200343023691585,
+      "sound": "21:police-car",
+      "police": true
+    },
+    {
+      "id": 22,
+      "type": "police-car",
+      "max": 52.82,
+      "hw": 0.9307098463368823,
+      "hl": 2.5200343023691616,
+      "sound": "22:police-car",
+      "police": true
+    },
+    {
+      "id": 23,
+      "type": "police-car",
+      "max": 53.13,
+      "hw": 0.9307098463368857,
+      "hl": 2.5200343023691585,
+      "sound": "23:police-car",
+      "police": true
+    },
+    {
+      "id": 24,
+      "type": "police-car",
+      "max": 53.44,
+      "hw": 0.9307098463368857,
+      "hl": 2.520034302369172,
+      "sound": "24:police-car",
+      "police": true
+    },
+    {
+      "id": 25,
+      "type": "police-car",
+      "max": 53.75,
+      "hw": 0.9307098463368857,
+      "hl": 2.520034302369172,
+      "sound": "25:police-car",
+      "police": true
+    },
+    {
+      "id": 26,
+      "type": "police-car",
+      "max": 54.06,
+      "hw": 0.9307098463368823,
+      "hl": 2.5200343023691616,
+      "sound": "26:police-car",
+      "police": true
+    },
+    {
+      "id": 27,
+      "type": "police-car",
+      "max": 54.37,
+      "hw": 0.9307098463368823,
+      "hl": 2.5200343023691585,
+      "sound": "27:police-car",
+      "police": true
+    }
+  ],
+  "firstPerson": [
+    -56.997703652810976,
+    1.6675291618331602,
+    151.60437517418165
+  ],
+  "secondPerson": "front-facing camera",
+  "thirdPerson": "restored",
+  "audit": {
+    "civilians": [
+      {
+        "id": "npc-male_adult_01-outfit-0",
+        "bounds": {
+          "height": 1.6169803882680427,
+          "minY": 0.0070544698022169386,
+          "maxY": 1.6240348580702597
+        }
+      },
+      {
+        "id": "npc-male_adult_10-outfit-1",
+        "bounds": {
+          "height": 1.6669981813539494,
+          "minY": 0.1200018186460849,
+          "maxY": 1.7870000000000343
+        }
+      },
+      {
+        "id": "npc-male_adult_16-outfit-2",
+        "bounds": {
+          "height": 1.704000000000022,
+          "minY": 0.11999999999999937,
+          "maxY": 1.8240000000000214
+        }
+      },
+      {
+        "id": "npc-female_adult_07-outfit-3",
+        "bounds": {
+          "height": 1.740997222539215,
+          "minY": 0.12000277746081218,
+          "maxY": 1.861000000000027
+        }
+      },
+      {
+        "id": "npc-male_adult_01-outfit-4",
+        "bounds": {
+          "height": 1.7780000000000096,
+          "minY": 0.11999999999995982,
+          "maxY": 1.8979999999999695
+        }
+      },
+      {
+        "id": "npc-male_adult_10-outfit-5",
+        "bounds": {
+          "height": 1.814998019652341,
+          "minY": 0.12000198034767226,
+          "maxY": 1.9350000000000132
+        }
+      },
+      {
+        "id": "npc-male_adult_16-outfit-6",
+        "bounds": {
+          "height": 1.8520000000000245,
+          "minY": 0.11999999999998916,
+          "maxY": 1.9720000000000137
+        }
+      },
+      {
+        "id": "npc-female_adult_07-outfit-7",
+        "bounds": {
+          "height": 1.6299973998482977,
+          "minY": 0.12000260015169642,
+          "maxY": 1.7499999999999942
+        }
+      },
+      {
+        "id": "npc-male_adult_01-outfit-8",
+        "bounds": {
+          "height": 1.6670000000000098,
+          "minY": 0.12000000000001342,
+          "maxY": 1.7870000000000232
+        }
+      },
+      {
+        "id": "npc-male_adult_10-outfit-9",
+        "bounds": {
+          "height": 1.7039981409285474,
+          "minY": 0.12000185907146763,
+          "maxY": 1.824000000000015
+        }
+      },
+      {
+        "id": "npc-male_adult_16-outfit-10",
+        "bounds": {
+          "height": 1.7410000000000234,
+          "minY": 0.1199999999999929,
+          "maxY": 1.8610000000000164
+        }
+      },
+      {
+        "id": "npc-female_adult_07-outfit-11",
+        "bounds": {
+          "height": 1.7779971634361882,
+          "minY": 0.12000283656379827,
+          "maxY": 1.8979999999999864
+        }
+      },
+      {
+        "id": "npc-male_adult_01-outfit-12",
+        "bounds": {
+          "height": 1.7766356455134233,
+          "minY": 0.14708451265534575,
+          "maxY": 1.923720158168769
+        }
+      },
+      {
+        "id": "npc-male_adult_10-outfit-13",
+        "bounds": {
+          "height": 1.8519979792269379,
+          "minY": 0.12000202077306908,
+          "maxY": 1.9720000000000069
+        }
+      },
+      {
+        "id": "npc-male_adult_16-outfit-14",
+        "bounds": {
+          "height": 1.6300000000000217,
+          "minY": 0.1199999999999972,
+          "maxY": 1.7500000000000189
+        }
+      },
+      {
+        "id": "npc-female_adult_07-outfit-15",
+        "bounds": {
+          "height": 1.6669973407452714,
+          "minY": 0.12000265925471114,
+          "maxY": 1.7869999999999826
+        }
+      },
+      {
+        "id": "npc-male_adult_01-outfit-16",
+        "bounds": {
+          "height": 1.6883691274664614,
+          "minY": 0.11284588096399525,
+          "maxY": 1.8012150084304566
+        }
+      },
+      {
+        "id": "npc-male_adult_10-outfit-17",
+        "bounds": {
+          "height": 1.7252787618624088,
+          "minY": 0.11132990324734021,
+          "maxY": 1.836608665109749
+        }
+      },
+      {
+        "id": "npc-male_adult_16-outfit-18",
+        "bounds": {
+          "height": 1.7780000000000231,
+          "minY": 0.11999999999998724,
+          "maxY": 1.8980000000000103
+        }
+      },
+      {
+        "id": "npc-female_adult_07-outfit-19",
+        "bounds": {
+          "height": 1.8149971043331599,
+          "minY": 0.12000289566684147,
+          "maxY": 1.9350000000000014
+        }
+      },
+      {
+        "id": "npc-male_adult_01-outfit-20",
+        "bounds": {
+          "height": 1.8350115164717637,
+          "minY": 0.11222451381769492,
+          "maxY": 1.9472360302894587
+        }
+      },
+      {
+        "id": "npc-male_adult_10-outfit-21",
+        "bounds": {
+          "height": 1.6234322799664467,
+          "minY": 0.10585861909530188,
+          "maxY": 1.7292908990617486
+        }
+      },
+      {
+        "id": "npc-male_adult_16-outfit-22",
+        "bounds": {
+          "height": 1.6670000000000214,
+          "minY": 0.12000000000000513,
+          "maxY": 1.7870000000000266
+        }
+      },
+      {
+        "id": "npc-female_adult_07-outfit-23",
+        "bounds": {
+          "height": 1.703997281642243,
+          "minY": 0.12000271835775457,
+          "maxY": 1.8239999999999976
+        }
+      }
+    ],
+    "police": [
+      {
+        "height": 1.7685722432344766,
+        "minY": -0.0023345714104488664,
+        "maxY": 1.7662376718240278
+      },
+      {
+        "height": 1.784999999821391,
+        "minY": 1.7860887074894194e-10,
+        "maxY": 1.785
+      }
+    ]
+  },
+  "sound": {
+    "shots": 6,
+    "punches": 4,
+    "engineProfiles": [
+      "2:motorcycle",
+      "10:sedan-sports",
+      "1:motorcycle",
+      "0:car-concept",
+      "16:taxi",
+      "23:police-car",
+      "25:police-car"
+    ],
+    "enabled": true
+  },
+  "final": {
+    "position": [
+      -57,
+      0,
+      112
+    ],
+    "heading": 3.141592653589793,
+    "speed": 0,
+    "vehicle": null,
+    "bike": false,
+    "weapon": 0,
+    "ammo": [
+      0,
+      11,
+      23
+    ],
+    "drawCalls": 516,
+    "triangles": 1731281,
+    "quality": "high",
+    "animation": "idle",
+    "transition": null,
+    "wanted": 0,
+    "health": 90,
+    "police": 4,
+    "policeShots": 4,
+    "elapsed": 16.31047800000084,
+    "copData": [
+      {
+        "position": [
+          -52,
+          0,
+          106
+        ],
+        "distance": 7.810249675906654,
+        "mode": "Walk"
+      },
+      {
+        "position": [
+          12.076435383665514,
+          0,
+          -62.170106260105854
+        ],
+        "distance": 187.3680331325765,
+        "mode": "Walk"
+      },
+      {
+        "position": [
+          67.29100773252809,
+          0,
+          149.89781276747962
+        ],
+        "distance": 129.94036638291544,
+        "mode": "Walk"
+      },
+      {
+        "position": [
+          133.8822108838692,
+          0,
+          -158.82102486738634
+        ],
+        "distance": 331.33071988895836,
+        "mode": "Walk"
+      }
+    ],
+    "mapHeading": 3.141592653589793,
+    "actorScale": [
+      1,
+      1,
+      1
+    ],
+    "rigScale": [
+      101.01997715104388,
+      101.01997715104388,
+      101.01997715104388
+    ],
+    "treesOnRoad": 0,
+    "weaponParent": "WristR",
+    "weaponHandDistance": 0.0003535699414649925,
+    "treeColliders": 132,
+    "bikeMeshRotation": null,
+    "actorBounds": [
+      0.6568806433255645,
+      1.848224600111647,
+      0.37681596757340685
+    ],
+    "actorBodyBounds": {
+      "height": 1.848224600111647,
+      "minY": 0.0017051878415719037,
+      "maxY": 1.8499297879532188
+    },
+    "legQuaternion": [
+      -0.005030403598217472,
+      0.9986471099820988,
+      0.05155439944864171,
+      0.004559458469030717
+    ],
+    "fireAnimating": false,
+    "citizens": 24,
+    "characterAsset": "Rocketbox Male Adult 06 / MIT",
+    "cityAsset": "Poly Haven urban apartments + factory / CC0",
+    "buildingCount": 128,
+    "playerVisible": true,
+    "cameraMode": "third",
+    "cameraPosition": [
+      -56.999999999713836,
+      2.649854135578063,
+      118.99126956603997
+    ],
+    "cameraDistance": 7.476601974485264,
+    "responsePolice": 0,
+    "streetPolice": 4,
+    "heavyPolice": 0,
+    "policeCars": 2,
+    "civilianAggro": 1,
+    "civilianShots": 0,
+    "appearances": [
+      {
+        "id": "npc-male_adult_01-outfit-0",
+        "asset": "npc-male_adult_01",
+        "width": 0.86,
+        "height": 1.63
+      },
+      {
+        "id": "npc-male_adult_10-outfit-1",
+        "asset": "npc-male_adult_10",
+        "width": 0.86,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-male_adult_16-outfit-2",
+        "asset": "npc-male_adult_16",
+        "width": 0.86,
+        "height": 1.704
+      },
+      {
+        "id": "npc-female_adult_07-outfit-3",
+        "asset": "npc-female_adult_07",
+        "width": 0.86,
+        "height": 1.7409999999999999
+      },
+      {
+        "id": "npc-male_adult_01-outfit-4",
+        "asset": "npc-male_adult_01",
+        "width": 0.94,
+        "height": 1.7779999999999998
+      },
+      {
+        "id": "npc-male_adult_10-outfit-5",
+        "asset": "npc-male_adult_10",
+        "width": 0.94,
+        "height": 1.815
+      },
+      {
+        "id": "npc-male_adult_16-outfit-6",
+        "asset": "npc-male_adult_16",
+        "width": 0.94,
+        "height": 1.8519999999999999
+      },
+      {
+        "id": "npc-female_adult_07-outfit-7",
+        "asset": "npc-female_adult_07",
+        "width": 0.94,
+        "height": 1.63
+      },
+      {
+        "id": "npc-male_adult_01-outfit-8",
+        "asset": "npc-male_adult_01",
+        "width": 1,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-male_adult_10-outfit-9",
+        "asset": "npc-male_adult_10",
+        "width": 1,
+        "height": 1.704
+      },
+      {
+        "id": "npc-male_adult_16-outfit-10",
+        "asset": "npc-male_adult_16",
+        "width": 1,
+        "height": 1.7409999999999999
+      },
+      {
+        "id": "npc-female_adult_07-outfit-11",
+        "asset": "npc-female_adult_07",
+        "width": 1,
+        "height": 1.7779999999999998
+      },
+      {
+        "id": "npc-male_adult_01-outfit-12",
+        "asset": "npc-male_adult_01",
+        "width": 1.1,
+        "height": 1.815
+      },
+      {
+        "id": "npc-male_adult_10-outfit-13",
+        "asset": "npc-male_adult_10",
+        "width": 1.1,
+        "height": 1.8519999999999999
+      },
+      {
+        "id": "npc-male_adult_16-outfit-14",
+        "asset": "npc-male_adult_16",
+        "width": 1.1,
+        "height": 1.63
+      },
+      {
+        "id": "npc-female_adult_07-outfit-15",
+        "asset": "npc-female_adult_07",
+        "width": 1.1,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-male_adult_01-outfit-16",
+        "asset": "npc-male_adult_01",
+        "width": 1.22,
+        "height": 1.704
+      },
+      {
+        "id": "npc-male_adult_10-outfit-17",
+        "asset": "npc-male_adult_10",
+        "width": 1.22,
+        "height": 1.7409999999999999
+      },
+      {
+        "id": "npc-male_adult_16-outfit-18",
+        "asset": "npc-male_adult_16",
+        "width": 1.22,
+        "height": 1.7779999999999998
+      },
+      {
+        "id": "npc-female_adult_07-outfit-19",
+        "asset": "npc-female_adult_07",
+        "width": 1.22,
+        "height": 1.815
+      },
+      {
+        "id": "npc-male_adult_01-outfit-20",
+        "asset": "npc-male_adult_01",
+        "width": 1.3,
+        "height": 1.8519999999999999
+      },
+      {
+        "id": "npc-male_adult_10-outfit-21",
+        "asset": "npc-male_adult_10",
+        "width": 1.3,
+        "height": 1.63
+      },
+      {
+        "id": "npc-male_adult_16-outfit-22",
+        "asset": "npc-male_adult_16",
+        "width": 1.3,
+        "height": 1.6669999999999998
+      },
+      {
+        "id": "npc-female_adult_07-outfit-23",
+        "asset": "npc-female_adult_07",
+        "width": 1.3,
+        "height": 1.704
+      }
+    ],
+    "soundStats": {
+      "shots": 6,
+      "punches": 4,
+      "engineProfiles": [
+        "2:motorcycle",
+        "10:sedan-sports",
+        "1:motorcycle",
+        "0:car-concept",
+        "16:taxi",
+        "23:police-car",
+        "25:police-car"
+      ],
+      "enabled": true
+    },
+    "renderInfo": {
+      "calls": 516,
+      "triangles": 1731281
+    }
+  },
+  "errors": [],
+  "http": []
+}

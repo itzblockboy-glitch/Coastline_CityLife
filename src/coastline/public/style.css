@@ -1,0 +1,1431 @@
+:root {
+  --lime: #d9fc79;
+  --white: #f7f6ec;
+  --muted: #b5c6c3;
+  --dark: #10272a;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #9fc7cc;
+  color: var(--white);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button,
+a {
+  cursor: pointer;
+}
+button {
+  border: 0;
+}
+#game {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+#vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    #102b393c,
+    transparent 22%,
+    transparent 65%,
+    #09283175
+  );
+}
+header {
+  position: absolute;
+  top: 30px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.brand {
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  letter-spacing: 3px;
+  font-weight: 900;
+  font-size: 22px;
+}
+.brand-icon {
+  font-size: 36px;
+  letter-spacing: -7px;
+  position: relative;
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  width: 46px;
+  height: 46px;
+  text-align: center;
+  line-height: 41px;
+  padding-right: 8px;
+}
+.brand-icon span {
+  color: var(--lime);
+  font-size: 25px;
+  position: absolute;
+  right: 0;
+  top: -8px;
+}
+.brand small {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 2.9px;
+  font-weight: 400;
+  margin-top: 5px;
+}
+.topmiddle {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lime);
+  display: inline-block;
+  box-shadow: 0 0 10px #d9fc7940;
+}
+.sep {
+  opacity: 0.35;
+}
+#weather {
+  margin-left: 14px;
+}
+.topright {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.connection {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #e1ebde;
+}
+.topright button {
+  padding: 14px 17px;
+  border-radius: 5px;
+  background: var(--lime);
+  font-weight: 700;
+  color: var(--dark);
+  font-size: 11px;
+}
+.topright button span {
+  margin-left: 15px;
+}
+.topright .square {
+  background: #15383d5c;
+  color: white;
+  font-size: 20px;
+  padding: 9px 14px;
+  border: 1px solid #ffffff30;
+}
+.location {
+  position: absolute;
+  top: 154px;
+  left: 36px;
+  pointer-events: none;
+  text-shadow: 0 2px 30px #1b454445;
+}
+.location > span,
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: 2.8px;
+  color: var(--lime);
+  font-weight: 700;
+}
+.location h1 {
+  font-size: clamp(36px, 4.1vw, 65px);
+  letter-spacing: -2.8px;
+  line-height: 0.99;
+  margin: 15px 0 16px;
+  font-weight: 800;
+}
+.location h1 span {
+  color: var(--lime);
+}
+.location p {
+  font-size: 11px;
+  color: #edf1e5c9;
+  letter-spacing: 0.2px;
+}
+.locline {
+  font-size: 8px;
+  letter-spacing: 1.7px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 25px;
+}
+.locline i {
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--lime);
+  transform: rotate(45deg);
+}
+.locline span {
+  opacity: 0.4;
+}
+.mission {
+  position: absolute;
+  top: 146px;
+  right: 32px;
+  width: 285px;
+  background: #102e32d9;
+  border: 1px solid #e5f7ef25;
+  border-radius: 8px;
+  padding: 20px;
+  backdrop-filter: blur(12px);
+}
+.missiontop {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  letter-spacing: 1.6px;
+  color: var(--lime);
+}
+.missiontop small {
+  color: #a9beba;
+  letter-spacing: 1px;
+}
+.mission h3 {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.4px;
+  margin: 20px 0 8px;
+}
+.mission p {
+  font-size: 10px;
+  color: #b9ccca;
+  margin: 0 0 23px;
+}
+.missionfoot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+}
+.missionfoot b {
+  color: var(--lime);
+  font-size: 9px;
+}
+.progress {
+  height: 2px;
+  background: #ffffff20;
+  margin-top: 15px;
+}
+.progress > div {
+  height: 100%;
+  width: 5%;
+  background: var(--lime);
+  transition: width 1s;
+}
+.bottomleft {
+  position: absolute;
+  bottom: 31px;
+  left: 32px;
+  width: 224px;
+}
+.mapwrap {
+  height: 176px;
+  position: relative;
+  border: 1px solid #e4f2e93c;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #24424a;
+  box-shadow: 0 5px 30px #102e3225;
+}
+#map {
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+}
+.mapn {
+  position: absolute;
+  top: 11px;
+  right: 13px;
+  font-size: 9px;
+  font-weight: bold;
+}
+.maplabel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #102e32db;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+}
+.maplabel > span + span {
+  color: var(--lime);
+}
+.vitals {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 10px;
+}
+.vitals > span {
+  color: var(--lime);
+}
+.vitals > div {
+  height: 3px;
+  width: 104px;
+  background: #ffffff20;
+}
+.vitals i {
+  display: block;
+  background: var(--lime);
+  height: 100%;
+  width: 100%;
+}
+.vitals small {
+  font-size: 8px;
+}
+.vitals .armor {
+  color: #c6e6ef;
+  margin-left: 6px;
+}
+.vitals .armorbar {
+  width: 47px;
+}
+.armorbar i {
+  background: #c6e6ef;
+}
+.interact {
+  position: absolute;
+  bottom: 144px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #102e32d9;
+  border: 1px solid #ffffff30;
+  padding: 12px 18px;
+  border-radius: 5px;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+.interact small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0;
+  color: #b7c6bd;
+  margin-top: 4px;
+}
+kbd {
+  display: inline-block;
+  border: 1px solid #ffffff50;
+  border-radius: 3px;
+  padding: 5px 6px;
+  font: 9px Arial;
+  line-height: 1;
+  color: var(--white);
+  background: #ffffff0b;
+}
+.interact kbd {
+  font-size: 17px;
+  padding: 7px 10px;
+  color: var(--lime);
+}
+.bottomcenter {
+  position: absolute;
+  bottom: 33px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  letter-spacing: 2px;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  white-space: nowrap;
+}
+.bottomright {
+  position: absolute;
+  right: 32px;
+  bottom: 31px;
+}
+.controlbar {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  font-size: 9px;
+  color: #d8e2d9;
+}
+.controlbar span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.telemetry {
+  margin-top: 17px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #c5d1c6;
+}
+.telemetry i {
+  font-style: normal;
+  color: var(--lime);
+  margin-left: 4px;
+}
+.speed {
+  display: none;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.speed strong {
+  font-size: 55px;
+  font-weight: 400;
+  letter-spacing: -3px;
+}
+.speed span {
+  font-size: 9px;
+  color: #c3d9d0;
+}
+.speed b {
+  display: block;
+  color: var(--lime);
+  font-size: 8px;
+  margin-top: 8px;
+  letter-spacing: 2px;
+}
+.overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: #092a32a8;
+  backdrop-filter: blur(12px);
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+.overlay.open {
+  display: flex;
+}
+.panel {
+  position: relative;
+  width: 430px;
+  max-width: 92vw;
+  background: #102e32;
+  border: 1px solid #ffffff25;
+  padding: 38px;
+  border-radius: 12px;
+  box-shadow: 0 40px 100px #0005;
+}
+.close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  color: #f7f6ec;
+  font-size: 26px;
+}
+.panel h2 {
+  font-size: 33px;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  margin: 18px 0;
+}
+.panel h2 span {
+  color: var(--lime);
+}
+.panel p {
+  color: #b8ccca;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.panel label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  margin: 24px 0;
+  color: #d1e2dc;
+}
+.panel label small {
+  font-size: 8px;
+  letter-spacing: 0;
+  float: right;
+  color: #8caaa8;
+}
+.panel input,
+.panel select {
+  display: block;
+  width: 100%;
+  margin-top: 9px;
+  padding: 13px;
+  background: #ffffff09;
+  border: 1px solid #ffffff20;
+  border-radius: 4px;
+  color: var(--white);
+  outline: none;
+}
+.panel select option {
+  background: #102e32;
+}
+.primary {
+  background: var(--lime);
+  color: var(--dark);
+  padding: 15px;
+  width: 100%;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.roomactions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+.roomactions button {
+  background: #ffffff0c;
+  border: 1px solid #ffffff18;
+  padding: 9px;
+  color: #d1e4dc;
+  font-size: 10px;
+  border-radius: 3px;
+}
+.fine {
+  font-size: 10px !important;
+  line-height: 1.9;
+  color: #91aeac;
+}
+.panel a {
+  color: var(--lime);
+  font-size: 10px;
+}
+#roomstatus {
+  color: var(--lime);
+  font-size: 12px;
+  margin-top: 15px;
+}
+#toast {
+  position: absolute;
+  top: 105px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #102e32ee;
+  color: var(--lime);
+  padding: 13px 22px;
+  border-radius: 6px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  max-width: 90vw;
+  text-align: center;
+}
+#toast.show {
+  opacity: 1;
+}
+#mobile {
+  display: none;
+}
+#loading {
+  position: absolute;
+  inset: 0;
+  background: #102e32;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.loadbrand {
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: 7px;
+}
+.loadbrand span {
+  color: var(--lime);
+}
+#loading p {
+  color: #b9ccc5;
+  font-size: 12px;
+  letter-spacing: 3px;
+}
+.loadtrack {
+  width: 240px;
+  height: 2px;
+  background: #ffffff20;
+  margin: 34px 0 16px;
+}
+.loadtrack i {
+  display: block;
+  height: 100%;
+  background: var(--lime);
+  width: 2%;
+  transition: width 0.3s;
+}
+#loadtext {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #b3cac4;
+}
+@media (max-width: 1100px) {
+  .topmiddle {
+    display: none;
+  }
+  .connection {
+    display: none;
+  }
+  .controlbar {
+    gap: 7px;
+    font-size: 8px;
+  }
+  .bottomcenter {
+    display: none;
+  }
+  .mission {
+    width: 255px;
+  }
+  .location h1 {
+    font-size: 48px;
+  }
+}
+@media (pointer: coarse) {
+  #mobile {
+    display: block;
+  }
+  #joystick {
+    position: absolute;
+    left: 34px;
+    bottom: 65px;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #e8f4e919;
+    border: 1px solid #ffffff4d;
+    touch-action: none;
+  }
+  #stick {
+    width: 43px;
+    height: 43px;
+    background: #eff7ed66;
+    border: 1px solid #fff7;
+    border-radius: 50%;
+    position: absolute;
+    left: 33px;
+    top: 33px;
+  }
+  .touchactions {
+    position: absolute;
+    bottom: 65px;
+    right: 27px;
+    display: grid;
+    grid-template-columns: 48px 48px;
+    gap: 12px;
+  }
+  .touchactions button {
+    height: 48px;
+    border-radius: 50%;
+    background: #193c4277;
+    border: 1px solid #fff5;
+    color: white;
+    font-size: 20px;
+    touch-action: none;
+  }
+  .bottomleft {
+    bottom: 205px;
+    left: 20px;
+    width: 145px;
+  }
+  .mapwrap {
+    height: 116px;
+  }
+  .vitals {
+    display: none;
+  }
+  .controlbar {
+    display: none;
+  }
+  .bottomright {
+    bottom: 20px;
+    right: 20px;
+  }
+  .interact {
+    bottom: 72px;
+  }
+  .location {
+    top: 110px;
+    left: 22px;
+  }
+  .location h1 {
+    font-size: 38px;
+  }
+  .location p,
+  .locline {
+    display: none;
+  }
+  .mission {
+    top: 100px;
+    right: 20px;
+    width: 220px;
+    padding: 15px;
+  }
+  .mission h3 {
+    font-size: 15px;
+    margin-top: 13px;
+  }
+  .mission p {
+    margin-bottom: 15px;
+  }
+  header {
+    left: 20px;
+    right: 20px;
+    top: 20px;
+  }
+  .brand {
+    font-size: 18px;
+  }
+  .brand-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 28px;
+    line-height: 33px;
+  }
+  .topright button {
+    padding: 12px;
+  }
+  .telemetry {
+    font-size: 7px;
+  }
+  .speed strong {
+    font-size: 40px;
+  }
+}
+@media (max-width: 600px) {
+  .location {
+    top: 105px;
+  }
+  .location h1 {
+    font-size: 33px;
+  }
+  .location > span {
+    font-size: 7px;
+  }
+  .mission {
+    top: 230px;
+    right: 16px;
+    width: 200px;
+  }
+  .mission h3 {
+    font-size: 14px;
+  }
+  .brand {
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+  .brand small {
+    font-size: 6px;
+  }
+  .topright button {
+    font-size: 9px;
+  }
+  .topright .square {
+    font-size: 17px;
+  }
+  .topright {
+    gap: 5px;
+  }
+  .missiontop {
+    font-size: 7px;
+  }
+  .bottomleft {
+    bottom: 210px;
+  }
+  .loadbrand {
+    font-size: 29px;
+  }
+}
+
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  overscroll-behavior: none;
+}
+input {
+  user-select: text;
+  -webkit-user-select: text;
+}
+button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.panel {
+  max-height: 90dvh;
+  overflow-y: auto;
+}
+.audioControls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+.audioControls button {
+  background: var(--lime);
+  border-radius: 5px;
+  padding: 13px;
+  color: var(--dark);
+  white-space: nowrap;
+}
+.audioControls input {
+  width: 100%;
+}
+#rotatehint {
+  display: none;
+}
+.touchactions button small {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  margin-top: 3px;
+}
+.touchactions .held {
+  background: #d9fc7980;
+  color: #102e32;
+}
+#interact {
+  cursor: pointer;
+}
+@media (pointer: coarse) {
+  header {
+    top: max(12px, env(safe-area-inset-top));
+    left: max(18px, env(safe-area-inset-left));
+    right: max(18px, env(safe-area-inset-right));
+  }
+  .location {
+    pointer-events: none;
+  }
+  .touchactions {
+    right: max(22px, env(safe-area-inset-right));
+    bottom: max(30px, env(safe-area-inset-bottom));
+    grid-template-columns: 62px 62px;
+    gap: 12px;
+  }
+  .touchactions button {
+    height: 62px;
+    font-size: 23px;
+    background: #102e32b0;
+    backdrop-filter: blur(5px);
+  }
+  #joystick {
+    left: max(30px, env(safe-area-inset-left));
+    bottom: max(38px, env(safe-area-inset-bottom));
+    width: 122px;
+    height: 122px;
+  }
+  #stick {
+    left: 39px;
+    top: 39px;
+  }
+  .bottomright {
+    bottom: 12px;
+  }
+  .telemetry {
+    display: none;
+  }
+  .interact {
+    bottom: 39px;
+    max-width: 190px;
+    padding: 10px;
+  }
+  .bottomleft {
+    bottom: 190px;
+  }
+  .speed {
+    position: fixed;
+    bottom: 185px;
+    right: 24px;
+  }
+  .panel {
+    padding: 25px;
+  }
+  .panel label {
+    margin: 17px 0;
+  }
+  .panel h2 {
+    font-size: 28px;
+  }
+  .topright button {
+    min-height: 44px;
+  }
+  .mission {
+    pointer-events: none;
+  }
+  .topright button span {
+    display: none;
+  }
+}
+@media (pointer: coarse) and (orientation: landscape) {
+  .location {
+    top: 82px;
+    left: 24px;
+  }
+  .location h1 {
+    font-size: 29px;
+    line-height: 1.04;
+    margin-top: 9px;
+  }
+  .location > span {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+  .location p,
+  .locline {
+    display: none;
+  }
+  .mission {
+    top: 82px;
+    right: 18px;
+    width: 222px;
+    padding: 12px;
+  }
+  .mission h3 {
+    margin: 10px 0 6px;
+    font-size: 14px;
+  }
+  .mission p {
+    margin-bottom: 12px;
+    font-size: 9px;
+  }
+  .missiontop {
+    font-size: 7px;
+  }
+  .bottomleft {
+    left: 175px;
+    bottom: 23px;
+    width: 135px;
+  }
+  .mapwrap {
+    height: 97px;
+  }
+  .maplabel {
+    padding: 5px;
+    font-size: 7px;
+  }
+  .interact {
+    left: 50%;
+    bottom: 28px;
+  }
+  .speed {
+    right: 180px;
+    bottom: 26px;
+  }
+  .brand {
+    font-size: 17px;
+  }
+  .brand small {
+    font-size: 6px;
+  }
+  .touchactions {
+    bottom: 24px;
+  }
+  .bottomcenter {
+    display: none;
+  }
+}
+@media (pointer: coarse) and (orientation: portrait) {
+  #rotatehint {
+    display: block;
+    position: absolute;
+    top: 81px;
+    right: 16px;
+    font-size: 8px;
+    color: var(--lime);
+  }
+  .location {
+    top: 122px;
+  }
+  .mission {
+    top: 235px;
+    width: 192px;
+  }
+  .bottomleft {
+    bottom: 210px;
+  }
+  .interact {
+    bottom: 180px;
+    left: 50%;
+  }
+}
+/* Coastline 1.2 — clean gameplay HUD, explicit driving pedals */
+:root {
+  --lime: #efd49b;
+  --dark: #141d25;
+}
+.location,
+.mission,
+.bottomcenter,
+.controlbar,
+.telemetry,
+.brand > div,
+.topmiddle,
+.connection,
+#rotatehint,
+.vitals {
+  display: none !important;
+}
+#vignette {
+  background: linear-gradient(
+    180deg,
+    #0d18222b,
+    transparent 18%,
+    transparent 80%,
+    #0a131d3c
+  );
+}
+header {
+  top: max(14px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  right: max(16px, env(safe-area-inset-right));
+  pointer-events: none;
+}
+.brand,
+.topright {
+  pointer-events: auto;
+}
+.appicon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  box-shadow: 0 2px 8px #0005;
+}
+.topright {
+  gap: 7px;
+}
+.topright button {
+  background: #14212bb0 !important;
+  color: #f1e5c9 !important;
+  border: 1px solid #ffffff25 !important;
+  border-radius: 10px !important;
+  width: 42px;
+  height: 42px;
+  padding: 0 !important;
+  font-size: 20px !important;
+  backdrop-filter: blur(7px);
+}
+#ammoCount {
+  width: auto !important;
+  padding: 0 10px !important;
+  font-size: 10px !important;
+  min-width: 54px;
+}
+#statuspill {
+  font-size: 10px;
+  letter-spacing: 0.7px;
+  color: #eee8da;
+  margin-right: 8px;
+  text-shadow: 0 1px 4px #000;
+}
+.bottomleft {
+  left: max(16px, env(safe-area-inset-left));
+  top: 70px;
+  bottom: auto;
+  width: 164px;
+  z-index: 2;
+}
+.mapwrap {
+  height: 130px;
+  border: 1px solid #d4cab65e;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px #0004;
+  cursor: pointer;
+  background: #243945;
+}
+.maplabel {
+  font-size: 8px;
+  padding: 6px 9px;
+  background: #111e27c9;
+  letter-spacing: 0.7px;
+}
+.mapn {
+  font-size: 9px;
+  text-shadow: 0 1px 4px #000;
+}
+.bottomleft.expanded {
+  width: min(76vw, 448px);
+}
+.bottomleft.expanded .mapwrap {
+  height: min(65vh, 352px);
+}
+#map {
+  opacity: 1;
+}
+.interact {
+  padding: 7px 10px;
+  bottom: 23px;
+  max-width: 180px;
+  background: #16212bc2;
+  letter-spacing: 0.1px;
+  font-size: 10px;
+  border-radius: 8px;
+}
+.interact kbd {
+  font-size: 10px;
+  padding: 4px 6px;
+}
+.interact div {
+  font-size: 10px;
+}
+.speed {
+  position: fixed;
+  right: 24px;
+  bottom: 26px;
+  gap: 9px;
+  margin: 0;
+}
+.speed strong {
+  font-size: 33px;
+  font-weight: 600;
+}
+.speed span {
+  font-size: 8px;
+}
+.speed b {
+  margin-top: 3px;
+}
+.bottomright {
+  position: static;
+}
+#crosshair {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font: 22px Arial;
+  color: #f9efd4;
+  text-shadow: 0 1px 3px #000;
+  pointer-events: none;
+}
+#toast {
+  top: 67px;
+  font-size: 10px;
+  padding: 9px 15px;
+  max-width: 54vw;
+  background: #15212cdd;
+}
+.panel {
+  background: #16212bf5;
+}
+.panel h2 {
+  font-size: 25px;
+}
+.steering,
+.pedals {
+  display: none;
+}
+#garageList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+#garageList button {
+  padding: 13px 9px;
+  text-align: left;
+  border: 1px solid #ffffff26;
+  background: #ffffff09;
+  color: #ece6d4;
+  border-radius: 6px;
+  font-size: 11px;
+}
+.touchactions button.held,
+.steering button.held,
+.pedals button.held {
+  background: #efd49b91 !important;
+  color: #111d27 !important;
+  border-color: #efd49b !important;
+}
+@media (pointer: coarse) {
+  #mobile {
+    display: block;
+  }
+  .bottomleft {
+    top: 68px;
+    bottom: auto;
+    left: max(16px, env(safe-area-inset-left));
+    width: 150px;
+  }
+  .mapwrap {
+    height: 118px;
+  }
+  #joystick {
+    width: 122px;
+    height: 122px;
+    bottom: max(24px, env(safe-area-inset-bottom));
+    left: max(28px, env(safe-area-inset-left));
+    background: #14212b3d;
+    border: 1px solid #ffffff4d;
+  }
+  #stick {
+    left: 39px;
+    top: 39px;
+    background: #e8e4d376;
+  }
+  .touchactions {
+    display: grid;
+    grid-template-columns: 58px 58px;
+    right: max(22px, env(safe-area-inset-right));
+    bottom: max(24px, env(safe-area-inset-bottom));
+    gap: 10px;
+  }
+  .touchactions button {
+    height: 58px;
+    background: #14212b88;
+    border: 1px solid #ffffff40;
+    backdrop-filter: blur(5px);
+  }
+  .touchactions button small {
+    font-size: 7px;
+  }
+  .touchactions #touchPunch {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: center;
+    width: 68px;
+    height: 68px;
+    font-size: 24px;
+  }
+  .touchactions #touchJump {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .touchactions #touchRun {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  #touchEnter {
+    position: absolute;
+    bottom: max(24px, env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    width: 57px;
+    height: 49px;
+    border-radius: 12px;
+    background: #14212b9e;
+    color: #fff0ce;
+    border: 1px solid #ffffff3d;
+    font-size: 20px;
+    touch-action: none;
+  }
+  #touchEnter small {
+    display: block;
+    font-size: 7px;
+    margin-top: 1px;
+  }
+  .interact {
+    bottom: 83px;
+    pointer-events: auto;
+    font-size: 9px;
+    max-width: 160px;
+  }
+  .interact kbd {
+    display: none;
+  }
+  .speed {
+    right: 190px;
+    bottom: 29px;
+  }
+  body.driving #joystick,
+  body.driving .touchactions {
+    display: none;
+  }
+  body.driving .steering {
+    display: flex;
+    position: absolute;
+    left: max(23px, env(safe-area-inset-left));
+    bottom: max(24px, env(safe-area-inset-bottom));
+    gap: 12px;
+  }
+  .steering button {
+    width: 67px;
+    height: 66px;
+    background: #14212b8e;
+    border: 1px solid #ffffff45;
+    border-radius: 15px;
+    color: #eee8d6;
+    font-size: 25px;
+    touch-action: none;
+  }
+  body.driving .pedals {
+    display: flex;
+    position: absolute;
+    right: max(21px, env(safe-area-inset-right));
+    bottom: max(23px, env(safe-area-inset-bottom));
+    gap: 13px;
+    align-items: end;
+  }
+  .pedals button {
+    height: 78px;
+    width: 70px;
+    border-radius: 14px;
+    border: 1px solid #ffffff4a;
+    background: #14212ba6;
+    color: #f1e7d3;
+    font-size: 30px;
+    touch-action: none;
+  }
+  .pedals button small {
+    display: block;
+    font-size: 7px;
+    letter-spacing: 0.3px;
+    margin-top: 8px;
+  }
+  .pedals #touchGas {
+    height: 96px;
+    background: #4d574786;
+    border-color: #edd7a882;
+  }
+  body.driving .interact {
+    display: none !important;
+  }
+  .topright button {
+    min-height: 42px;
+  }
+  .speed strong {
+    font-size: 31px;
+  }
+}
+@media (pointer: coarse) and (orientation: portrait) {
+  #statuspill {
+    display: none;
+  }
+  .bottomleft {
+    top: 70px;
+    width: 142px;
+  }
+  .mapwrap {
+    height: 112px;
+  }
+  header {
+    left: 13px;
+    right: 13px;
+  }
+  .topright {
+    gap: 5px;
+  }
+  .topright button {
+    width: 36px;
+    height: 38px !important;
+    min-height: 38px;
+    font-size: 18px !important;
+  }
+  #ammoCount {
+    min-width: 45px;
+    padding: 0 6px !important;
+  }
+  .appicon {
+    width: 36px;
+    height: 36px;
+  }
+  .speed {
+    right: 22px;
+    bottom: 135px;
+  }
+  .interact {
+    bottom: 172px;
+  }
+  #toast {
+    max-width: 58vw;
+    top: 198px;
+  }
+  .bottomleft.expanded {
+    width: 90vw;
+  }
+  .bottomleft.expanded .mapwrap {
+    height: 45vh;
+  }
+}
+body.driving #weaponSwitch,
+body.driving #ammoCount {
+  display: none !important;
+}
+.policehud {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: end;
+  margin-right: 5px;
+}
+#wanted {
+  font-size: 17px;
+  letter-spacing: 2px;
+  color: #efd49b;
+  text-shadow: 0 1px 4px #000;
+}
+.healthtrack {
+  width: 82px;
+  height: 3px;
+  background: #111a258c;
+  border-radius: 2px;
+  overflow: hidden;
+}
+#playerhealth {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: #a7cda0;
+  transition: width 0.2s;
+}
+#damageflash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: inset 0 0 100px #b622228f;
+  transition: opacity 0.12s;
+}
+#damageflash.hit {
+  opacity: 1;
+}
+.pedals button {
+  font-size: 34px;
+}
+.pedals button small {
+  display: none !important;
+}
+@media (max-width: 600px) {
+  #wanted {
+    font-size: 12px;
+    letter-spacing: 0;
+  }
+  .healthtrack {
+    width: 56px;
+  }
+  .policehud {
+    margin-right: 0;
+  }
+  #statuspill {
+    display: none !important;
+  }
+}

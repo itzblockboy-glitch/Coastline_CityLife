@@ -1,0 +1,673 @@
+{
+  "checks": {
+    "loads without a fatal error": "ok",
+    "no runtime errors": [],
+    "every vehicle grounded (no floating police cars)": {
+      "worst": [
+        {
+          "id": 0,
+          "type": "car-concept",
+          "minY": 0.12,
+          "width": 2.87,
+          "length": 4.38
+        },
+        {
+          "id": 1,
+          "type": "motorcycle",
+          "minY": 0.12,
+          "width": 0.91,
+          "length": 2.22
+        },
+        {
+          "id": 2,
+          "type": "motorcycle",
+          "minY": 0.12,
+          "width": 0.91,
+          "length": 2.22
+        }
+      ],
+      "floating": []
+    },
+    "taxi exists in the fleet": {
+      "id": 8,
+      "type": "taxi",
+      "max": 37.48,
+      "hw": 1.0402479999836123,
+      "hl": 2.328000009612624,
+      "sound": "8:taxi",
+      "police": false
+    },
+    "vehicle bodies sit on their own origin": {
+      "shifted": [],
+      "worst": [
+        {
+          "id": 0,
+          "type": "car-concept",
+          "traffic": false,
+          "along": 0,
+          "across": 0,
+          "length": 4.38,
+          "width": 2.87
+        },
+        {
+          "id": 1,
+          "type": "motorcycle",
+          "traffic": false,
+          "along": 0,
+          "across": 0,
+          "length": 2.22,
+          "width": 0.91
+        },
+        {
+          "id": 2,
+          "type": "motorcycle",
+          "traffic": false,
+          "along": 0,
+          "across": 0,
+          "length": 2.22,
+          "width": 0.91
+        },
+        {
+          "id": 3,
+          "type": "suv-luxury",
+          "traffic": false,
+          "along": 0,
+          "across": 0,
+          "length": 4.9,
+          "width": 2.2
+        }
+      ]
+    },
+    "minimap redraw is cheap (<3 ms/frame)": {
+      "ms": 0.013
+    },
+    "world extends past the old 211 m wall": {
+      "xMin": -120,
+      "xMax": 305,
+      "zMin": -375,
+      "zMax": 375,
+      "obstacles": 206,
+      "buildings": 184,
+      "districts": [
+        [
+          "4:2",
+          "factories"
+        ],
+        [
+          "4:6",
+          "factories"
+        ],
+        [
+          "1:9",
+          "construction"
+        ],
+        [
+          "4:8",
+          "construction"
+        ]
+      ]
+    },
+    "industrial districts registered": [
+      [
+        "4:2",
+        "factories"
+      ],
+      [
+        "4:6",
+        "factories"
+      ],
+      [
+        "1:9",
+        "construction"
+      ],
+      [
+        "4:8",
+        "construction"
+      ]
+    ],
+    "mobile pixel ratio capped at <=1.0": {
+      "renderScale": 1,
+      "pixelRatio": 1,
+      "shadowMap": 1024,
+      "shadows": true,
+      "calls": 697,
+      "triangles": 1585742
+    },
+    "shadow map no larger than 1024 on mobile": {
+      "renderScale": 1,
+      "pixelRatio": 1,
+      "shadowMap": 1024,
+      "shadows": true,
+      "calls": 697,
+      "triangles": 1585742
+    },
+    "taxi accelerates forward, not backward": {
+      "forwardFraction": 1,
+      "travelled": 7.68,
+      "alongForward": 7.68,
+      "speed": 7.07
+    },
+    "steering right turns right (heading decreases)": {
+      "aim": {
+        "heading": 0,
+        "clear": 60
+      },
+      "headingDelta": -1.031,
+      "speed": 9.12,
+      "heading": [
+        0,
+        0,
+        -1.03
+      ]
+    },
+    "police light bars sit on the roof": {
+      "sample": [
+        {
+          "roof": 1.68,
+          "light": 1.57
+        },
+        {
+          "roof": 1.68,
+          "light": 1.57
+        },
+        {
+          "roof": 1.68,
+          "light": 1.57
+        }
+      ],
+      "bad": 0
+    },
+    "weapon table includes a knife and several firearms": {
+      "count": 7,
+      "ids": [
+        "fists",
+        "sidearm",
+        "carbine",
+        "knife",
+        "smg",
+        "shotgun",
+        "grenade"
+      ]
+    },
+    "every firearm has a model attached": [],
+    "knife damages an NPC on strike": {
+      "before": {
+        "hp": 100,
+        "aggro": false
+      },
+      "after": {
+        "hp": 66,
+        "aggro": true,
+        "stunned": true
+      },
+      "weapon": "knife",
+      "npcIndex": 16
+    },
+    "punched NPC fights back and damages the player": {
+      "healthBefore": 100,
+      "after": {
+        "health": 98,
+        "dead": false,
+        "deaths": 0,
+        "cause": "",
+        "invulnerable": 0.38
+      }
+    },
+    "carbine/smg/shotgun consume ammunition when fired": [
+      {
+        "id": "carbine",
+        "before": 24,
+        "after": 23,
+        "spent": 1
+      },
+      {
+        "id": "smg",
+        "before": 32,
+        "after": 31,
+        "spent": 1
+      },
+      {
+        "id": "shotgun",
+        "before": 6,
+        "after": 5,
+        "spent": 1
+      }
+    ],
+    "cars take damage and can be wrecked": {
+      "after55": {
+        "hp": 45,
+        "wrecked": false
+      },
+      "afterMore": {
+        "hp": 0,
+        "wrecked": true
+      }
+    },
+    "player dies and respawns with full health": {
+      "died": true,
+      "revived": true,
+      "health": 100,
+      "dead": false,
+      "deaths": 1,
+      "cause": "Killed by a heavy hit",
+      "invulnerable": 3.9333
+    },
+    "car accelerates forward and steers right": {
+      "forwardFraction": 11.33,
+      "lateral": 1.96,
+      "headingDelta": -0.942,
+      "pitch": 0.025,
+      "roll": -0.257,
+      "speed": 4.93,
+      "gasSpeed": 7.01,
+      "simSeconds": 2.6,
+      "overlay": false,
+      "type": "sedan",
+      "hp": 100,
+      "wrecked": false,
+      "wedged": false,
+      "dead": false,
+      "transition": false,
+      "drivingType": "sedan",
+      "keys": {
+        "Gas": false,
+        "Steer": false
+      },
+      "aim": {
+        "heading": 0,
+        "clear": 60
+      }
+    },
+    "suspension responds (pitch/roll move away from zero)": {
+      "forwardFraction": 11.33,
+      "lateral": 1.96,
+      "headingDelta": -0.942,
+      "pitch": 0.025,
+      "roll": -0.257,
+      "speed": 4.93,
+      "gasSpeed": 7.01,
+      "simSeconds": 2.6,
+      "overlay": false,
+      "type": "sedan",
+      "hp": 100,
+      "wrecked": false,
+      "wedged": false,
+      "dead": false,
+      "transition": false,
+      "drivingType": "sedan",
+      "keys": {
+        "Gas": false,
+        "Steer": false
+      },
+      "aim": {
+        "heading": 0,
+        "clear": 60
+      }
+    },
+    "no frame errors during the whole run": {
+      "tickErr": "",
+      "errors": []
+    },
+    "taxi is rotated 180 deg, and every correction is exactly 0 or 180": {
+      "fixes": {
+        "car-concept": 0,
+        "suv-luxury": 0,
+        "delivery": 0,
+        "truck": 0,
+        "milk-truck": 0,
+        "hatchback-sports": 0,
+        "taxi": 3.141592653589793,
+        "sedan-sports": 0,
+        "sedan": 0,
+        "police-car": 0
+      },
+      "report": {
+        "car-concept": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": 0.713
+        },
+        "suv-luxury": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.449
+        },
+        "delivery": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.261
+        },
+        "truck": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": 0.229
+        },
+        "milk-truck": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.267
+        },
+        "hatchback-sports": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.484
+        },
+        "taxi": {
+          "yaw": 3.141592653589793,
+          "pureYFlip": true,
+          "roofDz": 0.322
+        },
+        "sedan-sports": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.251
+        },
+        "sedan": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.353
+        },
+        "police-car": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.284
+        }
+      }
+    }
+  },
+  "shots": [
+    "screenshots/orient-taxi.png",
+    "screenshots/orient-sedan-control.png",
+    "screenshots/orient-truck.png",
+    "screenshots/orient-coupe.png",
+    "screenshots/profile-truck.png",
+    "screenshots/profile-coupe.png",
+    "screenshots/v1.6-factories-222_-155.png",
+    "screenshots/v1.6-factories-222_93.png",
+    "screenshots/v1.6-construction-36_279.png",
+    "screenshots/v1.6-construction-222_217.png",
+    "screenshots/v1.6-downtown.png"
+  ],
+  "taxiAim": {
+    "heading": 0,
+    "clear": 60
+  },
+  "facing": {
+    "fixes": {
+      "car-concept": 0,
+      "suv-luxury": 0,
+      "delivery": 0,
+      "truck": 0,
+      "milk-truck": 0,
+      "hatchback-sports": 0,
+      "taxi": 3.141592653589793,
+      "sedan-sports": 0,
+      "sedan": 0,
+      "police-car": 0
+    },
+    "report": {
+      "car-concept": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": 0.713
+      },
+      "suv-luxury": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.449
+      },
+      "delivery": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.261
+      },
+      "truck": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": 0.229
+      },
+      "milk-truck": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.267
+      },
+      "hatchback-sports": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.484
+      },
+      "taxi": {
+        "yaw": 3.141592653589793,
+        "pureYFlip": true,
+        "roofDz": 0.322
+      },
+      "sedan-sports": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.251
+      },
+      "sedan": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.353
+      },
+      "police-car": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.284
+      }
+    }
+  },
+  "orientation": {
+    "taxi": [
+      {
+        "id": 8,
+        "rotY": -0.935,
+        "angle": -1.031,
+        "traffic": false,
+        "z": 214.9,
+        "roofDzWorld": -0.199,
+        "bounds": {
+          "minY": 0.09
+        }
+      },
+      {
+        "id": 12,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": -129.1,
+        "roofDzWorld": -0.274,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 16,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": 94.3,
+        "roofDzWorld": -0.274,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 20,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": 317.6,
+        "roofDzWorld": -0.274,
+        "bounds": {
+          "minY": 0.12
+        }
+      }
+    ],
+    "sedan": [
+      {
+        "id": 11,
+        "rotY": -0.858,
+        "angle": -0.942,
+        "traffic": false,
+        "z": -178,
+        "roofDzWorld": -0.308,
+        "bounds": {
+          "minY": 0.08
+        }
+      },
+      {
+        "id": 15,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": 29.9,
+        "roofDzWorld": -0.469,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 19,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": 253.3,
+        "roofDzWorld": -0.469,
+        "bounds": {
+          "minY": 0.12
+        }
+      }
+    ]
+  },
+  "orientationShots": {
+    "taxi": {
+      "id": 12,
+      "type": "taxi",
+      "x": 8,
+      "z": -128.3,
+      "rotY": 0,
+      "atShot": {
+        "pos": [
+          8,
+          2.02,
+          -120.56
+        ],
+        "mode": "third",
+        "freeCam": {
+          "car": 12,
+          "dist": 6.5,
+          "eye": [
+            8,
+            2.02,
+            -120.56
+          ]
+        },
+        "car": {
+          "x": 8,
+          "z": -127.06340000000255,
+          "rotY": 0,
+          "type": "taxi"
+        }
+      }
+    },
+    "sedan-control": {
+      "id": 15,
+      "type": "sedan",
+      "x": 194,
+      "z": 38.1,
+      "rotY": 0,
+      "atShot": {
+        "pos": [
+          194,
+          2.02,
+          45.64
+        ],
+        "mode": "third",
+        "freeCam": {
+          "car": 15,
+          "dist": 6.5,
+          "eye": [
+            194,
+            2.02,
+            45.64
+          ]
+        },
+        "car": {
+          "x": 194,
+          "z": 39.139599999999824,
+          "rotY": 0,
+          "type": "sedan"
+        }
+      }
+    },
+    "truck": {
+      "id": 5,
+      "type": "truck",
+      "x": 72,
+      "z": 135,
+      "rotY": 0,
+      "atShot": {
+        "pos": [
+          72,
+          2.02,
+          141.5
+        ],
+        "mode": "third",
+        "freeCam": {
+          "car": 5,
+          "dist": 6.5,
+          "eye": [
+            72,
+            2.02,
+            141.5
+          ]
+        },
+        "car": {
+          "x": 72,
+          "z": 135,
+          "rotY": 0,
+          "type": "truck"
+        }
+      }
+    },
+    "coupe": {
+      "id": 0,
+      "type": "car-concept",
+      "x": -61,
+      "z": 72,
+      "rotY": 3.14,
+      "atShot": {
+        "pos": [
+          -61,
+          2.02,
+          65.5
+        ],
+        "mode": "third",
+        "freeCam": {
+          "car": 0,
+          "dist": 6.5,
+          "eye": [
+            -61,
+            2.02,
+            65.5
+          ]
+        },
+        "car": {
+          "x": -61,
+          "z": 72,
+          "rotY": 3.141592653589793,
+          "type": "car-concept"
+        }
+      }
+    }
+  },
+  "errors": [],
+  "platform": "Linux x86_64",
+  "state": {
+    "drawCalls": 684,
+    "triangles": 1517766,
+    "quality": "high"
+  }
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Textures/m002_body_color.tga",
+    "save": "v15-sources/civilians/Male_Adult_01/Textures/m002_body_color.tga"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Textures/m002_head_color.tga",
+    "save": "v15-sources/civilians/Male_Adult_01/Textures/m002_head_color.tga"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Textures/m002_opacity_color.tga",
+    "save": "v15-sources/civilians/Male_Adult_01/Textures/m002_opacity_color.tga"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_01/Export/Male_Adult_01.fbx",
+    "save": "v15-sources/civilians/Male_Adult_01/Export/Male_Adult_01.fbx"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_16/Textures/m019_body_color.tga",
+    "save": "v15-sources/civilians/Male_Adult_16/Textures/m019_body_color.tga"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_16/Textures/m019_head_color.tga",
+    "save": "v15-sources/civilians/Male_Adult_16/Textures/m019_head_color.tga"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_16/Export/Male_Adult_16.fbx",
+    "save": "v15-sources/civilians/Male_Adult_16/Export/Male_Adult_16.fbx"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_10/Textures/m024_head_color.tga",
+    "save": "v15-sources/civilians/Male_Adult_10/Textures/m024_head_color.tga"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_10/Textures/m024_body_color.tga",
+    "save": "v15-sources/civilians/Male_Adult_10/Textures/m024_body_color.tga"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_10/Textures/m024_opacity_color.tga",
+    "save": "v15-sources/civilians/Male_Adult_10/Textures/m024_opacity_color.tga"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Male_Adult_10/Export/Male_Adult_10.fbx",
+    "save": "v15-sources/civilians/Male_Adult_10/Export/Male_Adult_10.fbx"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Female_Adult_07/Textures/f007_body_color.tga",
+    "save": "v15-sources/civilians/Female_Adult_07/Textures/f007_body_color.tga"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Female_Adult_07/Textures/f007_head_color.tga",
+    "save": "v15-sources/civilians/Female_Adult_07/Textures/f007_head_color.tga"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Female_Adult_07/Textures/f007_opacity_color.tga",
+    "save": "v15-sources/civilians/Female_Adult_07/Textures/f007_opacity_color.tga"
+  },
+  {
+    "download": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/Assets/Avatars/Adults/Female_Adult_07/Export/Female_Adult_07.fbx",
+    "save": "v15-sources/civilians/Female_Adult_07/Export/Female_Adult_07.fbx"
+  }
+]
