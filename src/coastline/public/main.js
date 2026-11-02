@@ -183,6 +183,26 @@ const VEHICLE_TYPES = ["car-concept", "suv-luxury", "delivery", "truck", "milk-t
 // The taxi is authored facing -Z: its cabin sits forward of centre and its root nodes carry a
 // 180° Y rotation the other cars do not have, so it reversed and steered the wrong way.
 const VEHICLE_MODEL_FIX = { taxi: { yaw: Math.PI } };
+// Facade variety: the generator reuses three building models, so every block looked identical.
+// Tinting multiplies the existing texture; clones are cached per material+tint, which keeps the
+// instancing groups bounded (materials still batch) instead of exploding per building.
+const TINTS = [0xffffff, 0xe6d8c4, 0xd2c2ae, 0xc3cdd2, 0xb9c2ac, 0xd8c9bb];
+const tintCache = new Map();
+function tintBuilding(root, hex) {
+  if (hex === 0xffffff) return root;
+  root.traverse((n) => {
+    if (!n.isMesh || Array.isArray(n.material)) return;
+    const key = n.material.uuid + "|" + hex;
+    let m = tintCache.get(key);
+    if (!m) {
+      m = n.material.clone();
+      m.color = n.material.color.clone().multiply(new T.Color(hex));
+      tintCache.set(key, m);
+    }
+    n.material = m;
+  });
+  return root;
+}
 function groundModel(o) {
   o.updateMatrixWorld(true);
   const b = new T.Box3().setFromObject(o);
@@ -331,6 +351,7 @@ try {
           const heights = { a: 9.9, b: 12.9, c: 18.9, d: 24.9, e: 6.9, f: 9.9 };
           const h = heights[letter], x = cx + a * 10, z = cz + b * 10;
           const o = instance("building-real-" + letter, x, z, h, (Math.floor(rand() * 4) * Math.PI) / 2);
+          tintBuilding(o, TINTS[Math.floor(rand() * TINTS.length)]);
           // Keep footprints inside city blocks even for the taller skyline variants.
           const bb = new T.Box3().setFromObject(o),
             sz = bb.getSize(new T.Vector3());
