@@ -38,7 +38,7 @@
       "police": false
     },
     "minimap redraw is cheap (<3 ms/frame)": {
-      "ms": 0.027
+      "ms": 0.043
     },
     "world extends past the old 211 m wall": {
       "xMin": -120,
@@ -89,31 +89,35 @@
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 804,
-      "triangles": 1912541
+      "calls": 696,
+      "triangles": 1585490
     },
     "shadow map no larger than 1024 on mobile": {
       "renderScale": 1,
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 804,
-      "triangles": 1912541
+      "calls": 696,
+      "triangles": 1585490
     },
     "taxi accelerates forward, not backward": {
       "forwardFraction": 1,
-      "travelled": 2.02,
-      "alongForward": 2.02,
-      "speed": 3.6
+      "travelled": 1.45,
+      "alongForward": 1.45,
+      "speed": 3.12
     },
     "steering right turns right (heading decreases)": {
       "FAILED": {
-        "headingDelta": -0.031,
-        "speed": 3.84,
+        "aim": {
+          "heading": 0,
+          "clear": 60
+        },
+        "headingDelta": 0,
+        "speed": 3.36,
         "heading": [
-          3.14,
-          3.14,
-          3.11
+          0,
+          0,
+          0
         ]
       }
     },
@@ -211,15 +215,15 @@
     },
     "car accelerates forward and steers right": {
       "FAILED": {
-        "forwardFraction": 0,
+        "forwardFraction": 0.09,
         "lateral": 0,
-        "headingDelta": 0,
-        "pitch": 0,
-        "roll": 0,
-        "speed": 0,
+        "headingDelta": -0.007,
+        "pitch": -0.02,
+        "roll": -0.021,
+        "speed": 0.39,
         "type": "sedan",
-        "hp": 0,
-        "wrecked": true,
+        "hp": 100,
+        "wrecked": false,
         "wedged": false,
         "dead": false,
         "transition": false,
@@ -227,28 +231,34 @@
         "keys": {
           "Gas": false,
           "Steer": false
+        },
+        "aim": {
+          "heading": 0,
+          "clear": 60
         }
       }
     },
     "suspension responds (pitch/roll move away from zero)": {
-      "FAILED": {
-        "forwardFraction": 0,
-        "lateral": 0,
-        "headingDelta": 0,
-        "pitch": 0,
-        "roll": 0,
-        "speed": 0,
-        "type": "sedan",
-        "hp": 0,
-        "wrecked": true,
-        "wedged": false,
-        "dead": false,
-        "transition": false,
-        "drivingType": "sedan",
-        "keys": {
-          "Gas": false,
-          "Steer": false
-        }
+      "forwardFraction": 0.09,
+      "lateral": 0,
+      "headingDelta": -0.007,
+      "pitch": -0.02,
+      "roll": -0.021,
+      "speed": 0.39,
+      "type": "sedan",
+      "hp": 100,
+      "wrecked": false,
+      "wedged": false,
+      "dead": false,
+      "transition": false,
+      "drivingType": "sedan",
+      "keys": {
+        "Gas": false,
+        "Steer": false
+      },
+      "aim": {
+        "heading": 0,
+        "clear": 60
       }
     },
     "no frame errors during the whole run": {
@@ -331,6 +341,10 @@
     "screenshots/v1.6-construction-222_217.png",
     "screenshots/v1.6-downtown.png"
   ],
+  "taxiAim": {
+    "heading": 0,
+    "clear": 60
+  },
   "facing": {
     "fixes": {
       "car-concept": 0,
@@ -401,11 +415,11 @@
     "taxi": [
       {
         "id": 8,
-        "rotY": 3.122,
-        "angle": 3.11,
+        "rotY": 0,
+        "angle": 0,
         "traffic": false,
-        "z": 197.7,
-        "roofDzWorld": 0.434,
+        "z": 201.7,
+        "roofDzWorld": -0.236,
         "bounds": {
           "minY": 0.03
         }
@@ -415,7 +429,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": -155.3,
+        "z": -156.9,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -426,7 +440,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 63.7,
+        "z": 61.8,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -437,7 +451,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 282.6,
+        "z": 280.5,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -447,13 +461,13 @@
     "sedan": [
       {
         "id": 11,
-        "rotY": 0,
-        "angle": 0,
+        "rotY": -0.004,
+        "angle": -0.007,
         "traffic": false,
-        "z": -204.9,
-        "roofDzWorld": -0.343,
+        "z": -207.4,
+        "roofDzWorld": -0.316,
         "bounds": {
-          "minY": 0.09
+          "minY": 0.07
         }
       },
       {
@@ -461,7 +475,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 3.7,
+        "z": 2.1,
         "roofDzWorld": -0.469,
         "bounds": {
           "minY": 0.12
@@ -472,7 +486,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 222.7,
+        "z": 220.8,
         "roofDzWorld": -0.469,
         "bounds": {
           "minY": 0.12
@@ -483,8 +497,8 @@
   "errors": [],
   "platform": "Linux x86_64",
   "state": {
-    "drawCalls": 696,
-    "triangles": 1585490,
+    "drawCalls": 638,
+    "triangles": 1425595,
     "quality": "high"
   }
 }
