@@ -103,6 +103,8 @@ function check(name, ok, detail) {
   const dHeading = drive.turned.heading - drive.moving.heading;
   check("steering right turns right (heading decreases)", dHeading < -0.05, {
     headingDelta: +dHeading.toFixed(3),
+    speed: +drive.turned.speed.toFixed(2),
+    heading: [+drive.before.heading.toFixed(2), +drive.moving.heading.toFixed(2), +drive.turned.heading.toFixed(2)],
   });
 
   // --- 7. Police light bar sits on the roof, not in the sky ----------------------------
@@ -172,8 +174,8 @@ function check(name, ok, detail) {
     { died, revived, ...pState });
 
   // --- 9. Vehicle physics probe -------------------------------------------------------
-  await page.evaluate(() => coastlineTest.board("car-concept"));
-  await page.waitForFunction(() => coastlineTest.getState().vehicle === "car-concept", null, { timeout: 60000 });
+  await page.evaluate(() => coastlineTest.board("sedan"));
+  await page.waitForFunction(() => coastlineTest.getState().vehicle === "sedan", null, { timeout: 60000 });
   const probe = await page.evaluate(() => coastlineTest.driveProbe());
   if (!probe || !(probe.forwardFraction > 3)) console.error("drive probe:", JSON.stringify(probe));
   check("car accelerates forward and steers right", probe && probe.forwardFraction > 3 && probe.headingDelta < -0.05, probe);

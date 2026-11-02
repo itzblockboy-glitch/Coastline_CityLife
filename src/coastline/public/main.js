@@ -1788,14 +1788,15 @@ function frame(now) {
     if (hitWall && speedAbs > 3) {
       // Impact: damage scales with closing speed, and the car is thrown back a little.
       damageCar(c, Math.min(46, speedAbs * 2.6), "impact");
-      heading = oldHeading;
+      heading = oldHeading + (heading - oldHeading) * 0.15;
       c.vx *= -0.22; c.vz *= -0.22;
       speed *= -0.24;
       c.pitchVel -= Math.min(3.4, speedAbs * 0.12);
       cameraShake = Math.max(cameraShake, Math.min(0.9, speedAbs * 0.045));
       sfx.impact?.(Math.min(1, speedAbs / 25));
     } else if (hitWall) {
-      heading = oldHeading;
+      // Slowly pivoting out of a kerb still works; ploughing into a wall does not.
+      heading = oldHeading + (heading - oldHeading) * 0.4;
       speed *= 0.7;
     }
     move(pos, c.vx * dt, c.vz * dt, c.bike ? 0.55 : 1.25, c,
@@ -2938,6 +2939,7 @@ if (new URLSearchParams(location.search).has("test"))
         pitch: +c.pitch.toFixed(3), roll: +c.roll.toFixed(3),
         speed: +c.speed.toFixed(2),
         type: c.type, hp: c.hp, wrecked: !!c.wrecked,
+        wedged: blocked(pos, 0.55, c, { angle: heading, hw: c.hw, hl: c.hl }),
         dead, transition: !!transition, drivingType: driving?.type || null,
         keys: { Gas: !!keys.Gas, Steer: !!keys.SteerRight },
       };
