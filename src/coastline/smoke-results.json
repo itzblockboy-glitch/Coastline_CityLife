@@ -89,30 +89,30 @@
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 768,
-      "triangles": 1831683
+      "calls": 696,
+      "triangles": 1585490
     },
     "shadow map no larger than 1024 on mobile": {
       "renderScale": 1,
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 768,
-      "triangles": 1831683
+      "calls": 696,
+      "triangles": 1585490
     },
     "taxi accelerates forward, not backward": {
       "forwardFraction": 1,
-      "travelled": 7.98,
-      "alongForward": 7.98,
-      "speed": 7.34
+      "travelled": 8.25,
+      "alongForward": 8.25,
+      "speed": 7.48
     },
     "steering right turns right (heading decreases)": {
       "aim": {
         "heading": 0,
         "clear": 60
       },
-      "headingDelta": -0.986,
-      "speed": 9.55,
+      "headingDelta": -0.989,
+      "speed": 9.32,
       "heading": [
         0,
         0,
@@ -212,14 +212,14 @@
       "invulnerable": 3.9333
     },
     "car accelerates forward and steers right": {
-      "forwardFraction": 11.79,
-      "lateral": 2.1,
-      "headingDelta": -0.977,
+      "forwardFraction": 12.05,
+      "lateral": 2.38,
+      "headingDelta": -1.041,
       "pitch": 0.025,
       "roll": -0.257,
       "speed": 4.96,
-      "gasSpeed": 7.13,
-      "simSeconds": 2.65,
+      "gasSpeed": 7.22,
+      "simSeconds": 2.72,
       "overlay": false,
       "type": "sedan",
       "hp": 100,
@@ -238,14 +238,14 @@
       }
     },
     "suspension responds (pitch/roll move away from zero)": {
-      "forwardFraction": 11.79,
-      "lateral": 2.1,
-      "headingDelta": -0.977,
+      "forwardFraction": 12.05,
+      "lateral": 2.38,
+      "headingDelta": -1.041,
       "pitch": 0.025,
       "roll": -0.257,
       "speed": 4.96,
-      "gasSpeed": 7.13,
-      "simSeconds": 2.65,
+      "gasSpeed": 7.22,
+      "simSeconds": 2.72,
       "overlay": false,
       "type": "sedan",
       "hp": 100,
@@ -337,6 +337,8 @@
   "shots": [
     "screenshots/orient-taxi.png",
     "screenshots/orient-sedan-control.png",
+    "screenshots/orient-truck.png",
+    "screenshots/orient-coupe.png",
     "screenshots/v1.6-factories-222_-155.png",
     "screenshots/v1.6-factories-222_93.png",
     "screenshots/v1.6-construction-36_279.png",
@@ -417,11 +419,11 @@
     "taxi": [
       {
         "id": 8,
-        "rotY": -0.892,
-        "angle": -0.986,
+        "rotY": -0.929,
+        "angle": -1.027,
         "traffic": false,
-        "z": 215.9,
-        "roofDzWorld": -0.201,
+        "z": 215.5,
+        "roofDzWorld": -0.2,
         "bounds": {
           "minY": 0.08
         }
@@ -431,7 +433,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": -129.8,
+        "z": -129.4,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -442,7 +444,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 93.4,
+        "z": 93.9,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -453,7 +455,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 316.7,
+        "z": 317.2,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -463,11 +465,11 @@
     "sedan": [
       {
         "id": 11,
-        "rotY": -0.892,
-        "angle": -0.977,
+        "rotY": -0.955,
+        "angle": -1.041,
         "traffic": false,
         "z": -178.6,
-        "roofDzWorld": -0.382,
+        "roofDzWorld": -0.371,
         "bounds": {
           "minY": -0.14
         }
@@ -477,7 +479,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 29.2,
+        "z": 29.6,
         "roofDzWorld": -0.469,
         "bounds": {
           "minY": 0.12
@@ -488,7 +490,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 252.4,
+        "z": 252.9,
         "roofDzWorld": -0.469,
         "bounds": {
           "minY": 0.12
