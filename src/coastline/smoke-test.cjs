@@ -90,9 +90,15 @@ function check(name, ok, detail) {
   const fwd = [Math.sin(drive.before.heading), Math.cos(drive.before.heading)];
   const dx = drive.moving.position[0] - drive.before.position[0];
   const dz = drive.moving.position[2] - drive.before.position[2];
+  // Direction, not distance: the displacement must be almost entirely along the car's nose.
   const along = dx * fwd[0] + dz * fwd[1];
-  check("taxi accelerates forward, not backward", along > 2, {
-    alongForward: +along.toFixed(2), dx: +dx.toFixed(2), dz: +dz.toFixed(2), speed: drive.moving.speed,
+  const travelled = Math.hypot(dx, dz);
+  const forwardFraction = travelled > 0.05 ? along / travelled : 0;
+  check("taxi accelerates forward, not backward", travelled > 0.8 && forwardFraction > 0.9, {
+    forwardFraction: +forwardFraction.toFixed(3),
+    travelled: +travelled.toFixed(2),
+    alongForward: +along.toFixed(2),
+    speed: +drive.moving.speed.toFixed(2),
   });
   const dHeading = drive.turned.heading - drive.moving.heading;
   check("steering right turns right (heading decreases)", dHeading < -0.05, {

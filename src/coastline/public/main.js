@@ -753,7 +753,7 @@ function move(p, dx, dz, r, ignore = null, shape = null) {
   if (hit && p === pos && driving) speed *= 0.35;
   return !hit;
 }
-let nearest = null, freeCam = null;
+let nearest = null, freeCam = null, shadowFrame = 0;
 const audioNear = [], dirVec = new T.Vector3(), rayHit = new T.Vector3(), EMPTY = [];
 function enter(forced) {
   if (transition) return;
@@ -1828,6 +1828,12 @@ function tick(now) {
     adaptiveFrameRate(frames / fpsTime);
     fpsTime = 0;
     frames = 0;
+  }
+  // Shadow pass at half rate on mobile: it re-renders every caster, and one frame of lag is
+  // imperceptible for sun shadows while roughly halving that cost.
+  if (mobile && renderer.shadowMap.enabled) {
+    renderer.shadowMap.autoUpdate = false;
+    renderer.shadowMap.needsUpdate = ++shadowFrame % 2 === 0;
   }
   renderer.render(scene, camera);
 }
