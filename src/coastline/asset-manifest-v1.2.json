@@ -1,0 +1,310 @@
+[
+  {
+    "file": "public/assets/anims.glb",
+    "source": "https://raw.githubusercontent.com/mmmmoonwolf/ordinary-day/main/assets/characters/anims.glb",
+    "bytes": 1060892,
+    "sha256": "fd3df974847df77757d75f67838cabe7648b2d061b556cec9ea7b5416599daaf",
+    "license": "CC0-1.0"
+  },
+  {
+    "source": "User-uploaded icon-512.png",
+    "author": "Provided by the user",
+    "license": "User-supplied; no redistribution license inferred",
+    "modifications": "Resized, connected white outside corners made transparent.",
+    "file": "public/assets/app-icon.png",
+    "bytes": 27948,
+    "sha256": "7e7414bdced4cdc6552b04cf3996f255b45425e4e322c68e575f82ebb0dfa578"
+  },
+  {
+    "source": "https://polyhaven.com/a/aerial_asphalt_01",
+    "license": "CC0-1.0",
+    "author": "Poly Haven contributors",
+    "modifications": "512px JPEG conversion.",
+    "file": "public/assets/asphalt-normal.jpg",
+    "bytes": 20069,
+    "sha256": "81f17436f84601f4a0610da9bbdfb77720688a2bf86ea5d476b017ae3ba22b73"
+  },
+  {
+    "source": "https://polyhaven.com/a/aerial_asphalt_01",
+    "license": "CC0-1.0",
+    "author": "Poly Haven contributors",
+    "modifications": "512px JPEG conversion.",
+    "file": "public/assets/asphalt.jpg",
+    "bytes": 54788,
+    "sha256": "07bb42e78d7fc349b2881afc261f943b4b158060ed5fe4bfadc55cd539c46b13"
+  },
+  {
+    "source": "https://flockbay.com/assets/blaster-d/",
+    "download": "https://api.flockbay.com/bootstrap/library/models/v1/67201897edb3a23b6e7c7e8129d5f8ad0b804746ec46fd85141e78ff34424d25/blaster-d.glb",
+    "author": "Kenney, Blaster Kit",
+    "license": "CC0-1.0",
+    "modifications": "Embedded WebP atlas, resized as sidearm/carbine.",
+    "file": "public/assets/blaster-d.glb",
+    "bytes": 31368,
+    "sha256": "7e2523cfcdd3841190015903f8518e4ffd8f1a6dff01bf7b357a2779857b5f50"
+  },
+  {
+    "source": "https://flockbay.com/assets/blaster-g/",
+    "download": "https://api.flockbay.com/bootstrap/library/models/v1/58219505c625669095c13295857bcb6ad9ba4a5113c508c2af75d473ed745a90/blaster-g.glb",
+    "author": "Kenney, Blaster Kit",
+    "license": "CC0-1.0",
+    "modifications": "Embedded WebP atlas, resized as sidearm/carbine.",
+    "file": "public/assets/blaster-g.glb",
+    "bytes": 38448,
+    "sha256": "20beed33adb22f8c6a9fc0a971810227ccb86b02d2571b8569039c23af942ccc"
+  },
+  {
+    "file": "public/assets/building-small-a.glb",
+    "source": "https://raw.githubusercontent.com/mdabees/kenney-starter-kit-city-builder/main/models/building-small-a.glb",
+    "bytes": 49516,
+    "sha256": "a1f5d574f4962ab92fdcc7e95682d1fc0292b7b56fdbf571d013a1319fda24d6",
+    "license": "CC0-1.0",
+    "modifications": "Missing external colormap retrieved from same repository and embedded in GLB."
+  },
+  {
+    "file": "public/assets/building-small-b.glb",
+    "source": "https://raw.githubusercontent.com/mdabees/kenney-starter-kit-city-builder/main/models/building-small-b.glb",
+    "bytes": 59620,
+    "sha256": "2f66b5773acbf824e8d6990c086cf8283bc6890c131f407a7a0cfb2ac369228d",
+    "license": "CC0-1.0",
+    "modifications": "Missing external colormap retrieved from same repository and embedded in GLB."
+  },
+  {
+    "file": "public/assets/building-small-c.glb",
+    "source": "https://raw.githubusercontent.com/mdabees/kenney-starter-kit-city-builder/main/models/building-small-c.glb",
+    "bytes": 79936,
+    "sha256": "4604dcd532c91f6b61fde03477f5e1d30b4e4a40373114c5fa9b549ef5efd824",
+    "license": "CC0-1.0",
+    "modifications": "Missing external colormap retrieved from same repository and embedded in GLB."
+  },
+  {
+    "file": "public/assets/building-small-d.glb",
+    "source": "https://raw.githubusercontent.com/mdabees/kenney-starter-kit-city-builder/main/models/building-small-d.glb",
+    "bytes": 49204,
+    "sha256": "d2227ef1fd82dc079f3d1533d3f8fffdc654bea6957ce3f4ff6a98d5efb92a93",
+    "license": "CC0-1.0",
+    "modifications": "Missing external colormap retrieved from same repository and embedded in GLB."
+  },
+  {
+    "file": "public/assets/building-type-a.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/building-type-a.glb",
+    "bytes": 110408,
+    "sha256": "7db8129133cabd2f08ffe82f1cf9cf4b2cc0f1e3acb4e61d8801f9096d4d5951",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/building-type-b.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/building-type-b.glb",
+    "bytes": 158540,
+    "sha256": "1fe5a439c49ea03ff16447886a666f570bff91b434161f66318269e9458072c1",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/building-type-c.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/building-type-c.glb",
+    "bytes": 111408,
+    "sha256": "493bfc2549694e45f78dace0bf153d18405dc0c4f814a35b53e3ceca90063dae",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/building-type-d.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/building-type-d.glb",
+    "bytes": 159184,
+    "sha256": "4e2725e76296df83bf10aff2a7759c6b5bee9330bcb75a54be3f1c367a7226db",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/building-type-e.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/building-type-e.glb",
+    "bytes": 157316,
+    "sha256": "597abb163fb046e4c6c7fe9db14f12a4cc1ee86a545923d3b445454cad320461",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/building-type-f.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/building-type-f.glb",
+    "bytes": 150356,
+    "sha256": "ae47fa284a7fa8944ab679e4f92e08117e8d451a0af05020e3c5492533d8ca3f",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/building-type-g.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/building-type-g.glb",
+    "bytes": 105400,
+    "sha256": "42e50589564da6b6bb4ea82f3d427bb5cc4328789d92e284565f3ab12c09aae4",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/building-type-h.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/building-type-h.glb",
+    "bytes": 77168,
+    "sha256": "91b85006f171fa2c9d31a4bd2d00f580a589243c16eb4258ebfb429c0ec08433",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/building-type-i.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/building-type-i.glb",
+    "bytes": 81576,
+    "sha256": "2d3bfbc16043932263ea865fed22d24b4444b43a9403cdedebcaca197e42ac3d",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/building-type-j.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/building-type-j.glb",
+    "bytes": 111336,
+    "sha256": "ec237405cd0a0afa3aca50e980ab42cab6037568ff1381f9bfb4479dff8a6de9",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/building-type-k.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/building-type-k.glb",
+    "bytes": 100972,
+    "sha256": "ab6f90c609590e145fc179928a7e0ae02b8b4ff8b55cd8c7894e5137dbc7bdb2",
+    "license": "CC0-1.0"
+  },
+  {
+    "source": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CarConcept",
+    "license": "CC-BY-4.0; embedded trademarks excluded",
+    "author": "Eric Chadwick, Darmstadt Graphics Group GmbH, 2024 / Khronos Group",
+    "modifications": "Simplified mesh, 512px WebP textures; runtime hidden interior parts, simplified tinted glass and optional paint tint.",
+    "file": "public/assets/car-concept.glb",
+    "bytes": 2887560,
+    "sha256": "c43c7fdd1d5d46acb3dbd00e915520627ce007180f856f9c7cd902e231abde5a"
+  },
+  {
+    "source": "https://polyhaven.com/a/kloppenheim_06_puresky",
+    "license": "CC0-1.0",
+    "author": "Poly Haven contributors",
+    "modifications": "None; 1k HDR.",
+    "file": "public/assets/coast-sky.hdr",
+    "bytes": 1173154,
+    "sha256": "206c67e3a1b992282821cf06662bdd69bbb4915c1c4444a66338a40d6a7d4e34"
+  },
+  {
+    "source": "https://polyhaven.com/a/concrete_floor_02",
+    "license": "CC0-1.0",
+    "author": "Poly Haven contributors",
+    "modifications": "512px JPEG conversion.",
+    "file": "public/assets/concrete-normal.jpg",
+    "bytes": 25227,
+    "sha256": "79cada7e453b09d3bf2019ed8ca1637c5f0fddeb01c2772311c982fae5d013c8"
+  },
+  {
+    "source": "https://polyhaven.com/a/concrete_floor_02",
+    "license": "CC0-1.0",
+    "author": "Poly Haven contributors",
+    "modifications": "512px JPEG conversion.",
+    "file": "public/assets/concrete.jpg",
+    "bytes": 82186,
+    "sha256": "963046b72cbc12ba063cc0586d70b1428a7cd257ba91d6788a22a40727c27929"
+  },
+  {
+    "file": "public/assets/cone.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/GLB%20format/cone.glb",
+    "bytes": 29100,
+    "sha256": "7965fbffc6441ca6024273d1df2672dbb44758184305fb9dbad964b0090dcbfd",
+    "license": "CC0-1.0"
+  },
+  {
+    "source": "https://github.com/Arslan12216775/kenney_car-kit/tree/master/Models/GLB%20format",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "modifications": "Texture repacking to embedded WebP.",
+    "file": "public/assets/delivery.glb",
+    "bytes": 87296,
+    "sha256": "08fcea5fb9fa216366ce37003aa6cde01121770cee0611e7535ce250f2c36a6c"
+  },
+  {
+    "file": "public/assets/hatchback-sports.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/GLB%20format/hatchback-sports.glb",
+    "bytes": 210092,
+    "sha256": "56b5b2ef575a1f06bbda56e53198d435751dc84fb6eb4b50682aaddc959bd9f1",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/m_hoodie.glb",
+    "source": "https://raw.githubusercontent.com/mmmmoonwolf/ordinary-day/main/assets/characters/m_hoodie.glb",
+    "bytes": 324936,
+    "sha256": "e04db2e59e0b7430684b70ce16fa27b4863a22edf6d751aeb4e3d8291f5e949c",
+    "license": "CC0-1.0"
+  },
+  {
+    "source": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CesiumMilkTruck",
+    "license": "CC-BY-4.0; Cesium trademark excluded",
+    "author": "Cesium / Khronos glTF Sample Assets",
+    "modifications": "Textures resized/repacked to WebP, resized in game.",
+    "file": "public/assets/milk-truck.glb",
+    "bytes": 154316,
+    "sha256": "dd2b6b6ee556050faf62dfcdd3d6748c218a05325ba230f837a8f1024fb18e3c"
+  },
+  {
+    "source": "https://sketchfab.com/3d-models/motorcycle-d3077af5fcf8464c884c6c1d611ff69b",
+    "download": "https://www.get3dmodels.com/download/motorcycle_by_get3dmodels.glb",
+    "license": "CC-BY-4.0",
+    "author": "Chenchanchong (https://sketchfab.com/Chenchanchong)",
+    "modifications": "Simplified mesh and 512px WebP PBR textures, reoriented and resized.",
+    "file": "public/assets/motorcycle.glb",
+    "bytes": 1454912,
+    "sha256": "2e45a931bfb4c323779b934ccd74e315fda8c1a7c9ced354b50cd28059163c03"
+  },
+  {
+    "file": "public/assets/palm.glb",
+    "source": "https://raw.githubusercontent.com/Yuji5124/nexus/main/assets/lowpoly-trees/kenney_palm.glb",
+    "bytes": 36832,
+    "sha256": "4c3506598f7d0ce6ad61d2bed544b2e5b99e713d017b59fe24e5581599e907ed",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/sedan-sports.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/GLB%20format/sedan-sports.glb",
+    "bytes": 189920,
+    "sha256": "0a652b60fe02c98fc508d15a33c88ac43fca6ef959239e9e8310bcaa49604b0b",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/sedan.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/GLB%20format/sedan.glb",
+    "bytes": 184504,
+    "sha256": "f21b5f04b2f6139ab2a7ccb7a4e6381b19cd38c7943ef7a00d0e0f708e4f5af3",
+    "license": "CC0-1.0"
+  },
+  {
+    "source": "https://github.com/Arslan12216775/kenney_car-kit/tree/master/Models/GLB%20format",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "modifications": "Texture repacking to embedded WebP.",
+    "file": "public/assets/suv-luxury.glb",
+    "bytes": 75512,
+    "sha256": "15c284bcd816f39093cbfecbed3cc5587aa759b36be5f1d1ca3de17fcd7a1d1e"
+  },
+  {
+    "file": "public/assets/taxi.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/GLB%20format/taxi.glb",
+    "bytes": 187896,
+    "sha256": "67bf12301017c86c35e00a8bf1040990ddc2b4740c00f22b2be005fb3d25ace4",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/tree-large.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/tree-large.glb",
+    "bytes": 17624,
+    "sha256": "2496c3d6a9cf64cadac0411db3ab45ebb35c210b22304f644505d645b776753b",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "public/assets/tree-small.glb",
+    "source": "https://raw.githubusercontent.com/Arslan12216775/kenney_car-kit/master/Models/City/tree-small.glb",
+    "bytes": 17624,
+    "sha256": "ef910f73091c662f83d113f5c34a2fa98b5b2292ac0f09fb309893d0bca4f469",
+    "license": "CC0-1.0"
+  },
+  {
+    "source": "https://github.com/Arslan12216775/kenney_car-kit/tree/master/Models/GLB%20format",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "modifications": "Texture repacking to embedded WebP.",
+    "file": "public/assets/truck.glb",
+    "bytes": 75948,
+    "sha256": "39d113df84b123648af4236bb28d8688e1bba55e52b6e2850d8d1d964f7e3bdb"
+  }
+]

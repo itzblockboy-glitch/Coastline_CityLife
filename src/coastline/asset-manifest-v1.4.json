@@ -1,0 +1,267 @@
+{
+  "version": "1.4.0",
+  "newAssets": [
+    {
+      "file": "real-human.glb",
+      "title": "Rocketbox Male Adult 06 + selected mocap",
+      "author": "Microsoft / Rocketbox",
+      "license": "MIT",
+      "source": "https://github.com/microsoft/Microsoft-Rocketbox",
+      "paths": [
+        "Assets/Avatars/Adults/Male_Adult_06/Export/Male_Adult_06.fbx",
+        "Assets/Avatars/Adults/Male_Adult_06/Textures",
+        "Assets/Animations/all_animations_max_motextr_static/m_idle_neutral_01.max.fbx",
+        "Assets/Animations/all_animations_max_motextr_xy/m_walk_neutral.max.fbx",
+        "Assets/Animations/all_animations_max_motextr_xy/m_run_neutral.max.fbx"
+      ],
+      "changes": "FBX converted to GLB; source textures resized/recompressed; body bone names normalized; quaternion-only locomotion. Jump/punch/interaction/fire clips authored in game for this biped."
+    },
+    {
+      "file": "real-city.glb",
+      "title": "Original assembled apartment/factory buildings",
+      "author": "Source facade modules: James Ray Cock / Poly Haven; city assembly: Coastline",
+      "license": "CC0-1.0 source modules",
+      "sources": [
+        "https://polyhaven.com/a/modular_urban_apartments_facade",
+        "https://polyhaven.com/a/modular_factory_facade"
+      ],
+      "changes": "Selected downloaded glTF wall/window/door/cornice modules assembled into 6 closed building shells and separate far detail; source geometry decimated, source PBR maps resized/compressed. Added simple roof caps/parapets/roof plant geometry. Original placement/grid, no Rockstar content."
+    },
+    {
+      "file": "street-lamp.glb",
+      "author": "Josh Dean / Poly Haven",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/street_lamp_01",
+      "changes": "Downloaded glTF packaged as GLB, reduced maps."
+    },
+    {
+      "file": "real-palm.glb",
+      "title": "Palm Tree Realistic",
+      "author": "00amza",
+      "license": "CC-BY-4.0",
+      "source": "https://sketchfab.com/3d-models/palm-tree-realistic-ced3b31f14f940d0b7480a83e6f8c9c0",
+      "download": "https://github.com/ahmednnz85-debug/Sinz/blob/main/palm.glb",
+      "verification": "Embedded GLB author/license/source metadata matches original Sketchfab page. Mirror README names a different palm; do not attribute this file to Next Spring.",
+      "changes": "Texture resized to 1K, mesh deduplicated/welded, scale/placement changed."
+    }
+  ],
+  "retainedSources": "asset-manifest-v1.2.json",
+  "licenseNotices": "public/credits.html and public/licenses/",
+  "bundledFiles": [
+    {
+      "path": "public/assets/anims.glb",
+      "bytes": 1060892,
+      "sha256": "fd3df974847df77757d75f67838cabe7648b2d061b556cec9ea7b5416599daaf"
+    },
+    {
+      "path": "public/assets/app-icon.png",
+      "bytes": 27948,
+      "sha256": "7e7414bdced4cdc6552b04cf3996f255b45425e4e322c68e575f82ebb0dfa578"
+    },
+    {
+      "path": "public/assets/asphalt-normal.jpg",
+      "bytes": 20069,
+      "sha256": "81f17436f84601f4a0610da9bbdfb77720688a2bf86ea5d476b017ae3ba22b73"
+    },
+    {
+      "path": "public/assets/asphalt.jpg",
+      "bytes": 54788,
+      "sha256": "07bb42e78d7fc349b2881afc261f943b4b158060ed5fe4bfadc55cd539c46b13"
+    },
+    {
+      "path": "public/assets/blaster-d.glb",
+      "bytes": 31368,
+      "sha256": "7e2523cfcdd3841190015903f8518e4ffd8f1a6dff01bf7b357a2779857b5f50"
+    },
+    {
+      "path": "public/assets/blaster-g.glb",
+      "bytes": 38448,
+      "sha256": "20beed33adb22f8c6a9fc0a971810227ccb86b02d2571b8569039c23af942ccc"
+    },
+    {
+      "path": "public/assets/building-small-a.glb",
+      "bytes": 49516,
+      "sha256": "a1f5d574f4962ab92fdcc7e95682d1fc0292b7b56fdbf571d013a1319fda24d6"
+    },
+    {
+      "path": "public/assets/building-small-b.glb",
+      "bytes": 59620,
+      "sha256": "2f66b5773acbf824e8d6990c086cf8283bc6890c131f407a7a0cfb2ac369228d"
+    },
+    {
+      "path": "public/assets/building-small-c.glb",
+      "bytes": 79936,
+      "sha256": "4604dcd532c91f6b61fde03477f5e1d30b4e4a40373114c5fa9b549ef5efd824"
+    },
+    {
+      "path": "public/assets/building-small-d.glb",
+      "bytes": 49204,
+      "sha256": "d2227ef1fd82dc079f3d1533d3f8fffdc654bea6957ce3f4ff6a98d5efb92a93"
+    },
+    {
+      "path": "public/assets/building-type-a.glb",
+      "bytes": 110408,
+      "sha256": "7db8129133cabd2f08ffe82f1cf9cf4b2cc0f1e3acb4e61d8801f9096d4d5951"
+    },
+    {
+      "path": "public/assets/building-type-b.glb",
+      "bytes": 158540,
+      "sha256": "1fe5a439c49ea03ff16447886a666f570bff91b434161f66318269e9458072c1"
+    },
+    {
+      "path": "public/assets/building-type-c.glb",
+      "bytes": 111408,
+      "sha256": "493bfc2549694e45f78dace0bf153d18405dc0c4f814a35b53e3ceca90063dae"
+    },
+    {
+      "path": "public/assets/building-type-d.glb",
+      "bytes": 159184,
+      "sha256": "4e2725e76296df83bf10aff2a7759c6b5bee9330bcb75a54be3f1c367a7226db"
+    },
+    {
+      "path": "public/assets/building-type-e.glb",
+      "bytes": 157316,
+      "sha256": "597abb163fb046e4c6c7fe9db14f12a4cc1ee86a545923d3b445454cad320461"
+    },
+    {
+      "path": "public/assets/building-type-f.glb",
+      "bytes": 150356,
+      "sha256": "ae47fa284a7fa8944ab679e4f92e08117e8d451a0af05020e3c5492533d8ca3f"
+    },
+    {
+      "path": "public/assets/building-type-g.glb",
+      "bytes": 105400,
+      "sha256": "42e50589564da6b6bb4ea82f3d427bb5cc4328789d92e284565f3ab12c09aae4"
+    },
+    {
+      "path": "public/assets/building-type-h.glb",
+      "bytes": 77168,
+      "sha256": "91b85006f171fa2c9d31a4bd2d00f580a589243c16eb4258ebfb429c0ec08433"
+    },
+    {
+      "path": "public/assets/building-type-i.glb",
+      "bytes": 81576,
+      "sha256": "2d3bfbc16043932263ea865fed22d24b4444b43a9403cdedebcaca197e42ac3d"
+    },
+    {
+      "path": "public/assets/building-type-j.glb",
+      "bytes": 111336,
+      "sha256": "ec237405cd0a0afa3aca50e980ab42cab6037568ff1381f9bfb4479dff8a6de9"
+    },
+    {
+      "path": "public/assets/building-type-k.glb",
+      "bytes": 100972,
+      "sha256": "ab6f90c609590e145fc179928a7e0ae02b8b4ff8b55cd8c7894e5137dbc7bdb2"
+    },
+    {
+      "path": "public/assets/car-concept.glb",
+      "bytes": 2887560,
+      "sha256": "c43c7fdd1d5d46acb3dbd00e915520627ce007180f856f9c7cd902e231abde5a"
+    },
+    {
+      "path": "public/assets/coast-sky.hdr",
+      "bytes": 1173154,
+      "sha256": "206c67e3a1b992282821cf06662bdd69bbb4915c1c4444a66338a40d6a7d4e34"
+    },
+    {
+      "path": "public/assets/concrete-normal.jpg",
+      "bytes": 25227,
+      "sha256": "79cada7e453b09d3bf2019ed8ca1637c5f0fddeb01c2772311c982fae5d013c8"
+    },
+    {
+      "path": "public/assets/concrete.jpg",
+      "bytes": 82186,
+      "sha256": "963046b72cbc12ba063cc0586d70b1428a7cd257ba91d6788a22a40727c27929"
+    },
+    {
+      "path": "public/assets/cone.glb",
+      "bytes": 29100,
+      "sha256": "7965fbffc6441ca6024273d1df2672dbb44758184305fb9dbad964b0090dcbfd"
+    },
+    {
+      "path": "public/assets/delivery.glb",
+      "bytes": 87296,
+      "sha256": "08fcea5fb9fa216366ce37003aa6cde01121770cee0611e7535ce250f2c36a6c"
+    },
+    {
+      "path": "public/assets/hatchback-sports.glb",
+      "bytes": 210092,
+      "sha256": "56b5b2ef575a1f06bbda56e53198d435751dc84fb6eb4b50682aaddc959bd9f1"
+    },
+    {
+      "path": "public/assets/m_hoodie.glb",
+      "bytes": 324936,
+      "sha256": "e04db2e59e0b7430684b70ce16fa27b4863a22edf6d751aeb4e3d8291f5e949c"
+    },
+    {
+      "path": "public/assets/milk-truck.glb",
+      "bytes": 154316,
+      "sha256": "dd2b6b6ee556050faf62dfcdd3d6748c218a05325ba230f837a8f1024fb18e3c"
+    },
+    {
+      "path": "public/assets/motorcycle.glb",
+      "bytes": 1454912,
+      "sha256": "2e45a931bfb4c323779b934ccd74e315fda8c1a7c9ced354b50cd28059163c03"
+    },
+    {
+      "path": "public/assets/palm.glb",
+      "bytes": 36832,
+      "sha256": "4c3506598f7d0ce6ad61d2bed544b2e5b99e713d017b59fe24e5581599e907ed"
+    },
+    {
+      "path": "public/assets/real-city.glb",
+      "bytes": 13662188,
+      "sha256": "4b9684a77594ce2986c7b7f2f2456d77689fdb5d65cc7705ddce5183e43f2ed1"
+    },
+    {
+      "path": "public/assets/real-human.glb",
+      "bytes": 2737580,
+      "sha256": "3eb1f1781b738b0fff033714c8a8aab018dde546817e340ddd57fad1144ccb8f"
+    },
+    {
+      "path": "public/assets/real-palm.glb",
+      "bytes": 1282068,
+      "sha256": "ea4471c40c7e04eaf22670e259604c2a1130237429c20b6fc2a072c155759fb3"
+    },
+    {
+      "path": "public/assets/sedan-sports.glb",
+      "bytes": 189920,
+      "sha256": "0a652b60fe02c98fc508d15a33c88ac43fca6ef959239e9e8310bcaa49604b0b"
+    },
+    {
+      "path": "public/assets/sedan.glb",
+      "bytes": 184504,
+      "sha256": "f21b5f04b2f6139ab2a7ccb7a4e6381b19cd38c7943ef7a00d0e0f708e4f5af3"
+    },
+    {
+      "path": "public/assets/street-lamp.glb",
+      "bytes": 1148508,
+      "sha256": "018dc84017c49cc3866c8827722bfb254bcb8626bcac41e3df4d635bca4d8c92"
+    },
+    {
+      "path": "public/assets/suv-luxury.glb",
+      "bytes": 75512,
+      "sha256": "15c284bcd816f39093cbfecbed3cc5587aa759b36be5f1d1ca3de17fcd7a1d1e"
+    },
+    {
+      "path": "public/assets/taxi.glb",
+      "bytes": 187896,
+      "sha256": "67bf12301017c86c35e00a8bf1040990ddc2b4740c00f22b2be005fb3d25ace4"
+    },
+    {
+      "path": "public/assets/tree-large.glb",
+      "bytes": 17624,
+      "sha256": "2496c3d6a9cf64cadac0411db3ab45ebb35c210b22304f644505d645b776753b"
+    },
+    {
+      "path": "public/assets/tree-small.glb",
+      "bytes": 17624,
+      "sha256": "ef910f73091c662f83d113f5c34a2fa98b5b2292ac0f09fb309893d0bca4f469"
+    },
+    {
+      "path": "public/assets/truck.glb",
+      "bytes": 75948,
+      "sha256": "39d113df84b123648af4236bb28d8688e1bba55e52b6e2850d8d1d964f7e3bdb"
+    }
+  ]
+}

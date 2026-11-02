@@ -1,0 +1,14 @@
+diff --git a/android/AndroidManifest.xml b/android/AndroidManifest.xml
+index 30c77e5..2e92682 100644
+--- a/android/AndroidManifest.xml
++++ b/android/AndroidManifest.xml
+@@ -2,7 +2,7 @@
+ <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35" />
+ <uses-permission android:name="android.permission.INTERNET"/><uses-permission android:name="android.permission.RECORD_AUDIO"/><uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+ <uses-feature android:glEsVersion="0x00030000" android:required="true"/><uses-feature android:name="android.hardware.microphone" android:required="false"/>
+-<application android:label="Coastline" android:icon="@drawable/icon" android:theme="@android:style/Theme.Material.NoActionBar" android:hardwareAccelerated="true" android:usesCleartextTraffic="false" android:allowBackup="false" android:supportsRtl="true">
++<application android:label="Coastline" android:icon="@drawable/icon" android:appCategory="game" android:theme="@android:style/Theme.Material.NoActionBar" android:hardwareAccelerated="true" android:usesCleartextTraffic="false" android:allowBackup="false" android:supportsRtl="true">
+ <activity android:name=".MainActivity" android:exported="true" android:screenOrientation="sensorLandscape" android:configChanges="orientation|screenSize|keyboardHidden|uiMode" android:resizeableActivity="true">
+-<intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
++<intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/><category android:name="android.intent.category.GAME"/></intent-filter>
+ </activity></application></manifest>

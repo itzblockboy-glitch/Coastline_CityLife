@@ -1,0 +1,382 @@
+{
+  "version": "1.5.0",
+  "newSketchfabAssets": [
+    {
+      "downloadPath": "cops/police.glb",
+      "download": "https://raw.githubusercontent.com/brcdynolab168-bit/City-builder-3d_DEMO/main/src/models/cops/police.glb",
+      "originalMetadata": {
+        "extras": {
+          "author": "Alihan (https://sketchfab.com/BenAlihan)",
+          "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+          "source": "https://sketchfab.com/3d-models/police-8f939bfdf22f476d91f480f4d6f5d72a",
+          "title": "Police"
+        },
+        "generator": "Sketchfab-16.68.0",
+        "version": "2.0"
+      },
+      "originalBytes": 1566084,
+      "changes": "Converted, empty mesh bindings removed where needed, meter fitting/texture reduction; police character retargeted and simplified; police car made static/simplified. Generic car classes reuse minivan for utility/delivery and coupe for main coupe."
+    },
+    {
+      "downloadPath": "police/police_car.glb",
+      "download": "https://raw.githubusercontent.com/brcdynolab168-bit/City-builder-3d_DEMO/main/src/models/police/police_car.glb",
+      "originalMetadata": {
+        "extras": {
+          "author": "Mateusz Woli\u0144ski (https://sketchfab.com/jeandiz)",
+          "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+          "source": "https://sketchfab.com/3d-models/police-car-9166b13b6ae341f4bfc093edb71d74f4",
+          "title": "Police car"
+        },
+        "generator": "Sketchfab-16.62.0",
+        "version": "2.0"
+      },
+      "originalBytes": 7687872,
+      "changes": "Converted, empty mesh bindings removed where needed, meter fitting/texture reduction; police character retargeted and simplified; police car made static/simplified. Generic car classes reuse minivan for utility/delivery and coupe for main coupe."
+    },
+    {
+      "downloadPath": "cars/compact.glb",
+      "download": "https://raw.githubusercontent.com/brcdynolab168-bit/City-builder-3d_DEMO/main/src/models/cars/compact.glb",
+      "originalMetadata": {
+        "extras": {
+          "author": "Comrade1280 (https://sketchfab.com/comrade1280)",
+          "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+          "source": "https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5",
+          "title": "Generic passenger car pack"
+        },
+        "generator": "Sketchfab-12.68.0",
+        "version": "2.0"
+      },
+      "originalBytes": 515112,
+      "changes": "Converted, empty mesh bindings removed where needed, meter fitting/texture reduction; police character retargeted and simplified; police car made static/simplified. Generic car classes reuse minivan for utility/delivery and coupe for main coupe."
+    },
+    {
+      "downloadPath": "cars/coupe.glb",
+      "download": "https://raw.githubusercontent.com/brcdynolab168-bit/City-builder-3d_DEMO/main/src/models/cars/coupe.glb",
+      "originalMetadata": {
+        "extras": {
+          "author": "Comrade1280 (https://sketchfab.com/comrade1280)",
+          "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+          "source": "https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5",
+          "title": "Generic passenger car pack"
+        },
+        "generator": "Sketchfab-12.68.0",
+        "version": "2.0"
+      },
+      "originalBytes": 479208,
+      "changes": "Converted, empty mesh bindings removed where needed, meter fitting/texture reduction; police character retargeted and simplified; police car made static/simplified. Generic car classes reuse minivan for utility/delivery and coupe for main coupe."
+    },
+    {
+      "downloadPath": "cars/hatchback.glb",
+      "download": "https://raw.githubusercontent.com/brcdynolab168-bit/City-builder-3d_DEMO/main/src/models/cars/hatchback.glb",
+      "originalMetadata": {
+        "extras": {
+          "author": "Comrade1280 (https://sketchfab.com/comrade1280)",
+          "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+          "source": "https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5",
+          "title": "Generic passenger car pack"
+        },
+        "generator": "Sketchfab-12.68.0",
+        "version": "2.0"
+      },
+      "originalBytes": 509760,
+      "changes": "Converted, empty mesh bindings removed where needed, meter fitting/texture reduction; police character retargeted and simplified; police car made static/simplified. Generic car classes reuse minivan for utility/delivery and coupe for main coupe."
+    },
+    {
+      "downloadPath": "cars/sedan.glb",
+      "download": "https://raw.githubusercontent.com/brcdynolab168-bit/City-builder-3d_DEMO/main/src/models/cars/sedan.glb",
+      "originalMetadata": {
+        "extras": {
+          "author": "Comrade1280 (https://sketchfab.com/comrade1280)",
+          "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+          "source": "https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5",
+          "title": "Generic passenger car pack"
+        },
+        "generator": "Sketchfab-12.68.0",
+        "version": "2.0"
+      },
+      "originalBytes": 541780,
+      "changes": "Converted, empty mesh bindings removed where needed, meter fitting/texture reduction; police character retargeted and simplified; police car made static/simplified. Generic car classes reuse minivan for utility/delivery and coupe for main coupe."
+    },
+    {
+      "downloadPath": "cars/suv.glb",
+      "download": "https://raw.githubusercontent.com/brcdynolab168-bit/City-builder-3d_DEMO/main/src/models/cars/suv.glb",
+      "originalMetadata": {
+        "extras": {
+          "author": "Comrade1280 (https://sketchfab.com/comrade1280)",
+          "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+          "source": "https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5",
+          "title": "Generic passenger car pack"
+        },
+        "generator": "Sketchfab-12.68.0",
+        "version": "2.0"
+      },
+      "originalBytes": 569972,
+      "changes": "Converted, empty mesh bindings removed where needed, meter fitting/texture reduction; police character retargeted and simplified; police car made static/simplified. Generic car classes reuse minivan for utility/delivery and coupe for main coupe."
+    },
+    {
+      "downloadPath": "cars/pickup.glb",
+      "download": "https://raw.githubusercontent.com/brcdynolab168-bit/City-builder-3d_DEMO/main/src/models/cars/pickup.glb",
+      "originalMetadata": {
+        "extras": {
+          "author": "Comrade1280 (https://sketchfab.com/comrade1280)",
+          "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+          "source": "https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5",
+          "title": "Generic passenger car pack"
+        },
+        "generator": "Sketchfab-12.68.0",
+        "version": "2.0"
+      },
+      "originalBytes": 524080,
+      "changes": "Converted, empty mesh bindings removed where needed, meter fitting/texture reduction; police character retargeted and simplified; police car made static/simplified. Generic car classes reuse minivan for utility/delivery and coupe for main coupe."
+    },
+    {
+      "downloadPath": "cars/minivan.glb",
+      "download": "https://raw.githubusercontent.com/brcdynolab168-bit/City-builder-3d_DEMO/main/src/models/cars/minivan.glb",
+      "originalMetadata": {
+        "extras": {
+          "author": "Comrade1280 (https://sketchfab.com/comrade1280)",
+          "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+          "source": "https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5",
+          "title": "Generic passenger car pack"
+        },
+        "generator": "Sketchfab-12.68.0",
+        "version": "2.0"
+      },
+      "originalBytes": 529788,
+      "changes": "Converted, empty mesh bindings removed where needed, meter fitting/texture reduction; police character retargeted and simplified; police car made static/simplified. Generic car classes reuse minivan for utility/delivery and coupe for main coupe."
+    },
+    {
+      "downloadPath": "taxis/taxi.glb",
+      "download": "https://raw.githubusercontent.com/brcdynolab168-bit/City-builder-3d_DEMO/main/src/models/taxis/taxi.glb",
+      "originalMetadata": {
+        "extras": {
+          "author": "solid3DDD (https://sketchfab.com/solid3ddd)",
+          "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+          "source": "https://sketchfab.com/3d-models/taxi-2-0b5310fbf2c14b3e807c63f2ee1ca7bf",
+          "title": "Taxi 2"
+        },
+        "generator": "Sketchfab-16.72.0",
+        "version": "2.0"
+      },
+      "originalBytes": 929708,
+      "changes": "Converted, empty mesh bindings removed where needed, meter fitting/texture reduction; police character retargeted and simplified; police car made static/simplified. Generic car classes reuse minivan for utility/delivery and coupe for main coupe."
+    }
+  ],
+  "newRocketboxAvatars": [
+    "Male_Adult_01",
+    "Male_Adult_10",
+    "Male_Adult_16",
+    "Female_Adult_07"
+  ],
+  "avatarSource": "https://github.com/microsoft/Microsoft-Rocketbox",
+  "avatarLicense": "MIT",
+  "avatarChanges": "512px source maps, FBX to GLB, target-basis direction retargeting, runtime outfit palettes and fixed width/depth variations.",
+  "retainedSources": "asset-manifest-v1.4.json and asset-manifest-v1.2.json (historical; unused older models removed from this release)",
+  "cityChange": "Meshopt geometry compression; offline decoder bundled and licensed.",
+  "vehicleMeters": {
+    "car-concept": {
+      "length": 4.65,
+      "width": 2.0,
+      "height": 1.247080439082722,
+      "sourceFile": "cars/coupe.glb"
+    },
+    "suv-luxury": {
+      "length": 4.9,
+      "width": 2.1976767776825237,
+      "height": 1.8416316132815356,
+      "sourceFile": "cars/suv.glb"
+    },
+    "delivery": {
+      "length": 5.0,
+      "width": 2.0489875533647703,
+      "height": 1.9082769102249553,
+      "sourceFile": "cars/minivan.glb"
+    },
+    "truck": {
+      "length": 5.35,
+      "width": 2.1383357454072125,
+      "height": 1.7528318872393651,
+      "sourceFile": "cars/pickup.glb"
+    },
+    "milk-truck": {
+      "length": 5.1,
+      "width": 2.089967304432066,
+      "height": 1.9464424484294542,
+      "sourceFile": "cars/minivan.glb"
+    },
+    "sedan": {
+      "length": 4.7,
+      "width": 2.09572551119088,
+      "height": 1.4467342668079732,
+      "sourceFile": "cars/sedan.glb"
+    },
+    "sedan-sports": {
+      "length": 4.45,
+      "width": 2.197949384524068,
+      "height": 1.7965631566351299,
+      "sourceFile": "cars/compact.glb"
+    },
+    "hatchback-sports": {
+      "length": 4.2,
+      "width": 1.871938199755845,
+      "height": 1.4313952465455217,
+      "sourceFile": "cars/hatchback.glb"
+    },
+    "taxi": {
+      "length": 4.85,
+      "width": 2.167183431208807,
+      "height": 1.8390083417107064,
+      "sourceFile": "taxis/taxi.glb"
+    },
+    "police-car": {
+      "length": 5.25,
+      "width": 2.055642558599487,
+      "height": 2.354741564155939,
+      "sourceFile": "police/police_car.glb"
+    }
+  },
+  "motorcycleLengthMeters": 2.22,
+  "soundEffects": "Original procedural synthesis; no samples or recordings.",
+  "bundledFiles": [
+    {
+      "path": "public/assets/app-icon.png",
+      "bytes": 27948,
+      "sha256": "7e7414bdced4cdc6552b04cf3996f255b45425e4e322c68e575f82ebb0dfa578"
+    },
+    {
+      "path": "public/assets/asphalt-normal.jpg",
+      "bytes": 20069,
+      "sha256": "81f17436f84601f4a0610da9bbdfb77720688a2bf86ea5d476b017ae3ba22b73"
+    },
+    {
+      "path": "public/assets/asphalt.jpg",
+      "bytes": 54788,
+      "sha256": "07bb42e78d7fc349b2881afc261f943b4b158060ed5fe4bfadc55cd539c46b13"
+    },
+    {
+      "path": "public/assets/blaster-d.glb",
+      "bytes": 31368,
+      "sha256": "7e2523cfcdd3841190015903f8518e4ffd8f1a6dff01bf7b357a2779857b5f50"
+    },
+    {
+      "path": "public/assets/blaster-g.glb",
+      "bytes": 38448,
+      "sha256": "20beed33adb22f8c6a9fc0a971810227ccb86b02d2571b8569039c23af942ccc"
+    },
+    {
+      "path": "public/assets/car-concept.glb",
+      "bytes": 282584,
+      "sha256": "0bc0caaa59eace750984f68105a3fc7741947bfd7ca5528a95bff8c06202e399"
+    },
+    {
+      "path": "public/assets/coast-sky.hdr",
+      "bytes": 1173154,
+      "sha256": "206c67e3a1b992282821cf06662bdd69bbb4915c1c4444a66338a40d6a7d4e34"
+    },
+    {
+      "path": "public/assets/concrete-normal.jpg",
+      "bytes": 25227,
+      "sha256": "79cada7e453b09d3bf2019ed8ca1637c5f0fddeb01c2772311c982fae5d013c8"
+    },
+    {
+      "path": "public/assets/concrete.jpg",
+      "bytes": 82186,
+      "sha256": "963046b72cbc12ba063cc0586d70b1428a7cd257ba91d6788a22a40727c27929"
+    },
+    {
+      "path": "public/assets/delivery.glb",
+      "bytes": 323444,
+      "sha256": "0bf50b8dbac68b9cc9a3d7d1c46e46d4bb8e3eefaf35451dcef1c4ae10e92f05"
+    },
+    {
+      "path": "public/assets/hatchback-sports.glb",
+      "bytes": 304448,
+      "sha256": "8c2bada0dafdc629a926548ff8c21fe7642e551ad9572a79e01ca967c6f0f9c2"
+    },
+    {
+      "path": "public/assets/milk-truck.glb",
+      "bytes": 323448,
+      "sha256": "eb64d7d791c3d6fdb19e8672f3728c133c7fbea527cf3eb8d055167f586fabe1"
+    },
+    {
+      "path": "public/assets/motorcycle.glb",
+      "bytes": 1454912,
+      "sha256": "2e45a931bfb4c323779b934ccd74e315fda8c1a7c9ced354b50cd28059163c03"
+    },
+    {
+      "path": "public/assets/npc-female_adult_07.glb",
+      "bytes": 983844,
+      "sha256": "81691f72a8dbd973cc39fe4ba43f3271dcf88a8ca54b3f4ecebf405af85a757c"
+    },
+    {
+      "path": "public/assets/npc-male_adult_01.glb",
+      "bytes": 984432,
+      "sha256": "199c8bfffdba8ea9381ddb089fa66597387801e746dbd8be9187b0aa8e8a9e02"
+    },
+    {
+      "path": "public/assets/npc-male_adult_10.glb",
+      "bytes": 868936,
+      "sha256": "ac1d5583b066b6b819de2f4974b35a7dc3a82a0c1da06355ce0210077ddbface"
+    },
+    {
+      "path": "public/assets/npc-male_adult_16.glb",
+      "bytes": 569480,
+      "sha256": "631ee5484d2c1d3b6e488d0f04822fb1851bb9e80448f5d97569c297e780e97d"
+    },
+    {
+      "path": "public/assets/npc-police.glb",
+      "bytes": 893868,
+      "sha256": "8856b926f0dfb176a57e06574fb3944198959580d33eb8bb3f5ec2ffaa38af72"
+    },
+    {
+      "path": "public/assets/police-car.glb",
+      "bytes": 775228,
+      "sha256": "c6c3ec19c11bfcac083703da9c8eef89f585b808dc5c447a4b80362a93c1b095"
+    },
+    {
+      "path": "public/assets/real-city.glb",
+      "bytes": 8142692,
+      "sha256": "6ddb1d9d45a8d7ed12b792a9c37b0184e5adb5a25e0f4f4903a396a82773f261"
+    },
+    {
+      "path": "public/assets/real-human.glb",
+      "bytes": 2737580,
+      "sha256": "3eb1f1781b738b0fff033714c8a8aab018dde546817e340ddd57fad1144ccb8f"
+    },
+    {
+      "path": "public/assets/real-palm.glb",
+      "bytes": 1282068,
+      "sha256": "ea4471c40c7e04eaf22670e259604c2a1130237429c20b6fc2a072c155759fb3"
+    },
+    {
+      "path": "public/assets/sedan-sports.glb",
+      "bytes": 309724,
+      "sha256": "a393f1ef38a92788fa56f180a65548741c3acb4f85185c34a16e1adaf6de298f"
+    },
+    {
+      "path": "public/assets/sedan.glb",
+      "bytes": 332004,
+      "sha256": "7588bb027407d1f1d0cbec6188803d2d3236d8dfe45b3287fac4574e2da6c0c8"
+    },
+    {
+      "path": "public/assets/street-lamp.glb",
+      "bytes": 1148508,
+      "sha256": "018dc84017c49cc3866c8827722bfb254bcb8626bcac41e3df4d635bca4d8c92"
+    },
+    {
+      "path": "public/assets/suv-luxury.glb",
+      "bytes": 362084,
+      "sha256": "579a169f40a2d6ecd84ea24050febd0661914c54885ee256efffbd2c1300ecdb"
+    },
+    {
+      "path": "public/assets/taxi.glb",
+      "bytes": 775960,
+      "sha256": "727e996e2dd03538f2a391115c94ab5a70fe38887c1d8c841a40ffa363ec6c64"
+    },
+    {
+      "path": "public/assets/truck.glb",
+      "bytes": 323448,
+      "sha256": "a1ab90d7844f8114b1cf0a7ff8f6141ac01cdf0df59152922f916137840b7164"
+    }
+  ]
+}

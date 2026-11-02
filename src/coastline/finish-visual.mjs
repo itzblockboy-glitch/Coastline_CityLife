@@ -1,0 +1,3 @@
+import {NodeIO} from '@gltf-transform/core';import{ALL_EXTENSIONS}from'@gltf-transform/extensions';import{prune,dedup,weld,textureCompress}from'@gltf-transform/functions';import sharp from'sharp';const io=new NodeIO().registerExtensions(ALL_EXTENSIONS);
+const d=await io.read('visual-sources/real-palm.glb');await d.transform(prune(),dedup(),weld(),textureCompress({encoder:sharp,targetFormat:'png',resize:[1024,1024]}));await io.write('public/assets/real-palm.glb',d);
+const l=await io.read('public/assets/street-lamp.glb');await l.transform(prune(),dedup(),textureCompress({encoder:sharp,targetFormat:'jpeg',quality:80,resize:[512,512]}));await io.write('public/assets/street-lamp.glb',l);
