@@ -305,6 +305,16 @@ try {
     }
   }
   await prepareMaterials();
+  // Grazing-angle texture quality without extra draw cost; matters more once renderScale drops.
+  const aniso = Math.min(4, renderer.capabilities.getMaxAnisotropy());
+  scene.traverse((o) => {
+    if (!o.isMesh || Array.isArray(o.material)) return;
+    for (const m of [o.material]) {
+      for (const k of ["map", "normalMap", "roughnessMap"]) {
+        if (m[k] && m[k].anisotropy !== aniso) { m[k].anisotropy = aniso; m[k].needsUpdate = true; }
+      }
+    }
+  });
   for (let xi = 0; xi < roadsX.length - 1; xi++)
     for (let zi = 0; zi < roadsZ.length - 1; zi++) {
       let cx = (roadsX[xi] + roadsX[xi + 1]) / 2,

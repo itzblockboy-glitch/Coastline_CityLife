@@ -13,6 +13,7 @@ ATTR_NAMES = {
     0x0101020C: "android:minSdkVersion",
     0x01010270: "android:targetSdkVersion",
     0x01010545: "android:appCategory",
+    0x010103F4: "android:isGame",
 }
 DATATYPE_STR = 0x03
 DATATYPE_INT = 0x10
@@ -110,6 +111,13 @@ def main(path):
     assert "android:appCategory" in app_attrs, "appCategory missing"
     assert app_attrs["android:appCategory"] == 0, \
         "appCategory is %r, expected 0 == ApplicationInfo.CATEGORY_GAME" % app_attrs["android:appCategory"]
+    # AOSP's own game classifier reads isGame (ApplicationInfo.FLAG_IS_GAME); appCategory alone
+    # is not enough for many OEM boosters.
+    assert app_attrs.get("android:isGame") == "true", \
+        "isGame is %r, expected true" % app_attrs.get("android:isGame")
+    meta = [a for _l, tag, attrs in elements if tag == "meta-data"
+            for n, v, _ in attrs if n == "android:name" and v == "android.game_mode_config"]
+    print("game_mode_config meta-data:", "present" if meta else "absent (API < 33 jar)")
     cats = []
     for _l, tag, attrs in elements:
         if tag == "category":
@@ -129,7 +137,8 @@ def main(path):
     assert "android.intent.category.GAME" in cats, "GAME category missing"
     assert "android.intent.action.MAIN" in acts, "MAIN action missing"
     print()
-    print("PASS: appCategory = 0 (CATEGORY_GAME), LAUNCHER + GAME categories, MAIN action intact")
+    print("PASS: appCategory = 0 (CATEGORY_GAME), isGame = true, LAUNCHER + GAME categories, "
+          "MAIN action intact")
 
 
 if __name__ == "__main__":

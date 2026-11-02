@@ -4,4 +4,5 @@ src/coastline/android/assets/www/
 src/coastline/android-tools/
 dist/
 !dist/Coastline-CityLife-v1.5-game.apk
+!dist/Coastline-CityLife-v1.6-game.apk
 !dist/verification.txt
