@@ -175,13 +175,23 @@ function check(name, ok, detail) {
   await page.evaluate(() => coastlineTest.board("car-concept"));
   await page.waitForFunction(() => coastlineTest.getState().vehicle === "car-concept", null, { timeout: 60000 });
   const probe = await page.evaluate(() => coastlineTest.driveProbe());
+  if (!probe || !(probe.forwardFraction > 3)) console.error("drive probe:", JSON.stringify(probe));
   check("car accelerates forward and steers right", probe && probe.forwardFraction > 3 && probe.headingDelta < -0.05, probe);
   check("suspension responds (pitch/roll move away from zero)",
     probe && (Math.abs(probe.pitch) > 0.002 || Math.abs(probe.roll) > 0.002), probe);
 
   const fixes = await page.evaluate(() => coastlineTest.facingFixes());
-  check("taxi facing correction is applied automatically", Math.abs((fixes.taxi || 0) - Math.PI) < 0.01,
-    fixes);
+  const report = await page.evaluate(() => coastlineTest.facingReport());
+  results.facing = { fixes, report };
+  // The taxi is authored facing -Z (its root carries a pure 180 deg Y rotation) and is the vehicle
+  // the user reported reversing, so it is the one pinned by name. Everything else only has to be
+  // an unambiguous half turn or nothing at all - never a half-applied angle.
+  const angles = Object.values(fixes);
+  check("taxi is rotated 180 deg, and every correction is exactly 0 or 180",
+    Math.abs((fixes.taxi || 0) - Math.PI) < 0.01 &&
+    angles.every((a) => Math.abs(a) < 0.01 || Math.abs(Math.abs(a) - Math.PI) < 0.01) &&
+    Object.entries(report).every(([k, r]) => r.pureYFlip === (Math.abs(fixes[k] || 0) > 0.01)),
+    { fixes, report });
 
   // --- 10. Vehicle orientation diagnostics (visual ground truth) -------------------------
   // Capture a traffic taxi and a traffic sedan from in front of their travel direction (+Z).

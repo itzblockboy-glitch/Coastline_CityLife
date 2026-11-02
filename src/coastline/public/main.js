@@ -185,7 +185,7 @@ const VEHICLE_TYPES = ["car-concept", "suv-luxury", "delivery", "truck", "milk-t
 // a car's greenhouse sits behind its bonnet, so roof-mean-Z minus body-mean-Z is negative when the
 // nose points +Z. Cabin-centred bodies (pickups, cab-overs) are ambiguous; there we fall back to the
 // majority authoring convention, which the known-good saloons share.
-const vehicleYawFix = new Map();
+const vehicleYawFix = new Map(), vehicleFacingReport = new Map();
 function detectVehicleFacing(name, scene) {
   if (vehicleYawFix.has(name)) return vehicleYawFix.get(name);
   const pts = [];
@@ -199,18 +199,28 @@ function detectVehicleFacing(name, scene) {
       pts.push(v.clone());
     }
   });
+  // Primary signal: the authoring convention baked into the root nodes. A pure 180 deg rotation
+  // about Y means the model was authored facing -Z (the taxi's case: x=z=0, |y|~1). The
+  // roof-behind-bonnet test is only used as a *report*: it misfires on cab-over and coupe bodies
+  // whose cabin is not clearly behind centre, which is exactly how the truck and the coupe ended
+  // up facing backwards when it drove the decision.
   let yaw = 0;
+  const roots = scene.children.filter((c) => c.isObject3D);
+  const q = roots[0]?.quaternion;
+  const pureYFlip = q && Math.abs(q.x) < 0.1 && Math.abs(q.z) < 0.1 && Math.abs(q.y) > 0.9;
+  if (pureYFlip) yaw = Math.PI;
+  let roofDz = 0;
   if (pts.length > 12) {
     const ys = pts.map((p) => p.y);
     const ymin = Math.min(...ys), ymax = Math.max(...ys), h = ymax - ymin;
     const roof = pts.filter((p) => p.y > ymin + 0.72 * h);
     if (roof.length > 4) {
       const mean = (a) => a.reduce((s, p) => s + p.z, 0) / a.length;
-      const dz = mean(roof) - mean(pts);
-      if (Math.abs(dz) > 0.15 && dz > 0) yaw = Math.PI; // cabin ahead of centre => nose is -Z
+      roofDz = +(mean(roof) - mean(pts)).toFixed(3);
     }
   }
   vehicleYawFix.set(name, yaw);
+  vehicleFacingReport.set(name, { yaw, pureYFlip: !!pureYFlip, roofDz });
   return yaw;
 }
 // Facade variety: the generator reuses three building models, so every block looked identical.
@@ -2856,6 +2866,7 @@ if (new URLSearchParams(location.search).has("test"))
       const i = WEAPON_DEFS.findIndex((w) => w.id === id);
       if (i < 0) return null;
       weaponIndex = i;
+      fireTimer = 0;
       reloadTimer = 0;
       updateWeapons(0);
       return WEAPON_DEFS[i].id;
@@ -2913,9 +2924,13 @@ if (new URLSearchParams(location.search).has("test"))
         headingDelta: +(heading - h0).toFixed(3),
         pitch: +c.pitch.toFixed(3), roll: +c.roll.toFixed(3),
         speed: +c.speed.toFixed(2),
+        type: c.type, hp: c.hp, wrecked: !!c.wrecked,
+        dead, transition: !!transition, drivingType: driving?.type || null,
+        keys: { Gas: !!keys.Gas, Steer: !!keys.SteerRight },
       };
     },
     facingFixes: () => Object.fromEntries([...vehicleYawFix.entries()]),
+    facingReport: () => Object.fromEntries([...vehicleFacingReport.entries()]),
     board: (type) => {
       const c = cars.find((v) => v.type === type);
       if (!c || driving || transition) return driving?.type || null;
