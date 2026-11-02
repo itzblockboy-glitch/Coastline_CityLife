@@ -89,25 +89,25 @@
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 635,
-      "triangles": 1418971
+      "calls": 774,
+      "triangles": 1837198
     },
     "shadow map no larger than 1024 on mobile": {
       "renderScale": 1,
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 635,
-      "triangles": 1418971
+      "calls": 774,
+      "triangles": 1837198
     },
     "taxi accelerates forward, not backward": {
       "forwardFraction": 1,
-      "travelled": 1.19,
-      "alongForward": 1.19,
-      "speed": 5.03
+      "travelled": 1.27,
+      "alongForward": 1.27,
+      "speed": 5.23
     },
     "steering right turns right (heading decreases)": {
-      "headingDelta": -0.061
+      "headingDelta": -0.096
     },
     "police light bars sit on the roof": {
       "sample": [
@@ -137,8 +137,8 @@
   "errors": [],
   "platform": "Linux x86_64",
   "state": {
-    "drawCalls": 635,
-    "triangles": 1418971,
+    "drawCalls": 639,
+    "triangles": 1425847,
     "quality": "high"
   }
 }
