@@ -1762,7 +1762,6 @@ function frame(now) {
     }
     // Rolling resistance and drag, applied whether or not the pedal is down.
     speed *= Math.pow(throttle ? 0.997 : 0.986, dt * 60);
-    speed -= Math.sign(speed) * Math.min(Math.abs(speed), (dragF ?? 0) * dt * 0.04);
     speed = T.MathUtils.clamp(speed, c.wrecked ? 0 : -8, c.max);
 
     // --- steering: rate-limited, speed-sensitive, with a grip budget -----------------------
