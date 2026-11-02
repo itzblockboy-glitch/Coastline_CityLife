@@ -753,7 +753,7 @@ function move(p, dx, dz, r, ignore = null, shape = null) {
   if (hit && p === pos && driving) speed *= 0.35;
   return !hit;
 }
-let nearest = null;
+let nearest = null, freeCam = null;
 const audioNear = [], dirVec = new T.Vector3(), rayHit = new T.Vector3(), EMPTY = [];
 function enter(forced) {
   if (transition) return;
@@ -1699,10 +1699,14 @@ function tick(now) {
     if (hit) nearestHit = Math.min(nearestHit, look.distanceTo(hit) - 0.5);
   }
   if (nearestHit < len)
-    desiredCam.copy(look).addScaledVector(dir, Math.max(1.1, nearestHit));
-  if (cameraMode === "first") camera.position.copy(desiredCam);
+    // dirVec was normalised in place by ray.set above; reuse it instead of a fresh vector.
+    desiredCam.copy(look).addScaledVector(dirVec, Math.max(1.1, nearestHit));
+  if (freeCam) {
+    camera.position.copy(freeCam.eye);
+    camera.lookAt(freeCam.target);
+  } else if (cameraMode === "first") camera.position.copy(desiredCam);
   else camera.position.lerp(desiredCam, 1 - Math.exp(-dt * 7));
-  camera.lookAt(look);
+  if (!freeCam) camera.lookAt(look);
   playerModel.visible = cameraMode !== "first" && camera.position.distanceTo(look) > 1.7;
   sun.position.set(
     pos.x - 40,
@@ -2300,6 +2304,22 @@ if (new URLSearchParams(location.search).has("test"))
     worldInfo: () => ({
       ...WORLD, obstacles: obstacles.length, buildings: buildings.length,
       districts: [...DISTRICTS.entries()],
+    }),
+    board: (type) => {
+      const c = cars.find((v) => v.type === type);
+      if (!c || driving || transition) return driving?.type || null;
+      pos.set(c.obj.position.x, 0, c.obj.position.z + 2.4);
+      enter(c);
+      return c.type;
+    },
+    // Straight-to-the-point camera for screenshots: look at a target from a fixed eye point.
+    setFreeCam: (eye, target) => {
+      freeCam = { eye: new T.Vector3(...eye), target: new T.Vector3(...target) };
+    },
+    policeLightHeights: () => cars.filter((c) => c.police).map((c) => {
+      const roof = new T.Box3().setFromObject(c.obj).max.y;
+      const light = c.strobe[0].getWorldPosition(new T.Vector3()).y;
+      return { roof: +roof.toFixed(2), light: +light.toFixed(2) };
     }),
     districtsCenters: () => [...DISTRICTS.entries()].map(([k, kind]) => {
       const [xi, zi] = k.split(":").map(Number);

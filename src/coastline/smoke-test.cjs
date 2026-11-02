@@ -31,6 +31,9 @@ function check(name, ok, detail) {
   await page.waitForFunction(() => window.coastlineTest?.getState().animation === "idle");
 
   check("loads without a fatal error", true);
+  // A thrown exception inside tick() aborts the frame before renderer.render(), which freezes
+  // the game while the HUD still looks alive. Treat any page error as a failure.
+  check("no runtime errors", errors.length === 0, errors.slice(0, 5));
   const state = await page.evaluate(() => window.coastlineTest.getState());
 
   // --- 1. Vehicles must not fly or sink -------------------------------------------------
@@ -64,26 +67,71 @@ function check(name, ok, detail) {
   check("mobile pixel ratio capped at <=1.0", perf.pixelRatio <= 1.01, perf);
   check("shadow map no larger than 1024 on mobile", perf.shadowMap <= 1024, perf);
 
+  // --- 6. The taxi must drive and steer the way it is facing ---------------------------
+  // The model is now authored nose-+Z; forward = (sin heading, cos heading). Throttle must move
+  // the car along +forward and "steer right" must decrease heading.
+  await page.evaluate(() => coastlineTest.board("taxi"));
+  await page.waitForFunction(() => coastlineTest.getState().vehicle === "taxi", null, { timeout: 60000 });
+  const drive = await (async () => {
+    const before = await page.evaluate(() => coastlineTest.getState());
+    const gas = await page.locator("#touchGas").boundingBox();
+    await page.locator("#touchGas").dispatchEvent("pointerdown", { pointerId: 61, clientX: gas.x + 10, clientY: gas.y + 10 });
+    await page.waitForFunction(() => coastlineTest.getState().speed > 3, null, { timeout: 60000 });
+    await page.waitForTimeout(900);
+    const moving = await page.evaluate(() => coastlineTest.getState());
+    const steer = await page.locator("#steerRight").boundingBox();
+    await page.locator("#steerRight").dispatchEvent("pointerdown", { pointerId: 62, clientX: steer.x + 10, clientY: steer.y + 10 });
+    await page.waitForTimeout(800);
+    const turned = await page.evaluate(() => coastlineTest.getState());
+    await page.locator("#steerRight").dispatchEvent("pointercancel", { pointerId: 62 });
+    await page.locator("#touchGas").dispatchEvent("pointercancel", { pointerId: 61 });
+    return { before, moving, turned };
+  })();
+  const fwd = [Math.sin(drive.before.heading), Math.cos(drive.before.heading)];
+  const dx = drive.moving.position[0] - drive.before.position[0];
+  const dz = drive.moving.position[2] - drive.before.position[2];
+  const along = dx * fwd[0] + dz * fwd[1];
+  check("taxi accelerates forward, not backward", along > 2, {
+    alongForward: +along.toFixed(2), dx: +dx.toFixed(2), dz: +dz.toFixed(2), speed: drive.moving.speed,
+  });
+  const dHeading = drive.turned.heading - drive.moving.heading;
+  check("steering right turns right (heading decreases)", dHeading < -0.05, {
+    headingDelta: +dHeading.toFixed(3),
+  });
+
+  // --- 7. Police light bar sits on the roof, not in the sky ----------------------------
+  const lights = await page.evaluate(() => coastlineTest.policeLightHeights());
+  const badLights = lights.filter((l) => Math.abs(l.light - l.roof) > 0.8);
+  check("police light bars sit on the roof", badLights.length === 0, {
+    sample: lights.slice(0, 3), bad: badLights.length,
+  });
+
   // --- Screenshots of the new districts -------------------------------------------------
   fs.mkdirSync(SHOT_DIR, { recursive: true });
   const centers = await page.evaluate(() => window.coastlineTest.districtsCenters());
   for (const c of centers) {
+    // Fixed eye point above the block edge, looking at the district centre: avoids the chase
+    // camera clipping into a neighbouring building.
     await page.evaluate(([x, z]) => {
-      coastlineTest.setPosition(x, z + 34);
-      coastlineTest.setCamera(0);
+      coastlineTest.setPosition(x, z);
+      coastlineTest.setFreeCam([x - 30, 20, z + 46], [x, 6, z]);
     }, [c.x, c.z]);
-    await page.waitForTimeout(1200);
+    await page.waitForTimeout(1500);
     const file = `${SHOT_DIR}/v1.6-${c.kind}-${Math.round(c.x)}_${Math.round(c.z)}.png`;
     await page.screenshot({ path: file, timeout: 90000 });
     results.shots.push(file);
   }
   // wide shot of downtown + the coastline
-  await page.evaluate(() => { coastlineTest.setPosition(-30, 40); coastlineTest.setCamera(0); });
-  await page.waitForTimeout(1200);
+  await page.evaluate(() => {
+    coastlineTest.setPosition(-30, 40);
+    coastlineTest.setFreeCam([-95, 42, 150], [40, 0, -20]);
+  });
+  await page.waitForTimeout(1500);
   await page.screenshot({ path: `${SHOT_DIR}/v1.6-downtown.png`, timeout: 90000 });
   results.shots.push(`${SHOT_DIR}/v1.6-downtown.png`);
 
   results.errors = errors;
+  results.platform = await page.evaluate(() => navigator.platform);
   results.state = { drawCalls: state.drawCalls, triangles: state.triangles, quality: state.quality };
   fs.writeFileSync("smoke-results.json", JSON.stringify(results, null, 2));
   console.log(JSON.stringify(results, null, 2));
