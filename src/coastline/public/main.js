@@ -1975,8 +1975,14 @@ function frame(now) {
     if (freeCam.car != null && cars[freeCam.car]) {
       // Track the car: traffic keeps driving, so a camera frozen at a sampled position drifts off
       // the body (which is exactly how the orientation shots missed their subject).
-      const c = cars[freeCam.car], d = freeCam.dist, nx = Math.sin(c.obj.rotation.y), nz = Math.cos(c.obj.rotation.y);
-      freeCam.eye.set(c.obj.position.x + nx * d, c.obj.position.y + 1.9, c.obj.position.z + nz * d);
+      const c = cars[freeCam.car], d = freeCam.dist, h = c.obj.rotation.y;
+      const nx = Math.sin(h), nz = Math.cos(h), sx = Math.cos(h), sz = -Math.sin(h);
+      const off = freeCam.side || 0;
+      freeCam.eye.set(
+        c.obj.position.x + nx * d + sx * off,
+        c.obj.position.y + (off ? 1.5 : 1.9),
+        c.obj.position.z + nz * d + sz * off,
+      );
       freeCam.target.set(c.obj.position.x, c.obj.position.y + 0.7, c.obj.position.z);
     }
     camera.position.copy(freeCam.eye);
@@ -3010,10 +3016,12 @@ if (new URLSearchParams(location.search).has("test"))
       freeCam: freeCam ? { car: freeCam.car, dist: freeCam.dist, eye: freeCam.eye.toArray().map((n) => +n.toFixed(2)) } : null,
     }),
     // Camera that follows one car from in front of its nose - screenshots of a moving car.
-    setCarCam: (id, dist = 6.5) => {
+    setCarCam: (id, dist = 6.5, side = 0) => {
       const c = cars[id];
       if (!c) return null;
-      freeCam = { car: id, dist, eye: new T.Vector3(), target: new T.Vector3() };
+      // side != 0 puts the eye out to the car's flank, which shows the profile: the only
+      // unambiguous read of which end is the bonnet.
+      freeCam = { car: id, dist, side, eye: new T.Vector3(), target: new T.Vector3() };
       return { id, type: c.type, x: +c.obj.position.x.toFixed(1), z: +c.obj.position.z.toFixed(1), rotY: +c.obj.rotation.y.toFixed(2) };
     },
     // Straight-to-the-point camera for screenshots: look at a target from a fixed eye point.

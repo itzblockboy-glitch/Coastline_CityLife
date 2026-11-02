@@ -267,6 +267,25 @@ function check(name, ok, detail) {
       results.shots.push(file);
     }
   }
+  // Profiles: the nose shot cannot separate a small coupe's bonnet from its boot, but a side view
+  // can. These are the two shapes whose front/rear the old heuristic disagreed about.
+  for (const [label, type] of [["truck", "truck"], ["coupe", "car-concept"]]) {
+    const info = await page.evaluate((t) => {
+      const car = coastlineTest.noseInfo(t).find((c) => c.traffic);
+      return car || coastlineTest.noseInfo(t)[0];
+    }, type);
+    if (!info) continue;
+    await page.evaluate((id) => {
+      const c = coastlineTest.carAt(id);
+      coastlineTest.setPosition(c.x - Math.sin(c.rotY) * 3, c.z - Math.cos(c.rotY) * 3);
+    }, info.id);
+    await settle(2);
+    await page.evaluate((id) => coastlineTest.setCarCam(id, 0.6, 7), info.id);
+    await settle(3);
+    const file = `${SHOT_DIR}/profile-${label}.png`;
+    await page.screenshot({ path: file, timeout: 90000 });
+    results.shots.push(file);
+  }
   await page.evaluate(() => coastlineTest.setFreeCam(null, null));
 
   // --- Screenshots of the new districts -------------------------------------------------
