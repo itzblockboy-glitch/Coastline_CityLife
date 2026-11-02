@@ -1,6 +1,6 @@
 ## Packaged manifest
 ```
-package: name='ai.arena.coastline' versionCode='7' versionName='1.6.0' compileSdkVersion='33' compileSdkVersionCodename='13'
+package: name='ai.arena.coastline' versionCode='8' versionName='1.7.0' compileSdkVersion='33' compileSdkVersionCodename='13'
 sdkVersion:'26'
 targetSdkVersion:'35'
 uses-permission: name='android.permission.INTERNET'
@@ -27,8 +27,8 @@ densities: '160'
 --- xmltree ---
 N: android=http://schemas.android.com/apk/res/android
   E: manifest (line=1)
-    A: android:versionCode(0x0101021b)=(type 0x10)0x7
-    A: android:versionName(0x0101021c)="1.6.0" (Raw: "1.6.0")
+    A: android:versionCode(0x0101021b)=(type 0x10)0x8
+    A: android:versionName(0x0101021c)="1.7.0" (Raw: "1.7.0")
     A: android:compileSdkVersion(0x01010572)=(type 0x10)0x21
     A: android:compileSdkVersionCodename(0x01010573)="13" (Raw: "13")
     A: package="ai.arena.coastline" (Raw: "ai.arena.coastline")
@@ -80,7 +80,7 @@ N: android=http://schemas.android.com/apk/res/android
             A: android:name(0x01010003)="android.intent.category.GAME" (Raw: "android.intent.category.GAME")
 --- signature ---
 Signer #1 certificate DN: CN=Coastline Development, O=Coastline Prototype, C=IN
-Signer #1 certificate SHA-256 digest: a464390711e82544c010a3b52fb58325c814c1dc59f99f638471b58c84cfdcfe
-Signer #1 certificate SHA-1 digest: 0ca300febe7428cc88c14414a69fdb86142f8f50
-Signer #1 certificate MD5 digest: 450de137d7903e263fbbfc8e39857c3c
+Signer #1 certificate SHA-256 digest: c589932c74f0b9887076bf2ebd16863b81067640360a92b5ee97fd780298494a
+Signer #1 certificate SHA-1 digest: 158db8bd2e59e965796fb539ccab1ba45e072a70
+Signer #1 certificate MD5 digest: 203fccf78073bb3ad56fa8bbbb34ad92
 ```
