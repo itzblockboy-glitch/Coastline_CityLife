@@ -179,10 +179,40 @@ function normalize(obj, height) {
 }
 const VEHICLE_TYPES = ["car-concept", "suv-luxury", "delivery", "truck", "milk-truck",
   "sedan", "sedan-sports", "hatchback-sports", "taxi", "police-car"];
-// Per-model corrections measured from the shipped GLBs (tools/inspect-vehicles.mjs).
-// The taxi is authored facing -Z: its cabin sits forward of centre and its root nodes carry a
-// 180° Y rotation the other cars do not have, so it reversed and steered the wrong way.
-const VEHICLE_MODEL_FIX = { taxi: { yaw: Math.PI } };
+// Vehicles are not authored consistently: some face +Z, some (the taxi among them) face -Z with a
+// 180 deg Y rotation baked into their root nodes. Guessing per model from file contents is what made
+// "some taxis drive in reverse" survive a fix, so detect facing from geometry for every model:
+// a car's greenhouse sits behind its bonnet, so roof-mean-Z minus body-mean-Z is negative when the
+// nose points +Z. Cabin-centred bodies (pickups, cab-overs) are ambiguous; there we fall back to the
+// majority authoring convention, which the known-good saloons share.
+const vehicleYawFix = new Map();
+function detectVehicleFacing(name, scene) {
+  if (vehicleYawFix.has(name)) return vehicleYawFix.get(name);
+  const pts = [];
+  scene.updateMatrixWorld(true);
+  scene.traverse((n) => {
+    if (!n.isMesh || !n.geometry?.attributes?.position) return;
+    const p = n.geometry.attributes.position, v = new T.Vector3();
+    const stride = Math.max(1, Math.floor(p.count / 600));
+    for (let i = 0; i < p.count; i += stride) {
+      v.fromBufferAttribute(p, i).applyMatrix4(n.matrixWorld);
+      pts.push(v.clone());
+    }
+  });
+  let yaw = 0;
+  if (pts.length > 12) {
+    const ys = pts.map((p) => p.y);
+    const ymin = Math.min(...ys), ymax = Math.max(...ys), h = ymax - ymin;
+    const roof = pts.filter((p) => p.y > ymin + 0.72 * h);
+    if (roof.length > 4) {
+      const mean = (a) => a.reduce((s, p) => s + p.z, 0) / a.length;
+      const dz = mean(roof) - mean(pts);
+      if (Math.abs(dz) > 0.15 && dz > 0) yaw = Math.PI; // cabin ahead of centre => nose is -Z
+    }
+  }
+  vehicleYawFix.set(name, yaw);
+  return yaw;
+}
 // Facade variety: the generator reuses three building models, so every block looked identical.
 // Tinting multiplies the existing texture; clones are cached per material+tint, which keeps the
 // instancing groups bounded (materials still batch) instead of exploding per building.
@@ -210,12 +240,12 @@ function groundModel(o) {
 }
 function instance(name, x, z, height, rot = 0) {
   let o = assets[name].scene.clone();
-  const fix = VEHICLE_MODEL_FIX[name];
   if (name === "motorcycle") o.rotation.y = -Math.PI / 2;
   if (VEHICLE_TYPES.includes(name)) {
     // Vehicle GLBs are pre-normalized to real-world meter dimensions, but their pivots are not
     // at ground level (police-car floats 0.80 m, car-concept sinks 0.15 m), so ground every one.
-    if (fix?.yaw) o.rotation.y += fix.yaw;
+    const yaw = detectVehicleFacing(name, assets[name].scene);
+    if (yaw) o.rotation.y += yaw;
     groundModel(o);
   } else if (name === "motorcycle") {
     const b = new T.Box3().setFromObject(o), size = b.getSize(new T.Vector3());
@@ -300,10 +330,22 @@ let toastTimer;
 let weaponIndex = 0,
   fireTimer = 0,
   reloadTimer = 0;
+// Weapon table. Kept index-compatible with the older build (1 = sidearm, 2 = carbine) so saved
+// habits and the regression harness still line up; the rest are new.
+const WEAPON_DEFS = [
+  { id: "fists", name: "Fists", icon: "✊", melee: true, damage: 8, rate: 0.42, reach: 2.5, knock: 0.5 },
+  { id: "sidearm", name: "Pulse sidearm", icon: "⌖", damage: 18, rate: 0.34, ammo: 12, spread: 0.012, sound: "sidearm", mesh: "blaster-g" },
+  { id: "carbine", name: "Carbine", icon: "▰", damage: 26, rate: 0.16, ammo: 24, spread: 0.009, sound: "rifle", mesh: "blaster-d" },
+  { id: "knife", name: "Combat knife", icon: "🔪", melee: true, damage: 34, rate: 0.62, reach: 2.3, knock: 0.25, bleed: true },
+  { id: "smg", name: "SMG", icon: "⁝", damage: 10, rate: 0.085, ammo: 32, spread: 0.034, sound: "smg", mesh: "smg" },
+  { id: "shotgun", name: "Shotgun", icon: "⁂", damage: 9, rate: 0.9, ammo: 6, pellets: 7, spread: 0.075, sound: "shotgun", mesh: "shotgun" },
+  { id: "grenade", name: "Frag grenade", icon: "◉", damage: 0, rate: 1.0, ammo: 3, sound: "heavy", mesh: "grenade", projectile: true },
+];
 const weapons = [],
   tracers = [],
-  ammo = [0, 12, 24],
-  maxAmmo = [0, 12, 24];
+  ammo = WEAPON_DEFS.map((w) => w.ammo || 0),
+  maxAmmo = WEAPON_DEFS.map((w) => w.ammo || 0);
+const def = () => WEAPON_DEFS[weaponIndex];
 let skyHDR;
 try {
   await Promise.all(
@@ -463,6 +505,16 @@ try {
     if (c.bike) c.max = c.id === 1 ? 38 : 51;
     c.accel = (c.bike ? 22 : 12) + (c.id % 7) * 1.1;
     c.soundId = sfx.signature(c.id,c.type).id;
+    // Physics + damage state. Every car carries its own health, suspension and velocity, so
+    // collisions, impacts and crashes are per-car rather than global.
+    c.hp = 100; c.maxHp = 100;
+    c.pitch = 0; c.roll = 0; c.pitchVel = 0; c.rollVel = 0;
+    c.lift = 0; c.vy = 0; c.airborne = false;
+    c.steer = 0; c.steerVel = 0;
+    c.vx = 0; c.vz = 0;           // world velocity, allows slide/drift
+    c.slideYaw = 0;               // visual slip angle during a drift
+    c.wrecked = false; c.smokeT = 0; c.fireT = 0;
+    c.lastImpact = 0; c.impactShake = 0; c.damagePenalty = 0; c.skidding = false;
   }
   for (const c of cars) measureVehicle(c);
   ring = new T.Mesh(
@@ -711,7 +763,7 @@ function animatePlayer(moving, running, punching) {
     pos.y > 0.03
       ? "p_jump"
       : punching
-        ? "punch_right"
+        ? punchSide > 0 ? "punch_right" : "punch_left"
         : moving
           ? weaponIndex && running
             ? "run_shoot"
@@ -721,7 +773,7 @@ function animatePlayer(moving, running, punching) {
           : weaponIndex
             ? "idle_gun"
             : "idle";
-  playAction(name, name === "p_jump" || name === "punch_right");
+  playAction(name, name === "p_jump" || name === "punch_right" || name === "punch_left" || name === "knife_slash");
 }
 function blocked(p, r = 0.55, ignore = null, shape = null) {
   if (p.x < WORLD.xMin + r || p.x > WORLD.xMax - r ||
@@ -792,7 +844,141 @@ function move(p, dx, dz, r, ignore = null, shape = null) {
   if (hit && p === pos && driving) speed *= 0.35;
   return !hit;
 }
-let nearest = null, freeCam = null, shadowFrame = 0;
+let nearest = null, freeCam = null, shadowFrame = 0, cameraShake = 0;
+// Player life state. Death is a short sequence rather than an instant teleport, so the hit that
+// killed you is visible and the camera has time to settle.
+let dead = false, deadAt = 0, deaths = 0, lastDamageCause = "", punchSide = 1;
+function playerDie(cause = "You went down") {
+  if (dead) return;
+  dead = true;
+  deadAt = elapsed;
+  deaths++;
+  lastDamageCause = cause;
+  health = 0;
+  vy = 0;
+  punchTime = 0;
+  fireTimer = 1;
+  if (driving) { driving.speed = 0; driving.vx = driving.vz = 0; }
+  resetInput();
+  cameraShake = 1.2;
+  document.body.classList.add("downed");
+  toast(cause + " · respawning");
+}
+function updatePlayerLife(dt) {
+  if (!dead) return;
+  const t = elapsed - deadAt;
+  // Drop the camera toward the ground while the body falls.
+  pitch = T.MathUtils.lerp(pitch, -0.35, Math.min(1, dt * 3));
+  if (playerModel) {
+    playerModel.rotation.z = T.MathUtils.lerp(playerModel.rotation.z, Math.PI / 2, Math.min(1, dt * 3));
+    playerModel.position.y = T.MathUtils.lerp(playerModel.position.y, -0.55, Math.min(1, dt * 2));
+  }
+  if (t > 2.4) {
+    dead = false;
+    playerModel.rotation.z = 0;
+    playerModel.position.y = 0;
+    pitch = 0.05;
+    document.body.classList.remove("downed");
+    respawnPlayer("Back on your feet · " + lastDamageCause);
+  }
+}
+// --- Damage, wreck effects and impact feedback -------------------------------------------
+// One soft round sprite texture, reused by every smoke puff and spark; sprites are pooled so a
+// crash does not allocate in the middle of a frame.
+const puffTexture = (() => {
+  const size = 64, cv = document.createElement("canvas");
+  cv.width = cv.height = size;
+  const g = cv.getContext("2d"),
+    grad = g.createRadialGradient(size / 2, size / 2, 1, size / 2, size / 2, size / 2);
+  grad.addColorStop(0, "rgba(255,255,255,1)");
+  grad.addColorStop(0.45, "rgba(255,255,255,.55)");
+  grad.addColorStop(1, "rgba(255,255,255,0)");
+  g.fillStyle = grad;
+  g.fillRect(0, 0, size, size);
+  const tex = new T.CanvasTexture(cv);
+  tex.colorSpace = T.SRGBColorSpace;
+  return tex;
+})();
+const puffs = [];
+for (let i = 0; i < 40; i++) {
+  const s = new T.Sprite(new T.SpriteMaterial({
+    map: puffTexture, transparent: true, depthWrite: false,
+    blending: T.NormalBlending, opacity: 0,
+  }));
+  s.visible = false;
+  s.userData = { life: 0, maxLife: 1, vel: new T.Vector3(), grow: 1.6, fade: 1 };
+  scene.add(s);
+  puffs.push(s);
+}
+function puff(pos3, opts = {}) {
+  const s = puffs.find((p) => !p.visible) || puffs[(Math.random() * puffs.length) | 0];
+  const { color = 0x8a8a8a, size = 0.6, life = 1.1, spread = 0.5, up = 1.2, grow = 1.8, opacity = 0.55 } = opts;
+  s.material.color.set(color);
+  s.material.opacity = opacity;
+  s.material.blending = opts.additive ? T.AdditiveBlending : T.NormalBlending;
+  s.position.copy(pos3);
+  s.scale.setScalar(size);
+  s.visible = true;
+  s.userData.life = s.userData.maxLife = life;
+  s.userData.grow = grow;
+  s.userData.opacity = opacity;
+  s.userData.vel.set((Math.random() - 0.5) * spread, up * (0.6 + Math.random() * 0.8), (Math.random() - 0.5) * spread);
+  return s;
+}
+function updatePuffs(dt) {
+  for (const s of puffs) {
+    if (!s.visible) continue;
+    s.userData.life -= dt;
+    if (s.userData.life <= 0) { s.visible = false; s.material.opacity = 0; continue; }
+    const k = s.userData.life / s.userData.maxLife;
+    s.userData.vel.y += dt * 0.35;
+    s.position.addScaledVector(s.userData.vel, dt);
+    s.scale.addScalar(dt * s.userData.grow);
+    s.material.opacity = s.userData.opacity * k * k;
+  }
+}
+function damageCar(c, amount, cause = "impact") {
+  if (!c || c.wrecked || amount <= 0) return;
+  c.hp = Math.max(0, c.hp - amount);
+  c.damagePenalty = T.MathUtils.clamp(1 - c.hp / c.maxHp, 0, 0.9) * 0.55;
+  applyDamageVisuals(c);
+  const at = c.obj.position.clone().add(new T.Vector3(0, 0.7, 0));
+  for (let i = 0; i < 3; i++)
+    puff(at, { color: 0xc8c2b4, size: 0.35, life: 0.5, spread: 1.6, up: 1.4, grow: 2.2, opacity: 0.5 });
+  for (let i = 0; i < 3; i++)
+    puff(at, { color: 0xffd07a, size: 0.16, life: 0.28, spread: 2.6, up: 1.0, grow: 0.6, opacity: 0.9, additive: true });
+  if (c.hp <= 0) {
+    c.wrecked = true;
+    c.speed = 0; c.vx = c.vz = 0;
+    c.engineDead = true;
+    if (c === driving) {
+      toast("The " + vehicleName(c.type) + " is wrecked");
+      cameraShake = Math.max(cameraShake, 0.8);
+    }
+  }
+}
+function updateDamageEffects(c, dt) {
+  if (c.hp > c.maxHp * 0.45 && !c.wrecked) return;
+  const at = c.obj.position.clone().add(new T.Vector3(0, 0.85, 0));
+  const rate = c.wrecked ? 14 : (1 - c.hp / (c.maxHp * 0.45)) * 5;
+  c.smokeT -= dt;
+  if (c.smokeT <= 0) {
+    c.smokeT = 1 / Math.max(1, rate);
+    puff(at, {
+      color: c.wrecked ? 0x2b2b2b : 0x9a9a9a,
+      size: c.wrecked ? 0.75 : 0.45, life: c.wrecked ? 2.1 : 1.2,
+      spread: 0.5, up: 1.5, grow: 2.4, opacity: c.wrecked ? 0.5 : 0.35,
+    });
+  }
+  if (c.wrecked) {
+    c.fireT -= dt;
+    if (c.fireT <= 0) {
+      c.fireT = 0.12;
+      puff(at, { color: Math.random() > 0.5 ? 0xff7a1f : 0xffc14d, size: 0.5, life: 0.5,
+        spread: 0.6, up: 2.1, grow: 0.8, opacity: 0.85, additive: true });
+    }
+  }
+}
 const audioNear = [], dirVec = new T.Vector3(), rayHit = new T.Vector3(), EMPTY = [];
 function enter(forced) {
   if (transition) return;
@@ -867,24 +1053,10 @@ function jump() {
   }
 }
 function punch() {
-  if (document.querySelector(".overlay.open")) return;
+  if (document.querySelector(".overlay.open") || dead) return;
   if (!driving && !transition && punchTime <= 0) {
     punchTime = 0.6;
-    sfx.punch();
-    let hit = false;
-    for (let n of [...npcs, ...cops.filter((c) => c.active)]) {
-      if (n.g.position.distanceTo(pos) < 2.5) {
-        n.stun = 1;
-        n.walk.stop();
-        n.hit.reset().setLoop(T.LoopOnce, 1).play();
-        let d = n.g.position.clone().sub(pos).normalize();
-        move(n.g.position, d.x * 0.45, d.z * 0.45, 0.35);
-        if (!n.police) n.aggroUntil = elapsed + 24;
-        recordCrime(n.police ? Math.max(2, Math.min(5, wanted + 1)) : 1, 1);
-        hit = true;
-      }
-    }
-    if (hit) toast("Easy, traveler. Keep the coast friendly.");
+    meleeAttack(WEAPON_DEFS[0]);
   }
 }
 function toast(s) {
@@ -1552,7 +1724,7 @@ function tick(now) {
       (keys.KeyA || keys.ArrowLeft ? 1 : 0) +
       joyX;
   const dialogOpen = document.querySelector(".overlay.open");
-  const paused = dialogOpen || transition;
+  const paused = dialogOpen || transition || dead;
   if (paused) {
     up = right = 0;
     speed *= Math.pow(0.94, dt * 60);
@@ -1562,64 +1734,110 @@ function tick(now) {
   if (transition) {
     updateTransition(dialogOpen ? 0 : dt);
   } else if (driving) {
-    let throttle = paused ? 0 : keys.Gas || keys.KeyW || keys.ArrowUp ? 1 : 0,
-      brake = !paused && (keys.Space || keys.KeyS || keys.ArrowDown);
-    right = paused
+    const c = driving;
+    let throttle = paused || c.wrecked ? 0 : keys.Gas || keys.KeyW || keys.ArrowUp ? 1 : 0,
+      brake = !paused && !c.wrecked && (keys.Space || keys.KeyS || keys.ArrowDown);
+    right = paused || c.wrecked
       ? 0
       : T.MathUtils.clamp(
           right + (keys.SteerRight ? 1 : 0) - (keys.SteerLeft ? 1 : 0),
           -1,
           1,
         );
-    if (throttle) speed += driving.accel * dt;
+    const prevSpeed = speed;
+    const power = c.accel * (1 - c.damagePenalty) * (c.hp < 30 ? 0.62 : 1);
+    if (throttle) speed += power * dt;
     if (brake) {
       if (speed > 0.8) speed = Math.max(0, speed - 32 * dt);
       else if (!throttle) speed = Math.max(-8, speed - 10 * dt);
     }
-    speed *= Math.pow(throttle ? 0.997 : 0.989, dt * 60);
-    speed = T.MathUtils.clamp(speed, -8, driving.max);
+    // Rolling resistance and drag, applied whether or not the pedal is down.
+    speed *= Math.pow(throttle ? 0.997 : 0.986, dt * 60);
+    speed -= Math.sign(speed) * Math.min(Math.abs(speed), (dragF ?? 0) * dt * 0.04);
+    speed = T.MathUtils.clamp(speed, c.wrecked ? 0 : -8, c.max);
+
+    // --- steering: rate-limited, speed-sensitive, with a grip budget -----------------------
+    const speedAbs = Math.abs(speed);
+    const targetSteer = right;
+    c.steer += (targetSteer - c.steer) * Math.min(1, dt * 9);
+    const turnRate = (c.bike ? 1.85 : 1.3) * (1 - Math.min(0.45, speedAbs / c.max * 0.45));
     const oldHeading = heading;
-    if (Math.abs(speed) > 0.15)
-      heading -=
-        right *
-        dt *
-        (driving.bike ? 1.8 : 1.25) *
-        T.MathUtils.clamp(speed / 8, -1, 1);
-    if (
-      blocked(pos, 0.55, driving, {
-        angle: heading,
-        hw: driving.hw,
-        hl: driving.hl,
-      })
-    ) {
+    if (speedAbs > 0.12) heading -= c.steer * dt * turnRate * T.MathUtils.clamp(speed / 7, -1, 1);
+
+    // --- tyre model: velocity is free, grip pulls it back toward the nose ------------------
+    // Below the grip limit the car simply follows its heading. Above it (hard braking at speed or
+    // a very sharp turn) the velocity lags behind, which reads as a slide/skid.
+    const fwdX = Math.sin(heading), fwdZ = Math.cos(heading);
+    const desiredX = fwdX * speed, desiredZ = fwdZ * speed;
+    const grip = (c.bike ? 7.5 : 5.2) * (c.hp < 30 ? 0.8 : 1);
+    c.vx = desiredX + (c.vx - desiredX) * Math.exp(-grip * dt);
+    c.vz = desiredZ + (c.vz - desiredZ) * Math.exp(-grip * dt);
+    const slip = Math.atan2(c.vx, c.vz) - heading;
+    c.slideYaw = T.MathUtils.euclideanModulo(slip + Math.PI, Math.PI * 2) - Math.PI;
+    c.skidding = speedAbs > 9 && Math.abs(c.slideYaw) > 0.09;
+
+    const hitWall = blocked(pos, 0.55, c, { angle: heading, hw: c.hw, hl: c.hl });
+    if (hitWall && speedAbs > 3) {
+      // Impact: damage scales with closing speed, and the car is thrown back a little.
+      damageCar(c, Math.min(46, speedAbs * 2.6), "impact");
+      heading = oldHeading;
+      c.vx *= -0.22; c.vz *= -0.22;
+      speed *= -0.24;
+      c.pitchVel -= Math.min(3.4, speedAbs * 0.12);
+      cameraShake = Math.max(cameraShake, Math.min(0.9, speedAbs * 0.045));
+      sfx.impact?.(Math.min(1, speedAbs / 25));
+    } else if (hitWall) {
       heading = oldHeading;
       speed *= 0.7;
     }
-    move(
-      pos,
-      Math.sin(heading) * speed * dt,
-      Math.cos(heading) * speed * dt,
-      driving.bike ? 0.55 : 1.25,
-      driving,
-      { angle: heading, hw: driving.hw, hl: driving.hl },
-    );
-    pos.y = 0.12;
-    driving.obj.position.copy(pos);
-    driving.obj.rotation.y = heading;
-    driving.obj.rotation.z = driving.bike
-      ? T.MathUtils.lerp(
-          driving.obj.rotation.z,
-          -right * 0.15 * Math.min(Math.abs(speed) / 8, 1),
-          dt * 8,
-        )
-      : 0;
-    driving.angle = heading;
-    driving.speed = speed;
-    if (driving.bike) {
-      player.position.copy(pos);
-      player.position.y = pos.y + 0.61 - riderHipOffset;
-      player.rotation.set(0, heading, driving.obj.rotation.z);
+    move(pos, c.vx * dt, c.vz * dt, c.bike ? 0.55 : 1.25, c,
+      { angle: heading, hw: c.hw, hl: c.hl });
+    speed = c.vx * fwdX + c.vz * fwdZ; // keep scalar speed consistent with what actually moved
+
+    // --- suspension: springs on pitch (dive/squat) and roll (body lean) -------------------
+    const accel = (speed - prevSpeed) / Math.max(dt, 0.001);
+    const lateral = -c.steer * speedAbs * 0.22;
+    const pitchTarget = T.MathUtils.clamp(-accel * 0.014, -0.10, 0.10);
+    const rollTarget = T.MathUtils.clamp((c.bike ? lateral * 1.7 : lateral * 0.9) + c.slideYaw * 0.55, -0.26, 0.26);
+    // critically-damped-ish spring: velocity toward target, with stiffness and damping
+    c.pitchVel += (pitchTarget - c.pitch) * 90 * dt;
+    c.pitchVel *= Math.exp(-9 * dt);
+    c.pitch += c.pitchVel * dt;
+    c.rollVel += (rollTarget - c.roll) * 70 * dt;
+    c.rollVel *= Math.exp(-8.5 * dt);
+    c.roll += c.rollVel * dt;
+
+    // --- airborne: ramps/kerbs launch the car, gravity brings it back ---------------------
+    const groundY = 0.12;
+    if (c.airborne) {
+      c.vy -= 18 * dt;
+      c.lift += c.vy * dt;
+      if (c.lift <= 0) {
+        const impact = Math.abs(c.vy);
+        c.lift = 0; c.vy = 0; c.airborne = false;
+        c.pitchVel += Math.min(2.2, impact * 0.16);
+        if (impact > 6) { damageCar(c, impact * 1.6, "landing"); cameraShake = Math.max(cameraShake, Math.min(0.7, impact * 0.03)); }
+      }
+    } else if (speedAbs > 16 && Math.random() < dt * 0.9 && !c.bike) {
+      // Road crown/seam at speed: brief hop, which the suspension then absorbs.
+      c.airborne = true; c.vy = 1.6 + Math.random() * 1.2;
     }
+    // Road noise keeps the body alive instead of rigidly glued to the surface.
+    const rumble = Math.sin(elapsed * 17 + c.id) * 0.004 * Math.min(1, speedAbs / 12);
+
+    pos.y = groundY;
+    c.obj.position.set(pos.x, groundY + c.lift, pos.z);
+    c.obj.rotation.y = heading + c.slideYaw * 0.55;
+    c.obj.rotation.x = c.pitch;
+    c.obj.rotation.z = c.roll + rumble;
+    c.angle = heading;
+    c.speed = speed;
+    if (c.bike) {
+      player.position.copy(pos);
+      player.position.y = pos.y + 0.61 - riderHipOffset + c.lift;
+      player.rotation.set(0, heading, c.obj.rotation.z);
+    }
+    updateDamageEffects(c, dt);
   } else {
     if (moving) {
       let angle = yaw + Math.PI - Math.atan2(right, up);
@@ -1656,6 +1874,9 @@ function tick(now) {
       continue;
     m.update(dt);
   }
+  updatePuffs(dt);
+  updateGrenades(dt);
+  updatePlayerLife(dt);
   enforceActorScale(playerModel);
   if (driving?.bike && !transition) poseRider(false);
   updatePoliceCars(dialogOpen ? 0 : dt);
@@ -1691,6 +1912,7 @@ function tick(now) {
     )
       c.speed = c.cruise;
     else c.speed = 0;
+    if (c.hp < c.maxHp) applyDamageVisuals(c);
     if (c.obj.position.z > WORLD.zMax - 8) {
       const q = c.obj.position.clone();
       q.z = WORLD.zMin + 8;
@@ -1746,6 +1968,14 @@ function tick(now) {
   } else if (cameraMode === "first") camera.position.copy(desiredCam);
   else camera.position.lerp(desiredCam, 1 - Math.exp(-dt * 7));
   if (!freeCam) camera.lookAt(look);
+  if (cameraShake > 0.001) {
+    // Impact feedback: a decaying positional jitter, cheap and framerate independent.
+    const k = cameraShake * 0.35;
+    camera.position.x += (Math.random() - 0.5) * k;
+    camera.position.y += (Math.random() - 0.5) * k;
+    camera.position.z += (Math.random() - 0.5) * k;
+    cameraShake *= Math.exp(-7 * dt);
+  }
   playerModel.visible = cameraMode !== "first" && camera.position.distanceTo(look) > 1.7;
   sun.position.set(
     pos.x - 40,
@@ -1921,6 +2151,27 @@ function vehicleName(type) {
     }[type] || type
   );
 }
+// Body deformation: squash the shell along its length and lean it as damage accumulates. Applied to
+// the child model (not the root) so collision boxes and physics stay untouched.
+function applyDamageVisuals(c) {
+  const body = c.obj.children[0];
+  if (!body) return;
+  const dmg = 1 - Math.max(0, c.hp) / c.maxHp;
+  const crush = 1 - dmg * 0.16;
+  body.scale.z = (body.userData.baseScaleZ ??= body.scale.z) * crush;
+  body.scale.y = (body.userData.baseScaleY ??= body.scale.y) * (1 - dmg * 0.05);
+  body.rotation.z = (body.userData.baseRotZ ??= body.rotation.z) + dmg * 0.035;
+  if (!body.userData.damageTint) {
+    const mats = [];
+    body.traverse((n) => { if (n.isMesh && !Array.isArray(n.material) && n.material.color) mats.push(n.material); });
+    body.userData.damageTint = mats;
+  }
+  for (const m of body.userData.damageTint) {
+    if (!m.userData.baseColor) m.userData.baseColor = m.color.clone();
+    m.color.copy(m.userData.baseColor).multiplyScalar(1 - dmg * 0.45);
+    m.roughness = Math.min(1, 0.6 + dmg * 0.4);
+  }
+}
 function tintCar(root, color) {
   root.traverse((n) => {
     if (!n.isMesh) return;
@@ -2071,14 +2322,91 @@ function poseRider(reset = true) {
   });
   activeAction = "";
 }
+// Procedural weapon models for the added gear. Built from boxes so they cost a handful of
+// triangles and carry no licence: these are original fictional designs in the game's palette.
+function buildWeaponModel(kind) {
+  const g = new T.Group();
+  const dark = new T.MeshStandardMaterial({ color: 0x2f3438, roughness: 0.55, metalness: 0.35 });
+  const mid = new T.MeshStandardMaterial({ color: 0x565f66, roughness: 0.6, metalness: 0.25 });
+  const accent = new T.MeshStandardMaterial({ color: 0xd8b25e, roughness: 0.45, metalness: 0.4 });
+  const glow = new T.MeshStandardMaterial({ color: 0x7fd2c8, emissive: 0x2f7f78, emissiveIntensity: 0.8, roughness: 0.4 });
+  const blade = new T.MeshStandardMaterial({ color: 0xd7dde2, roughness: 0.22, metalness: 0.85 });
+  const add = (w, h, d, x, y, z, m) => {
+    const mesh = new T.Mesh(new T.BoxGeometry(w, h, d), m);
+    mesh.position.set(x, y, z);
+    g.add(mesh);
+    return mesh;
+  };
+  if (kind === "smg") {
+    add(0.055, 0.075, 0.30, 0, 0, -0.12, dark);
+    add(0.03, 0.11, 0.055, 0, -0.085, -0.02, mid); // magazine
+    add(0.04, 0.06, 0.09, 0, -0.045, 0.02, dark); // grip
+    add(0.028, 0.028, 0.16, 0, 0.012, -0.30, mid); // barrel
+    add(0.012, 0.012, 0.05, 0, 0.05, -0.20, glow); // sight
+  } else if (kind === "shotgun") {
+    add(0.06, 0.075, 0.46, 0, 0, -0.18, mid);
+    add(0.045, 0.045, 0.42, 0, -0.045, -0.24, dark); // pump
+    add(0.05, 0.065, 0.12, 0, -0.055, 0.04, dark); // stock
+    add(0.03, 0.03, 0.5, 0, 0.045, -0.30, dark); // top tube
+    add(0.02, 0.02, 0.06, 0, 0.02, -0.44, accent);
+  } else if (kind === "knife") {
+    add(0.02, 0.03, 0.11, 0, 0, 0.02, dark); // handle
+    add(0.012, 0.05, 0.02, 0, 0.01, -0.055, mid); // guard
+    const b = add(0.008, 0.032, 0.24, 0, 0.005, -0.19, blade); // blade
+    b.rotation.x = 0.02;
+    add(0.008, 0.028, 0.05, 0, 0.02, -0.30, blade); // tip bevel
+  } else if (kind === "grenade") {
+    const body = new T.Mesh(new T.SphereGeometry(0.045, 10, 8), new T.MeshStandardMaterial({
+      color: 0x4a5a3a, roughness: 0.7, metalness: 0.2,
+    }));
+    g.add(body);
+    add(0.02, 0.05, 0.02, 0, 0.05, 0, mid); // fuse
+    add(0.035, 0.008, 0.012, 0.02, 0.05, 0, accent); // lever
+  }
+  g.traverse((n) => { if (n.isMesh) { n.castShadow = true; } });
+  return g;
+}
+// Reuse the wrist-attachment maths, but hang a procedural model off the grip.
+function attachProcedural(model, kind) {
+  const hand = findBone(model, "Wrist.R");
+  if (!hand) return null;
+  const holder = new T.Group();
+  holder.name = "WeaponGrip_" + kind;
+  hand.add(holder);
+  holder.position.set(0, 0.035, 0);
+  model.updateWorldMatrix(true, true);
+  const modelQ = model.getWorldQuaternion(new T.Quaternion()),
+    handQ = hand.getWorldQuaternion(new T.Quaternion());
+  holder.quaternion.copy(handQ.invert().multiply(modelQ));
+  const visual = buildWeaponModel(kind);
+  const handScale = hand.getWorldScale(new T.Vector3()).x || 1;
+  visual.scale.setScalar(1 / handScale);
+  holder.add(visual);
+  const muzzle = new T.Object3D();
+  muzzle.position.set(0, 0.03, kind === "shotgun" ? -0.5 : kind === "smg" ? -0.34 : -0.2);
+  holder.add(muzzle);
+  const flash = new T.Mesh(
+    new T.SphereGeometry(0.06, 6, 4),
+    new T.MeshBasicMaterial({ color: 0xffe0a0, transparent: true, opacity: 0.95 }),
+  );
+  muzzle.add(flash);
+  flash.visible = false;
+  holder.visible = false;
+  holder.userData = { muzzle, flash, visual, restZ: visual.position.z };
+  return holder;
+}
 function initWeapons() {
   player.rotation.y = heading;
   const idle = actions.idle_gun;
   idle.reset().play();
   mixer.update(0.05);
   player.updateMatrixWorld(true);
-  for (const name of ["blaster-g", "blaster-d"])
-    weapons.push(attachWeapon(playerModel, name));
+  for (const w of WEAPON_DEFS) {
+    if (!w.mesh) { weapons.push(null); continue; }
+    weapons.push(w.mesh.startsWith("blaster")
+      ? attachWeapon(playerModel, w.mesh)
+      : attachProcedural(playerModel, w.mesh));
+  }
   idle.stop();
   activeAction = "";
   for (let i = 0; i < 10; i++) {
@@ -2103,20 +2431,23 @@ function initWeapons() {
 }
 function cycleWeapon() {
   if (driving || transition) return;
-  weaponIndex = (weaponIndex + 1) % 3;
+  weaponIndex = (weaponIndex + 1) % WEAPON_DEFS.length;
   reloadTimer = 0;
   for (let i = 0; i < weapons.length; i++)
-    weapons[i].visible = i === weaponIndex - 1;
+    if (weapons[i]) weapons[i].visible = i === weaponIndex;
   updateWeapons(0);
 }
 function reloadWeapon() {
-  if (weaponIndex && !reloadTimer && ammo[weaponIndex] < maxAmmo[weaponIndex])
+  if (!def().melee && !reloadTimer && ammo[weaponIndex] < maxAmmo[weaponIndex])
     reloadTimer = 1.3;
 }
 function fireWeapon() {
-  if (driving || transition || document.querySelector(".overlay.open")) return;
-  if (!weaponIndex) {
-    punch();
+  if (driving || transition || document.querySelector(".overlay.open") || dead) return;
+  const w = def();
+  if (w.melee) {
+    if (fireTimer > 0) return;
+    fireTimer = w.rate;
+    meleeAttack(w);
     return;
   }
   if (fireTimer > 0 || reloadTimer > 0) return;
@@ -2125,8 +2456,9 @@ function fireWeapon() {
     return;
   }
   ammo[weaponIndex]--;
-  sfx.shot(weaponIndex === 1 ? "sidearm" : "rifle");
-  fireTimer = weaponIndex === 1 ? 0.34 : 0.13;
+  fireTimer = w.rate;
+  if (w.projectile) { throwGrenade(w); return; }
+  sfx.shot(w.sound);
   shotAnimTime = 0.16;
   recordCrime(2, 0.45);
   const recoil = actions.upperfire;
@@ -2136,51 +2468,199 @@ function fireWeapon() {
   }
   if (cameraMode !== "front") heading = Math.atan2(-Math.sin(yaw), -Math.cos(yaw));
   player.rotation.y = heading;
-  let origin = new T.Vector3();
+  const holder = weapons[weaponIndex];
+  const origin = new T.Vector3();
   player.updateMatrixWorld(true);
-  weapons[weaponIndex - 1].userData.muzzle.getWorldPosition(origin);
-  const r = new T.Raycaster();
-  if (cameraMode === "front") r.set(origin, new T.Vector3(Math.sin(heading), 0, Math.cos(heading)));
-  else r.setFromCamera(new T.Vector2(0, 0), camera);
-  let target = r.ray.at(90, new T.Vector3()),
-    distance = 90;
-  for (let b of obstacles) {
-    let hit = r.ray.intersectBox(b, new T.Vector3());
-    if (hit && r.ray.origin.distanceTo(hit) < distance) {
-      distance = r.ray.origin.distanceTo(hit);
-      target.copy(hit);
+  if (holder) holder.userData.muzzle.getWorldPosition(origin);
+  else origin.copy(pos).add(new T.Vector3(0, 1.35, 0));
+  const baseDir = new T.Vector3();
+  if (cameraMode === "front") baseDir.set(Math.sin(heading), 0, Math.cos(heading));
+  else camera.getWorldDirection(baseDir);
+  const pellets = w.pellets || 1;
+  for (let p = 0; p < pellets; p++) {
+    const dir = baseDir.clone();
+    const spread = w.spread * (pellets > 1 ? 1.8 : 1);
+    dir.x += (Math.random() - 0.5) * spread * 2;
+    dir.y += (Math.random() - 0.5) * spread * 1.2;
+    dir.z += (Math.random() - 0.5) * spread * 2;
+    dir.normalize();
+    const r = new T.Raycaster(origin, dir, 0.2, 120);
+    let distance = 120;
+    const target = origin.clone().addScaledVector(dir, distance);
+    for (const b of obstacles) {
+      const hit = r.ray.intersectBox(b, rayHit);
+      if (hit) {
+        const d = origin.distanceTo(hit);
+        if (d < distance) { distance = d; target.copy(hit); }
+      }
     }
-  }
-  for (let npc of [...npcs, ...cops.filter((c) => c.active)]) {
-    if (npc.stun > 0) continue;
-    const sphere = new T.Sphere(
-        npc.g.position.clone().add(new T.Vector3(0, 1, 0)),
-        0.8,
-      ),
-      hit = r.ray.intersectSphere(sphere, new T.Vector3());
-    if (hit && hit.distanceTo(r.ray.origin) < distance) {
-      target.copy(hit);
-      distance = hit.distanceTo(r.ray.origin);
-      recordCrime(npc.police ? Math.min(5, wanted + 1) : 2, 0.5);
-      if (!npc.police) npc.aggroUntil = elapsed + 28;
-      npc.stun = 1.5;
-      npc.walk.stop();
-      npc.hit.reset().setLoop(T.LoopOnce, 1).play();
+    // Carbine/shotgun rounds damage vehicles too.
+    for (const carHit of cars) {
+      if (carHit === driving) continue;
+      const box = new T.Box3().setFromObject(carHit.obj);
+      const hit = r.ray.intersectBox(box, rayHit);
+      if (hit) {
+        const d = origin.distanceTo(hit);
+        if (d < distance) {
+          distance = d;
+          target.copy(hit);
+          damageCar(carHit, w.damage * 0.35, "gunfire");
+          puff(hit, { color: 0xffd07a, size: 0.1, life: 0.2, spread: 1.6, up: 1.2, grow: 0.4, opacity: 0.9, additive: true });
+        }
+      }
     }
+    for (const npc of [...npcs, ...cops.filter((c) => c.active)]) {
+      if (npc.dead || npc.stun > 0) continue;
+      const sphere = new T.Sphere(npc.g.position.clone().add(new T.Vector3(0, 1, 0)), 0.8);
+      const hit = r.ray.intersectSphere(sphere, new T.Vector3());
+      if (hit && hit.distanceTo(origin) < distance) {
+        target.copy(hit);
+        distance = hit.distanceTo(origin);
+        damageActor(npc, w.damage, origin, "shot");
+      }
+    }
+    const shot = tracers.find((t) => t.ttl <= 0) || tracers[0];
+    const a = shot.line.geometry.attributes.position;
+    a.setXYZ(0, origin.x, origin.y, origin.z);
+    a.setXYZ(1, target.x, target.y, target.z);
+    a.needsUpdate = true;
+    shot.line.visible = true;
+    shot.ttl = 0.075;
+    puff(target, { color: 0xd8d2c4, size: 0.14, life: 0.32, spread: 1.1, up: 1.4, grow: 2.2, opacity: 0.5 });
   }
-  let shot = tracers.find((t) => t.ttl <= 0) || tracers[0],
-    a = shot.line.geometry.attributes.position;
-  a.setXYZ(0, origin.x, origin.y, origin.z);
-  a.setXYZ(1, target.x, target.y, target.z);
-  a.needsUpdate = true;
-  shot.line.visible = true;
-  shot.ttl = 0.065;
+  cameraShake = Math.max(cameraShake, 0.12 + (w.pellets ? 0.22 : 0));
   if (ammo[weaponIndex] === 0) reloadWeapon();
 }
+// --- grenades: real projectiles with gravity, bounce and area damage ----------------------
+const grenades = [];
+const grenadeGeo = new T.SphereGeometry(0.075, 8, 6);
+const grenadeMat = new T.MeshStandardMaterial({ color: 0x4a5a3a, roughness: 0.7 });
+function throwGrenade(w) {
+  if (grenadeIndex >= 12) return;
+  const mesh = new T.Mesh(grenadeGeo, grenadeMat);
+  const origin = pos.clone().add(new T.Vector3(Math.sin(heading) * 0.5, 1.5, Math.cos(heading) * 0.5));
+  mesh.position.copy(origin);
+  scene.add(mesh);
+  const dir = new T.Vector3(Math.sin(heading), 0.34, Math.cos(heading)).normalize();
+  grenades.push({ mesh, vel: dir.multiplyScalar(17 + Math.abs(speed)), t: 2.6, spin: (Math.random() - 0.5) * 12 });
+  sfx.shot("heavy");
+}
+function updateGrenades(dt) {
+  for (let i = grenades.length - 1; i >= 0; i--) {
+    const g = grenades[i];
+    g.t -= dt;
+    g.vel.y -= 18 * dt;
+    const step = g.vel.clone().multiplyScalar(dt);
+    const next = g.mesh.position.clone().add(step);
+    if (next.y < 0.08) { // ground bounce
+      next.y = 0.08;
+      g.vel.y = Math.abs(g.vel.y) * 0.42;
+      g.vel.x *= 0.72; g.vel.z *= 0.72;
+      if (g.vel.length() < 0.8) { g.vel.set(0, 0, 0); g.t = Math.min(g.t, 0.25); }
+    }
+    if (blocked(new T.Vector3(next.x, 0, next.z), 0.12, null)) {
+      g.vel.x *= -0.45; g.vel.z *= -0.45;
+    } else g.mesh.position.copy(next);
+    g.mesh.rotation.x += g.spin * dt;
+    g.mesh.rotation.z += g.spin * 0.7 * dt;
+    if (g.t <= 0) { explode(g.mesh.position.clone()); scene.remove(g.mesh); grenades.splice(i, 1); }
+  }
+}
+function explode(at) {
+  sfx.explosion?.();
+  cameraShake = Math.max(cameraShake, Math.min(1.4, 1.3 - pos.distanceTo(at) * 0.02));
+  const radius = 7.5;
+  for (let i = 0; i < 14; i++)
+    puff(at.clone().add(new T.Vector3((Math.random() - 0.5) * 2, Math.random() * 1.6, (Math.random() - 0.5) * 2)),
+      { color: i % 3 ? 0x2b2b2b : 0xffa53d, size: 0.7 + Math.random(), life: 1.1 + Math.random(),
+        spread: 3.2, up: 2.6, grow: 2.6, opacity: 0.75, additive: i % 3 === 0 });
+  const away = new T.Vector3();
+  for (const npc of [...npcs, ...cops.filter((c) => c.active)]) {
+    const d = npc.g.position.distanceTo(at);
+    if (d > radius || npc.dead) continue;
+    const dmg = Math.round(120 * (1 - d / radius));
+    damageActor(npc, dmg, at, "blast");
+    away.copy(npc.g.position).sub(at).setY(0).normalize().multiplyScalar((1 - d / radius) * 3.2);
+    move(npc.g.position, away.x, away.z, 0.35);
+  }
+  for (const carHit of cars) {
+    const d = carHit.obj.position.distanceTo(at);
+    if (d > radius) continue;
+    damageCar(carHit, 110 * (1 - d / radius), "blast");
+    carHit.pitchVel += (1 - d / radius) * 3.5;
+    if (carHit !== driving) carHit.lift = Math.max(carHit.lift, (1 - d / radius) * 0.5);
+  }
+  const dPlayer = pos.distanceTo(at);
+  if (dPlayer < radius) {
+    takePlayerDamage(Math.round(85 * (1 - dPlayer / radius)), at, 0.05);
+    // Blast knockback on foot.
+    if (!driving) {
+      away.copy(pos).sub(at).setY(0).normalize().multiplyScalar((1 - dPlayer / radius) * 3.4);
+      move(pos, away.x, away.z, 0.55);
+    }
+  }
+  recordCrime(Math.min(5, wanted + 1), 0.6);
+}
+let grenadeIndex = 0;
+function meleeAttack(w) {
+  const knife = w.bleed;
+  if (knife) sfx.slash?.(); else sfx.punch();
+  shotAnimTime = 0.16;
+  punchSide = knife ? punchSide : -punchSide;
+  playAction(knife ? "knife_slash" : punchSide > 0 ? "punch_right" : "punch_left", true);
+  punchTime = 0.55;
+  let hit = false;
+  player.rotation.y = heading;
+  player.updateMatrixWorld(true);
+  const reach2 = w.reach * w.reach;
+  for (const n of [...npcs, ...cops.filter((c) => c.active)]) {
+    if (n.dead) continue;
+    const d2 = n.g.position.distanceToSquared(pos);
+    if (d2 > reach2) continue;
+    // Must be roughly in front of the player.
+    const to = n.g.position.clone().sub(pos);
+    if (to.x * Math.sin(heading) + to.z * Math.cos(heading) < 0.2) continue;
+    damageActor(n, w.damage, pos, knife ? "knife" : "punch");
+    const push = to.clone().setY(0).normalize().multiplyScalar(w.knock);
+    move(n.g.position, push.x, push.z, 0.35);
+    hit = true;
+  }
+  for (const carHit of cars) {
+    if (carHit === driving) continue;
+    const d = carHit.obj.position.distanceTo(pos);
+    if (d < 2.6) { damageCar(carHit, knife ? 6 : 3, "melee"); hit = true; }
+  }
+  if (hit) toast(knife ? "Blade out. Keep the coast friendly." : "Easy, traveler. Keep the coast friendly.");
+}
+// Single damage entry point for people: health, reaction, and death.
+function damageActor(n, amount, from, cause = "hit") {
+  if (n.dead || amount <= 0) return;
+  n.hp = (n.hp ?? 100) - amount;
+  n.stun = cause === "punch" ? 0.9 : 0.35;
+  n.walk?.stop();
+  n.hit?.reset().setLoop(T.LoopOnce, 1).play();
+  puff(n.g.position.clone().add(new T.Vector3(0, 1.1, 0)),
+    { color: cause === "knife" ? 0xb03030 : 0xcfc7b8, size: 0.22, life: 0.4, spread: 1.2, up: 1.0, grow: 1.4, opacity: 0.55 });
+  if (n.police) recordCrime(Math.min(5, wanted + 1), 0.6);
+  else { recordCrime(1, 0.5); n.aggroUntil = elapsed + 30; }
+  if (n.hp <= 0) {
+    n.dead = true;
+    n.deadAt = elapsed;
+    n.g.rotation.z = Math.PI / 2 * (Math.random() > 0.5 ? 1 : -1); // collapse
+    n.g.rotation.x = 0.1;
+    n.g.position.y = 0.05;
+    n.m.stopAllAction();
+    if (n.police) recordCrime(Math.min(5, wanted + 2), 1);
+    else recordCrime(2, 1);
+    toast(n.police ? "Officer down. This will not be forgotten." : "They are not getting up.");
+  }
+}
+
 function updateWeapons(dt) {
   fireTimer = Math.max(0, fireTimer - dt);
   shotAnimTime = Math.max(0, shotAnimTime - dt);
   for (const w of weapons) {
+    if (!w) continue;
     w.userData.visual.position.z =
       w.userData.restZ - (shotAnimTime / 0.16) * 0.028;
     w.userData.flash.visible = shotAnimTime > 0.11;
@@ -2194,21 +2674,19 @@ function updateWeapons(dt) {
     t.line.visible = t.ttl > 0;
   }
   for (let i = 0; i < weapons.length; i++)
-    weapons[i].visible = !driving && !transition && i === weaponIndex - 1;
-  $("weaponSwitch").textContent = ["✊", "⌖", "▰"][weaponIndex];
-  $("weaponSwitch").setAttribute(
-    "aria-label",
-    "Switch weapon: " + ["Fists", "Pulse sidearm", "Carbine"][weaponIndex],
-  );
-  $("ammoCount").textContent = weaponIndex
-    ? reloadTimer > 0
+    if (weapons[i]) weapons[i].visible = !driving && !transition && i === weaponIndex;
+  const w = def();
+  $("weaponSwitch").textContent = w.icon;
+  $("weaponSwitch").setAttribute("aria-label", "Switch weapon: " + w.name + " (tap to cycle)");
+  $("ammoCount").textContent = w.melee
+    ? w.name
+    : reloadTimer > 0
       ? "Reloading…"
-      : ammo[weaponIndex] + " / " + maxAmmo[weaponIndex]
-    : "Fists";
-  $("crosshair").style.display = weaponIndex && !driving ? "block" : "none";
-  $("touchPunch").innerHTML = weaponIndex
-    ? "⌖<small>FIRE</small>"
-    : "✊<small>PUNCH</small>";
+      : ammo[weaponIndex] + " / " + maxAmmo[weaponIndex];
+  $("crosshair").style.display = !w.melee && !driving ? "block" : "none";
+  $("touchPunch").innerHTML = w.melee
+    ? w.icon + "<small>STRIKE</small>"
+    : "⌖<small>FIRE</small>";
 }
 function summon(id) {
   if (transition) return;
@@ -2350,6 +2828,76 @@ if (new URLSearchParams(location.search).has("test"))
       ...WORLD, obstacles: obstacles.length, buildings: buildings.length,
       districts: [...DISTRICTS.entries()],
     }),
+    // --- combat / physics probes -------------------------------------------------------
+    weaponList: () => WEAPON_DEFS.map((w, i) => ({
+      index: i, id: w.id, name: w.name, melee: !!w.melee,
+      damage: w.damage, ammo: ammo[i], max: maxAmmo[i],
+      hasMesh: !!weapons[i], projectile: !!w.projectile,
+    })),
+    selectWeapon: (id) => {
+      const i = WEAPON_DEFS.findIndex((w) => w.id === id);
+      if (i < 0) return null;
+      weaponIndex = i;
+      reloadTimer = 0;
+      updateWeapons(0);
+      return WEAPON_DEFS[i].id;
+    },
+    // Punch/stab the nearest NPC through the real control path and report the exchange.
+    hitNearestNpc: () => {
+      let best = null, bestD = 1e9;
+      for (const n of npcs) {
+        if (n.dead) continue;
+        const d = n.g.position.distanceTo(pos);
+        if (d < bestD) { bestD = d; best = n; }
+      }
+      if (!best) return null;
+      best.g.position.copy(pos).add(new T.Vector3(Math.sin(heading) * 1.2, 0, Math.cos(heading) * 1.2));
+      const before = { hp: best.hp, aggro: best.aggroUntil > elapsed };
+      fireWeapon();
+      return {
+        before, after: { hp: best.hp, aggro: best.aggroUntil > elapsed, stunned: best.stun > 0 },
+        weapon: def().id, npcIndex: npcs.indexOf(best),
+      };
+    },
+    npcState: (i) => {
+      const n = npcs[i];
+      return n ? { hp: n.hp, dead: !!n.dead, aggro: n.aggroUntil > elapsed,
+        distance: +n.g.position.distanceTo(pos).toFixed(2) } : null;
+    },
+    playerState: () => ({ health, dead, deaths, cause: lastDamageCause, invulnerable }),
+    hurtPlayer: (amount) => { invulnerable = 0; takePlayerDamage(amount, pos.clone().add(new T.Vector3(1, 0, 1))); return health; },
+    carState: (type) => {
+      const c = cars.find((v) => v.type === type);
+      return c ? { hp: c.hp, wrecked: c.wrecked, pitch: +c.pitch.toFixed(3), roll: +c.roll.toFixed(3),
+        lift: +c.lift.toFixed(3), slip: +(c.slideYaw || 0).toFixed(3), speed: +c.speed.toFixed(2) } : null;
+    },
+    damageCarOfType: (type, amount) => {
+      const c = cars.find((v) => v.type === type);
+      if (!c) return null;
+      damageCar(c, amount, "test");
+      return { hp: c.hp, wrecked: c.wrecked };
+    },
+    /** Drive forward and steer for a fixed time, then report motion + suspension state. */
+    driveProbe: async () => {
+      const c = driving;
+      if (!c) return null;
+      const start = pos.clone(), h0 = heading;
+      keys.Gas = true;
+      await new Promise((r) => setTimeout(r, 1200));
+      keys.Gas = false;
+      keys.SteerRight = true;
+      await new Promise((r) => setTimeout(r, 700));
+      keys.SteerRight = false;
+      const moved = pos.clone().sub(start);
+      return {
+        forwardFraction: +(moved.x * Math.sin(h0) + moved.z * Math.cos(h0)).toFixed(2),
+        lateral: +Math.abs(moved.x * Math.cos(h0) - moved.z * Math.sin(h0)).toFixed(2),
+        headingDelta: +(heading - h0).toFixed(3),
+        pitch: +c.pitch.toFixed(3), roll: +c.roll.toFixed(3),
+        speed: +c.speed.toFixed(2),
+      };
+    },
+    facingFixes: () => Object.fromEntries([...vehicleYawFix.entries()]),
     board: (type) => {
       const c = cars.find((v) => v.type === type);
       if (!c || driving || transition) return driving?.type || null;
@@ -2657,7 +3205,7 @@ function attachWeapon(model, name) {
 }
 function actorActions(model, clips) {
   const m = new T.AnimationMixer(model.userData.rig), actions = {};
-  for (const name of ["Idle","Walk","Run","Punch_Right","Gun_Shoot","HitRecieve"]) actions[name] = m.clipAction(clips.find(c=>c.name===name));
+  for (const name of ["Idle","Walk","Run","Punch_Right","Punch_Left","Gun_Shoot","HitRecieve"]) actions[name] = m.clipAction(clips.find(c=>c.name===name));
   mixers.push(m); return {m,actions};
 }
 function dressCitizen(model, i) {
@@ -2685,7 +3233,7 @@ function spawnCitizen(i) {
   for(let a=0;a<18&&blocked(new T.Vector3(x,0,z),.42);a++)z+=3;
   g.position.set(x,.12,z);
   const {m,actions}=actorActions(model,npcClipSets[asset]);actions.Walk.play();
-  npcs.push({g,model,m,actions,walk:actions.Walk,hit:actions.HitRecieve,active:true,stun:0,dir:i%2?1:-1,aggroUntil:0,cooldown:0,mode:'Walk',armed:i%6===2,weapon:null,appearanceId:asset+'-outfit-'+i,width,height});
+  npcs.push({g,model,m,actions,walk:actions.Walk,hit:actions.HitRecieve,active:true,stun:0,hp:100,dead:false,dir:i%2?1:-1,aggroUntil:0,cooldown:0,mode:'Walk',armed:i%6===2,weapon:null,appearanceId:asset+'-outfit-'+i,width,height});
 }
 function initPolice() {
   for(let i=0;i<24;i++){
@@ -2695,12 +3243,14 @@ function initPolice() {
     for(let a=0;a<18&&blocked(home,.4);a++)home.z+=3;
     g.position.copy(home);g.visible=street;
     const c={g,model,m,actions,walk:actions.Run,hit:actions.HitRecieve,active:street,street,home,patrolDir:1,police:true,stun:0,cooldown:1,mode:'',heavy:false,weapon:attachWeapon(model,'blaster-g'),heavyWeapon:attachWeapon(model,'blaster-d')};
-    cops.push(c);copAction(c,'Idle');
+    c.hp=100;c.dead=false;cops.push(c);copAction(c,'Idle');
   }
 }
 function takePlayerDamage(amount, from, knockback=0) {
-  if(invulnerable || health<=0)return;
+  if(invulnerable || health<=0 || dead)return;
   health=Math.max(0,health-amount);invulnerable=.38;
+  cameraShake=Math.max(cameraShake,Math.min(.8,amount*.05));
+  if(health<=0){playerDie(amount>=30?"Killed by a heavy hit":"You were beaten down");return;}
   if(knockback && !driving && !transition){const d=pos.clone().sub(from);d.y=0;d.normalize();move(pos,d.x*knockback,d.z*knockback,.55);}
   $('damageflash').classList.add('hit');setTimeout(()=>$('damageflash').classList.remove('hit'),110);
 }
@@ -2708,8 +3258,13 @@ function updateCitizens(dt) {
   if(dt<=0)return;
   for(const n of npcs){
     n.cooldown-=dt;
+    if(n.dead){
+      enforceActorScale(n.model);
+      continue;
+    }
     if(n.stun>0){n.stun-=dt;if(n.stun<=0){n.hit.stop();n.mode='';}enforceActorScale(n.model);continue;}
-    const angry=n.aggroUntil>elapsed && wanted>=1;
+    // Being attacked is enough to fight back; a wanted level only decides how hard they push.
+    const angry=n.aggroUntil>elapsed && !n.dead;
     if(angry){
       const to=pos.clone().sub(n.g.position);to.y=0;const distance=to.length();to.normalize();n.g.rotation.y=Math.atan2(to.x,to.z);
       const armed=n.armed&&wanted>=3;
@@ -2719,7 +3274,7 @@ function updateCitizens(dt) {
       if(distance>(armed?15:1.65)){
         copAction(n,'Run');move(n.g.position,to.x*dt*2.8,to.z*dt*2.8,.36);
       }else if(n.cooldown<=0&&hasSight(n.g.position.clone().add(new T.Vector3(0,1.2,0)),pos.clone().add(new T.Vector3(0,1,0)))){
-        n.cooldown=armed?1.65:1.4;n.mode='';copAction(n,armed?'Gun_Shoot':'Punch_Right');
+        n.cooldown=armed?1.65:1.4;n.mode='';copAction(n,armed?'Gun_Shoot':(Math.random()>.5?'Punch_Right':'Punch_Left'));
         if(armed){civilianShots++;drawPoliceShot(n);takePlayerDamage(3,n.g.position);}else{sfx.punch();takePlayerDamage(2,n.g.position,.13);}
       }
     }else{
@@ -2813,6 +3368,9 @@ function copAction(c, name) {
   c.mode = name;
 }
 function updatePolice(dt) {
+  for (const c of cops) {
+    if (c.dead) { c.active = false; }
+  }
   if(dt<=0)return;
   invulnerable=Math.max(0,invulnerable-dt);
   const count=[0,0,4,8,12,20][wanted];
@@ -2854,7 +3412,7 @@ function updatePolice(dt) {
   if(wanted&&elapsed-lastCrime>25&&!cops.some(c=>c.active&&wanted>=2&&c.g.position.distanceTo(pos)<35&&hasSight(c.g.position.clone().add(new T.Vector3(0,1,0)),pos.clone().add(new T.Vector3(0,1,0))))){
     crimeHeat-=dt*.15;if(crimeHeat< -2){wanted--;crimeHeat=0;lastCrime=elapsed-18;}
   }
-  if(health<=0)respawnPlayer();
+  if(health<=0&&!dead)playerDie("You went down");
 }
 
 function drawPoliceShot(c) {
@@ -2884,6 +3442,14 @@ function respawnPlayer(reason = "Busted · Back at Palm Beach") {
   health = 100;
   wanted = crimeHeat = 0;
   invulnerable = 4;
+  dead = false;
+  document.body.classList.remove("downed");
+  playerModel.rotation.z = 0;
+  playerModel.position.y = 0;
+  pitch = 0.05;
+  // Weapons keep their ammo, but a death costs you the grenade stock and reloads the rest.
+  for (let i = 1; i < WEAPON_DEFS.length; i++) ammo[i] = maxAmmo[i];
+  ammo[WEAPON_DEFS.findIndex((w) => w.id === "grenade")] = Math.min(1, maxAmmo[WEAPON_DEFS.findIndex((w) => w.id === "grenade")]);
   mixer.stopAllAction();
   activeAction = "";
   playAction("idle");
@@ -2968,12 +3534,45 @@ function buildHumanClips(assetName = "real-human") {
   }
   const idleGun = make("Idle_Gun", [0, 1], () => aim());
   make("Gun_Shoot", [0, .065, .15, .30], (_, i) => aim(i === 1 ? .28 : 0));
-  make("Punch_Right", [0, .14, .28, .47, .65], (_, i) => {
-    const extend = [0, .15, 1, .45, 0][i];
-    point("UpperArmR", "LowerArmR", [-.28, -.45 + extend * .47, .3 + extend]);
-    point("LowerArmR", "WristR", [0, .85 * (1 - extend), .25 + extend]);
-    point("UpperArmL", "LowerArmL", [.35, -.35, .4]);
-    point("LowerArmL", "WristL", [0, .8, .35]);
+  // A punch reads from the whole body, not the arm: hips and chest rotate into the strike while
+  // the opposite arm stays in guard. The old build lost that twist, which is what made hits look
+  // like a shove. Five poses: ready, coil, impact, follow-through, recover.
+  function twist(name, y) {
+    const b = findBone(rig, name);
+    if (b) b.rotateY(y);
+  }
+  function guard(side, k) {
+    const o = side === "L" ? 1 : -1;
+    point("UpperArm" + side, "LowerArm" + side, [o * .30, -.55 + k * .25, .55]);
+    point("LowerArm" + side, "Wrist" + side, [o * .10, .62, .30]);
+  }
+  function punchPose(side, extend, coil, guardK) {
+    const o = side === "L" ? 1 : -1;
+    const other = side === "L" ? "R" : "L", oo = -o;
+    // torso winds away from the striking arm, then drives through the target
+    twist("Chest", coil * .38 + extend * -.34);
+    twist("Spine", coil * .16 + extend * -.16);
+    point("UpperArm" + side, "LowerArm" + side,
+      [o * (.30 - extend * .27), -.62 + extend * .55, .42 + extend * .95]);
+    point("LowerArm" + side, "Wrist" + side, [oo * (.08 - extend * .06), .05 - extend * .06, .85 + extend * .35]);
+    point("UpperArm" + other, "LowerArm" + other, [oo * .30, -.55 + guardK * .25, .55]);
+    point("LowerArm" + other, "Wrist" + other, [oo * .10, .62, .30]);
+  }
+  make("Punch_Right", [0, .11, .21, .33, .52], (_, i) => {
+    punchPose("R", [0, .18, 1, .55, 0][i], [0, .9, -.35, 0, 0][i], [0, .4, .9, .5, 0][i]);
+  });
+  make("Punch_Left", [0, .11, .21, .33, .52], (_, i) => {
+    punchPose("L", [0, .18, 1, .55, 0][i], [0, .9, -.35, 0, 0][i], [0, .4, .9, .5, 0][i]);
+  });
+  make("Knife_Slash", [0, .10, .20, .32, .5], (_, i) => {
+    const k = [0, .55, 1, .5, 0][i], c = [0, .8, -.5, -.1, 0][i];
+    twist("Chest", c * .34);
+    twist("Spine", c * .14);
+    // knife hand: high outside, sweeping down and across
+    point("UpperArmR", "LowerArmR", [-.55 + k * .75, -.15 + k * .35, .45 + k * .8]);
+    point("LowerArmR", "WristR", [.45 - k * .9, .25 - k * .55, .7 + k * .4]);
+    point("UpperArmL", "LowerArmL", [.34, -.5 + k * .2, .45]);
+    point("LowerArmL", "WristL", [.12, .55, .35]);
   });
   make("P_Jump", [0, .18, .40, .70, .90], (_, i) => {
     const k = [0, .6, 1, .4, 0][i];

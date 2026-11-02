@@ -112,11 +112,77 @@ function check(name, ok, detail) {
     sample: lights.slice(0, 3), bad: badLights.length,
   });
 
-  // --- 8. Vehicle orientation diagnostics (visual ground truth) -------------------------
+  // --- 8. Weapons, knife, melee, NPC retaliation, death, car damage ---------------------
+  const weapons = await page.evaluate(() => coastlineTest.weaponList());
+  const ids = weapons.map((w) => w.id);
+  check("weapon table includes a knife and several firearms",
+    ids.includes("knife") && ids.filter((i) => !["fists", "knife"].includes(i)).length >= 4,
+    { count: weapons.length, ids });
+  check("every firearm has a model attached", weapons.filter((w) => !w.melee).every((w) => w.hasMesh),
+    weapons.filter((w) => !w.melee && !w.hasMesh));
+
+  // Knife: select it, strike an NPC, expect damage well above a punch.
+  await page.evaluate(() => { coastlineTest.setPosition(-57, 96); coastlineTest.setWanted(0); });
+  await page.waitForTimeout(300);
+  await page.evaluate(() => coastlineTest.selectWeapon("knife"));
+  const knifeHit = await page.evaluate(() => coastlineTest.hitNearestNpc());
+  check("knife damages an NPC on strike", !!knifeHit && knifeHit.after.hp < knifeHit.before.hp,
+    knifeHit);
+
+  // Retaliation: the NPC we hit must turn hostile, chase and land a hit on the player.
+  const hpBefore = await page.evaluate(() => coastlineTest.playerState().health);
+  const retaliated = await page.waitForFunction(
+    (hp) => coastlineTest.playerState().health < hp,
+    hpBefore, { timeout: 45000 },
+  ).then(() => true).catch(() => false);
+  check("punched NPC fights back and damages the player", retaliated,
+    { healthBefore: hpBefore, after: await page.evaluate(() => coastlineTest.playerState()) });
+
+  // Firearms: carbine and shotgun should discharge and consume ammo.
+  const fired = [];
+  for (const id of ["carbine", "smg", "shotgun"]) {
+    const before = await page.evaluate((w) => {
+      coastlineTest.selectWeapon(w);
+      return coastlineTest.weaponList().find((x) => x.id === w).ammo;
+    }, id);
+    await page.evaluate(() => coastlineTest.hitNearestNpc());
+    const after = await page.evaluate((w) => coastlineTest.weaponList().find((x) => x.id === w).ammo, id);
+    fired.push({ id, before, after, spent: before - after });
+  }
+  check("carbine/smg/shotgun consume ammunition when fired",
+    fired.every((f) => f.spent >= 1), fired);
+
+  // Car damage: a heavy hit wrecks a car and marks it damaged.
+  const dmg1 = await page.evaluate(() => coastlineTest.damageCarOfType("sedan", 55));
+  const dmg2 = await page.evaluate(() => coastlineTest.damageCarOfType("sedan", 60));
+  check("cars take damage and can be wrecked",
+    dmg1 && dmg1.hp < 100 && dmg2 && dmg2.wrecked, { after55: dmg1, afterMore: dmg2 });
+
+  // Player death and respawn.
+  await page.evaluate(() => coastlineTest.hurtPlayer(400));
+  const died = await page.waitForFunction(() => coastlineTest.playerState().dead, null, { timeout: 15000 })
+    .then(() => true).catch(() => false);
+  const revived = await page.waitForFunction(() => !coastlineTest.playerState().dead, null, { timeout: 30000 })
+    .then(() => true).catch(() => false);
+  const pState = await page.evaluate(() => coastlineTest.playerState());
+  check("player dies and respawns with full health", died && revived && pState.health === 100,
+    { died, revived, ...pState });
+
+  // --- 9. Vehicle physics probe -------------------------------------------------------
+  await page.evaluate(() => coastlineTest.board("car-concept"));
+  await page.waitForFunction(() => coastlineTest.getState().vehicle === "car-concept", null, { timeout: 60000 });
+  const probe = await page.evaluate(() => coastlineTest.driveProbe());
+  check("car accelerates forward and steers right", probe && probe.forwardFraction > 3 && probe.headingDelta < -0.05, probe);
+  check("suspension responds (pitch/roll move away from zero)",
+    probe && (Math.abs(probe.pitch) > 0.002 || Math.abs(probe.roll) > 0.002), probe);
+
+  const fixes = await page.evaluate(() => coastlineTest.facingFixes());
+  check("taxi facing correction is applied automatically", Math.abs((fixes.taxi || 0) - Math.PI) < 0.01,
+    fixes);
+
+  // --- 10. Vehicle orientation diagnostics (visual ground truth) -------------------------
   // Capture a traffic taxi and a traffic sedan from in front of their travel direction (+Z).
   // If the mesh faced backwards, the shot would show the boot/rear window instead of the bonnet.
-  await page.evaluate(() => coastlineTest.board("taxi"));
-  await page.waitForFunction(() => coastlineTest.getState().vehicle === "taxi", null, { timeout: 60000 });
   const noseT = await page.evaluate(() => coastlineTest.noseInfo("taxi"));
   const noseS = await page.evaluate(() => coastlineTest.noseInfo("sedan"));
   results.orientation = { taxi: noseT, sedan: noseS };
@@ -125,15 +191,14 @@ function check(name, ok, detail) {
       const car = coastlineTest.noseInfo(t).find((c) => c.traffic);
       return car || coastlineTest.noseInfo(t)[0];
     }, type);
-    const target = await page.evaluate((id) => {
-      const c = coastlineTest.carAt(id);
-      return c;
-    }, info.id);
+    const target = await page.evaluate((id) => { const c = coastlineTest.carAt(id); return c; }, info.id);
     if (target) {
-      await page.evaluate(([x, z, ry]) => {
-        // 7 m in front (+Z of travel), 2.2 m up, looking back at the car
+      await page.evaluate(([x, z]) => {
+        // Stand the player beside the car first (traffic cars are culled beyond 260 m), then put
+        // the camera 7 m ahead of the nose looking back at it.
+        coastlineTest.setPosition(x, z + 3);
         coastlineTest.setFreeCam([x, 2.2, z + 7], [x, 0.8, z]);
-      }, [target.x, target.z, info.rotY]);
+      }, [target.x, target.z]);
       await page.waitForTimeout(900);
       const file = `${SHOT_DIR}/orient-${label}.png`;
       await page.screenshot({ path: file, timeout: 90000 });
