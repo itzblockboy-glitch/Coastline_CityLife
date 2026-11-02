@@ -81,11 +81,15 @@ function check(name, ok, detail) {
     const gas = await page.locator("#touchGas").boundingBox();
     await page.locator("#touchGas").dispatchEvent("pointerdown", { pointerId: 61, clientX: gas.x + 10, clientY: gas.y + 10 });
     await page.waitForFunction(() => coastlineTest.getState().speed > 3, null, { timeout: 60000 });
-    await page.waitForTimeout(900);
+    // Simulated time, not wall clock: CI renders through SwiftShader at a few fps, so a fixed
+    // wait would only advance the car a couple of frames and every probe would read as "stuck".
+    const e0 = await page.evaluate(() => coastlineTest.getState().elapsed);
+    await page.waitForFunction((e) => coastlineTest.getState().elapsed > e + 1.2, e0, { timeout: 90000 });
     const moving = await page.evaluate(() => coastlineTest.getState());
     const steer = await page.locator("#steerRight").boundingBox();
     await page.locator("#steerRight").dispatchEvent("pointerdown", { pointerId: 62, clientX: steer.x + 10, clientY: steer.y + 10 });
-    await page.waitForTimeout(800);
+    const e1 = await page.evaluate(() => coastlineTest.getState().elapsed);
+    await page.waitForFunction((e) => coastlineTest.getState().elapsed > e + 0.9, e1, { timeout: 90000 });
     const turned = await page.evaluate(() => coastlineTest.getState());
     await page.locator("#steerRight").dispatchEvent("pointercancel", { pointerId: 62 });
     await page.locator("#touchGas").dispatchEvent("pointercancel", { pointerId: 61 });

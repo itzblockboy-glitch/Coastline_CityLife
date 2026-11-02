@@ -2945,12 +2945,19 @@ if (new URLSearchParams(location.search).has("test"))
     driveProbe: async () => {
       const c = driving;
       if (!c) return null;
-      const start = pos.clone(), h0 = heading;
+      const start = pos.clone(), h0 = heading, e0 = elapsed;
+      // Simulated seconds, not wall clock: software WebGL renders at a few fps in CI, so a fixed
+      // timeout would only advance the physics a couple of frames.
+      const run = async (secs) => {
+        const end = elapsed + secs;
+        while (elapsed < end) await new Promise((r) => setTimeout(r, 16));
+      };
       keys.Gas = true;
-      await new Promise((r) => setTimeout(r, 1200));
+      await run(1.6);
+      const gasSpeed = +speed.toFixed(2);
       keys.Gas = false;
       keys.SteerRight = true;
-      await new Promise((r) => setTimeout(r, 700));
+      await run(1.0);
       keys.SteerRight = false;
       const moved = pos.clone().sub(start);
       return {
@@ -2958,7 +2965,8 @@ if (new URLSearchParams(location.search).has("test"))
         lateral: +Math.abs(moved.x * Math.cos(h0) - moved.z * Math.sin(h0)).toFixed(2),
         headingDelta: +(heading - h0).toFixed(3),
         pitch: +c.pitch.toFixed(3), roll: +c.roll.toFixed(3),
-        speed: +c.speed.toFixed(2),
+        speed: +c.speed.toFixed(2), gasSpeed, simSeconds: +(elapsed - e0).toFixed(2),
+        overlay: !!document.querySelector(".overlay.open"),
         type: c.type, hp: c.hp, wrecked: !!c.wrecked,
         wedged: blocked(pos, 0.55, c, { angle: heading, hw: c.hw, hl: c.hl }),
         dead, transition: !!transition, drivingType: driving?.type || null,
