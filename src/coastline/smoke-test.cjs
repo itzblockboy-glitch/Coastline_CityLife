@@ -180,6 +180,10 @@ function check(name, ok, detail) {
   check("suspension responds (pitch/roll move away from zero)",
     probe && (Math.abs(probe.pitch) > 0.002 || Math.abs(probe.roll) > 0.002), probe);
 
+  const tickErr = await page.evaluate(() => coastlineTest.getState().tickError);
+  check("no frame errors during the whole run", !tickErr && errors.length === 0,
+    { tickErr, errors: errors.slice(0, 4) });
+
   const fixes = await page.evaluate(() => coastlineTest.facingFixes());
   const report = await page.evaluate(() => coastlineTest.facingReport());
   results.facing = { fixes, report };
@@ -260,6 +264,7 @@ function check(name, ok, detail) {
   // Always leave a record: the CI log host is not reachable from every environment, so the
   // committed JSON is the only reliable way to see where a run stopped.
   results.error = String((e && e.stack) || e);
+  results.pageErrors = errors;
   try {
     fs.mkdirSync(SHOT_DIR, { recursive: true });
     fs.writeFileSync("smoke-results.json", JSON.stringify(results, null, 2));

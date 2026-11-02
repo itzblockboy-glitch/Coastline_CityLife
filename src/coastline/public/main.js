@@ -1708,8 +1708,7 @@ function adaptiveFrameRate(fps) {
     adaptCooldown = now + 4;
   }
 }
-function tick(now) {
-  requestAnimationFrame(tick);
+function frame(now) {
   if (document.hidden || nativePaused) {
     last = now;
     return;
@@ -2118,6 +2117,20 @@ function tick(now) {
 }
 drawMap();
 updateWeapons(0);
+let tickError = "";
+function tick(now) {
+  requestAnimationFrame(tick);
+  try {
+    frame(now);
+  } catch (e) {
+    // A single bad frame must never kill the loop - that freezes the whole game while the HUD
+    // still looks alive. Record the first failure and keep rendering.
+    if (!tickError) {
+      tickError = String((e && e.stack) || e);
+      console.error("frame error:", tickError);
+    }
+  }
+}
 requestAnimationFrame(tick);
 addEventListener("resize", () => {
   renderer.setSize(innerWidth, innerHeight);
@@ -2765,6 +2778,7 @@ if (new URLSearchParams(location.search).has("test"))
       police: cops.filter((c) => c.active).length,
       policeShots,
       elapsed,
+      tickError,
       copData: cops
         .filter((c) => c.active)
         .map((c) => ({
