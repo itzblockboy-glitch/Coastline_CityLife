@@ -38,7 +38,7 @@
       "police": false
     },
     "minimap redraw is cheap (<3 ms/frame)": {
-      "ms": 0.023
+      "ms": 0.03
     },
     "world extends past the old 211 m wall": {
       "xMin": -120,
@@ -89,27 +89,25 @@
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 567,
-      "triangles": 1909617
+      "calls": 482,
+      "triangles": 1560921
     },
     "shadow map no larger than 1024 on mobile": {
       "renderScale": 1,
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 567,
-      "triangles": 1909617
+      "calls": 482,
+      "triangles": 1560921
     },
     "taxi accelerates forward, not backward": {
-      "FAILED": {
-        "alongForward": 1.37,
-        "dx": 0,
-        "dz": -1.37,
-        "speed": 5.431124376198399
-      }
+      "forwardFraction": 1,
+      "travelled": 1.09,
+      "alongForward": 1.09,
+      "speed": 4.83
     },
     "steering right turns right (heading decreases)": {
-      "headingDelta": -0.065
+      "headingDelta": -0.199
     },
     "police light bars sit on the roof": {
       "sample": [
@@ -139,8 +137,8 @@
   "errors": [],
   "platform": "Linux x86_64",
   "state": {
-    "drawCalls": 506,
-    "triangles": 1747186,
+    "drawCalls": 430,
+    "triangles": 1401782,
     "quality": "high"
   }
 }
