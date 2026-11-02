@@ -38,7 +38,7 @@
       "police": false
     },
     "minimap redraw is cheap (<3 ms/frame)": {
-      "ms": 0.05
+      "ms": 0.027
     },
     "world extends past the old 211 m wall": {
       "xMin": -120,
@@ -89,28 +89,26 @@
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 800,
-      "triangles": 1910801
+      "calls": 688,
+      "triangles": 1579708
     },
     "shadow map no larger than 1024 on mobile": {
       "renderScale": 1,
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 800,
-      "triangles": 1910801
+      "calls": 688,
+      "triangles": 1579708
     },
     "taxi accelerates forward, not backward": {
-      "FAILED": {
-        "forwardFraction": 0,
-        "travelled": 0,
-        "alongForward": 0,
-        "speed": 13.74
-      }
+      "forwardFraction": 1,
+      "travelled": 2.12,
+      "alongForward": 2.12,
+      "speed": 3.77
     },
     "steering right turns right (heading decreases)": {
       "FAILED": {
-        "headingDelta": 0
+        "headingDelta": -0.032
       }
     },
     "police light bars sit on the roof": {
@@ -207,12 +205,12 @@
     },
     "car accelerates forward and steers right": {
       "FAILED": {
-        "forwardFraction": 0,
+        "forwardFraction": 0.02,
         "lateral": 0,
         "headingDelta": 0,
-        "pitch": 0,
+        "pitch": -0.011,
         "roll": 0,
-        "speed": 0,
+        "speed": 0.23,
         "type": "car-concept",
         "hp": 100,
         "wrecked": false,
@@ -226,32 +224,26 @@
       }
     },
     "suspension responds (pitch/roll move away from zero)": {
-      "FAILED": {
-        "forwardFraction": 0,
-        "lateral": 0,
-        "headingDelta": 0,
-        "pitch": 0,
-        "roll": 0,
-        "speed": 0,
-        "type": "car-concept",
-        "hp": 100,
-        "wrecked": false,
-        "dead": false,
-        "transition": false,
-        "drivingType": "car-concept",
-        "keys": {
-          "Gas": false,
-          "Steer": false
-        }
+      "forwardFraction": 0.02,
+      "lateral": 0,
+      "headingDelta": 0,
+      "pitch": -0.011,
+      "roll": 0,
+      "speed": 0.23,
+      "type": "car-concept",
+      "hp": 100,
+      "wrecked": false,
+      "dead": false,
+      "transition": false,
+      "drivingType": "car-concept",
+      "keys": {
+        "Gas": false,
+        "Steer": false
       }
     },
     "no frame errors during the whole run": {
-      "FAILED": {
-        "tickErr": "ReferenceError: dragF is not defined\n    at KS (http://localhost:3000/app.js:4229:126220)\n    at B0 (http://localhost:3000/app.js:4229:133103)",
-        "errors": [
-          "console: frame error: ReferenceError: dragF is not defined\n    at KS (http://localhost:3000/app.js:4229:126220)\n    at B0 (http://localhost:3000/app.js:4229:133103)"
-        ]
-      }
+      "tickErr": "",
+      "errors": []
     },
     "taxi is rotated 180 deg, and every correction is exactly 0 or 180": {
       "fixes": {
@@ -399,13 +391,13 @@
     "taxi": [
       {
         "id": 8,
-        "rotY": 3.142,
-        "angle": 3.142,
+        "rotY": 3.121,
+        "angle": 3.109,
         "traffic": false,
-        "z": 200,
-        "roofDzWorld": 0.274,
+        "z": 197.6,
+        "roofDzWorld": 0.433,
         "bounds": {
-          "minY": 0.12
+          "minY": 0.03
         }
       },
       {
@@ -413,7 +405,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": -161.7,
+        "z": -156.7,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -424,7 +416,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 56.2,
+        "z": 62,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -435,7 +427,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 274.1,
+        "z": 280.8,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -448,7 +440,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": -202.9,
+        "z": -196.2,
         "roofDzWorld": -0.343,
         "bounds": {
           "minY": 0.09
@@ -459,7 +451,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": -2.7,
+        "z": 2.3,
         "roofDzWorld": -0.469,
         "bounds": {
           "minY": 0.12
@@ -470,7 +462,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 215.2,
+        "z": 221,
         "roofDzWorld": -0.469,
         "bounds": {
           "minY": 0.12
@@ -478,9 +470,7 @@
       }
     ]
   },
-  "errors": [
-    "console: frame error: ReferenceError: dragF is not defined\n    at KS (http://localhost:3000/app.js:4229:126220)\n    at B0 (http://localhost:3000/app.js:4229:133103)"
-  ],
+  "errors": [],
   "platform": "Linux x86_64",
   "state": {
     "drawCalls": 638,
