@@ -38,7 +38,7 @@
       "police": false
     },
     "minimap redraw is cheap (<3 ms/frame)": {
-      "ms": 0.033
+      "ms": 0.043
     },
     "world extends past the old 211 m wall": {
       "xMin": -120,
@@ -89,25 +89,25 @@
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 774,
-      "triangles": 1837198
+      "calls": 696,
+      "triangles": 1585490
     },
     "shadow map no larger than 1024 on mobile": {
       "renderScale": 1,
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 774,
-      "triangles": 1837198
+      "calls": 696,
+      "triangles": 1585490
     },
     "taxi accelerates forward, not backward": {
       "forwardFraction": 1,
-      "travelled": 1.27,
-      "alongForward": 1.27,
-      "speed": 5.23
+      "travelled": 0.85,
+      "alongForward": 0.85,
+      "speed": 4.21
     },
     "steering right turns right (heading decreases)": {
-      "headingDelta": -0.096
+      "headingDelta": -0.113
     },
     "police light bars sit on the roof": {
       "sample": [
@@ -128,17 +128,102 @@
     }
   },
   "shots": [
+    "screenshots/orient-taxi.png",
+    "screenshots/orient-sedan-control.png",
     "screenshots/v1.6-factories-222_-155.png",
     "screenshots/v1.6-factories-222_93.png",
     "screenshots/v1.6-construction-36_279.png",
     "screenshots/v1.6-construction-222_217.png",
     "screenshots/v1.6-downtown.png"
   ],
+  "orientation": {
+    "taxi": [
+      {
+        "id": 8,
+        "rotY": 3.028,
+        "angle": 3.028,
+        "traffic": false,
+        "z": 198.4,
+        "roofDzWorld": 0.277,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 12,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": -185.1,
+        "roofDzWorld": -0.274,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 16,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": 28.9,
+        "roofDzWorld": -0.274,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 20,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": 242.9,
+        "roofDzWorld": -0.274,
+        "bounds": {
+          "minY": 0.12
+        }
+      }
+    ],
+    "sedan": [
+      {
+        "id": 11,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": -234.1,
+        "roofDzWorld": -0.469,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 15,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": -26.1,
+        "roofDzWorld": -0.469,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 19,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": 187.9,
+        "roofDzWorld": -0.469,
+        "bounds": {
+          "minY": 0.12
+        }
+      }
+    ]
+  },
   "errors": [],
   "platform": "Linux x86_64",
   "state": {
-    "drawCalls": 639,
-    "triangles": 1425847,
+    "drawCalls": 638,
+    "triangles": 1425595,
     "quality": "high"
   }
 }
