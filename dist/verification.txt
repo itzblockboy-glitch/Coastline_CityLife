@@ -62,22 +62,25 @@ N: android=http://schemas.android.com/apk/res/android
       A: android:isGame(0x010103f4)=(type 0x12)0xffffffff
       A: android:usesCleartextTraffic(0x010104ec)=(type 0x12)0x0
       A: android:appCategory(0x01010545)=(type 0x10)0x0
-      E: activity (line=10)
+      E: meta-data (line=10)
+        A: android:name(0x01010003)="android.game_mode_config" (Raw: "android.game_mode_config")
+        A: android:resource(0x01010025)=@0x7f030000
+      E: activity (line=11)
         A: android:name(0x01010003)=".MainActivity" (Raw: ".MainActivity")
         A: android:exported(0x01010010)=(type 0x12)0xffffffff
         A: android:screenOrientation(0x0101001e)=(type 0x10)0x6
         A: android:configChanges(0x0101001f)=(type 0x11)0x6a0
         A: android:resizeableActivity(0x010104f6)=(type 0x12)0xffffffff
-        E: intent-filter (line=11)
-          E: action (line=11)
+        E: intent-filter (line=12)
+          E: action (line=12)
             A: android:name(0x01010003)="android.intent.action.MAIN" (Raw: "android.intent.action.MAIN")
-          E: category (line=11)
+          E: category (line=12)
             A: android:name(0x01010003)="android.intent.category.LAUNCHER" (Raw: "android.intent.category.LAUNCHER")
-          E: category (line=11)
+          E: category (line=12)
             A: android:name(0x01010003)="android.intent.category.GAME" (Raw: "android.intent.category.GAME")
 --- signature ---
 Signer #1 certificate DN: CN=Coastline Development, O=Coastline Prototype, C=IN
-Signer #1 certificate SHA-256 digest: 28f99b19a39d59dda52d36951c444f24f025e2b43257734be9ee5a7a5cf61531
-Signer #1 certificate SHA-1 digest: 6473a81c636276d1360456d0077a7cdaddcd5651
-Signer #1 certificate MD5 digest: 01cff516c561d74072f46b0909d1f987
+Signer #1 certificate SHA-256 digest: 2d454cd3684bed4a87ae6afc169a72f0ff6c42fb52bd7ccd58fdb5b45554180a
+Signer #1 certificate SHA-1 digest: aed79540fb904a36ba041ead9aa4f7629747b63c
+Signer #1 certificate MD5 digest: bc582df50c33c7aa285e028efd32a7fe
 ```
