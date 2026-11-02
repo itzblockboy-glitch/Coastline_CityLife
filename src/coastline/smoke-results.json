@@ -1,0 +1,221 @@
+{
+  "checks": {
+    "loads without a fatal error": "ok",
+    "every vehicle grounded (no floating police cars)": {
+      "worst": [
+        {
+          "id": 0,
+          "type": "car-concept",
+          "minY": 0.12,
+          "width": 2.87,
+          "length": 4.38
+        },
+        {
+          "id": 1,
+          "type": "motorcycle",
+          "minY": 0.12,
+          "width": 0.91,
+          "length": 2.22
+        },
+        {
+          "id": 2,
+          "type": "motorcycle",
+          "minY": 0.12,
+          "width": 0.91,
+          "length": 2.22
+        }
+      ],
+      "floating": []
+    },
+    "taxi exists in the fleet": {
+      "id": 8,
+      "type": "taxi",
+      "max": 37.48,
+      "hw": 1.0402479999836123,
+      "hl": 2.328000009612624,
+      "sound": "8:taxi",
+      "police": false
+    },
+    "minimap redraw is cheap (<3 ms/frame)": {
+      "ms": 0.027
+    },
+    "world extends past the old 211 m wall": {
+      "xMin": -120,
+      "xMax": 305,
+      "zMin": -375,
+      "zMax": 375,
+      "obstacles": 206,
+      "buildings": 184,
+      "districts": [
+        [
+          "4:2",
+          "factories"
+        ],
+        [
+          "4:6",
+          "factories"
+        ],
+        [
+          "1:9",
+          "construction"
+        ],
+        [
+          "4:8",
+          "construction"
+        ]
+      ]
+    },
+    "industrial districts registered": [
+      [
+        "4:2",
+        "factories"
+      ],
+      [
+        "4:6",
+        "factories"
+      ],
+      [
+        "1:9",
+        "construction"
+      ],
+      [
+        "4:8",
+        "construction"
+      ]
+    ],
+    "mobile pixel ratio capped at <=1.0": {
+      "renderScale": 1,
+      "pixelRatio": 1,
+      "shadowMap": 1024,
+      "shadows": true,
+      "calls": 554,
+      "triangles": 1901453
+    },
+    "shadow map no larger than 1024 on mobile": {
+      "renderScale": 1,
+      "pixelRatio": 1,
+      "shadowMap": 1024,
+      "shadows": true,
+      "calls": 554,
+      "triangles": 1901453
+    }
+  },
+  "shots": [
+    "screenshots/v1.6-factories-222_-155.png",
+    "screenshots/v1.6-factories-222_93.png",
+    "screenshots/v1.6-construction-36_279.png",
+    "screenshots/v1.6-construction-222_217.png",
+    "screenshots/v1.6-downtown.png"
+  ],
+  "errors": [
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined",
+    "pageerror: dir is not defined"
+  ],
+  "state": {
+    "drawCalls": 506,
+    "triangles": 1747186,
+    "quality": "high"
+  }
+}
