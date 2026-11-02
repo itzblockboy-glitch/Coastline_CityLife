@@ -115,7 +115,7 @@ def main(path):
     # is not enough for many OEM boosters.
     assert app_attrs.get("android:isGame") == "true", \
         "isGame is %r, expected true" % app_attrs.get("android:isGame")
-    meta = [a for _l, tag, attrs in elements if tag == "meta-data"
+    meta = [v for _l, tag, attrs in elements if tag == "meta-data"
             for n, v, _ in attrs if n == "android:name" and v == "android.game_mode_config"]
     print("game_mode_config meta-data:", "present" if meta else "absent (API < 33 jar)")
     cats = []

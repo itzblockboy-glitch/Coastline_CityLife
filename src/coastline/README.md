@@ -1,4 +1,4 @@
-# Coastline 1.5 — city life, police & camera update
+# Coastline 1.6 — game detection, open world, mobile performance
 
 Original Three.js/WebGL2 coastal sandbox; signed offline Android APK, optional six-player rooms and WebRTC voice. High graphics is now the default at the user's request. It is more GPU-intensive: use Balanced/Low when needed. RAM capacity alone does not predict performance, and no physical-device FPS/thermal claim is made.
 
@@ -10,7 +10,7 @@ npm run bundle
 npm start
 ```
 
-Server binds to `0.0.0.0:3000`. `public/main.js` is readable client code; `public/app.js` is the prebuilt offline bundle. Android: follow `android/bootstrap-tools.sh`, then `npm run build:apk`. Requires JDK/Android build tools; SDK binaries and private signing key are not included. Default output `/home/user/Coastline-CityLife-v1.5.apk`; change for your workspace. Android package `ai.arena.coastline`, version 1.5.0/code 6, min 26/target 35. The manifest declares `android:appCategory="game"` on `<application>` and an extra `android.intent.category.GAME` category on the launcher activity, so Android and OEM game boosters (Samsung Game Launcher/Game Booster, Xiaomi Game Turbo, AOSP Game Manager) classify the app as a game. Bump `android:versionCode` if you ship this as an update. Same development signing certificate as delivered v1.4; source rebuilds without that original private key cannot update an installed APK directly.
+Server binds to `0.0.0.0:3000`. `public/main.js` is readable client code; `public/app.js` is the prebuilt offline bundle. Android: follow `android/bootstrap-tools.sh`, then `npm run build:apk`. Requires JDK/Android build tools; SDK binaries and private signing key are not included. Default output `/home/user/Coastline-CityLife-v1.5.apk`; change for your workspace. Android package `ai.arena.coastline`, version 1.6.0/code 7, min 26/target 35. The manifest declares `android:appCategory="game"` **and** `android:isGame="true"` (the attribute AOSP's own game classifier reads), plus the Android 13+ `android.game_mode_config` meta-data with `res/xml/game_mode_config.xml`. `MainActivity` reads `GameManager.getGameMode()` reflectively and passes it to the page, so battery game mode selects Low graphics. The extra `android.intent.category.GAME` category is harmless but is *not* read by AOSP for classification. Same development signing certificate as delivered v1.4; source rebuilds without that original private key cannot update an installed APK directly.
 
 ## What's new
 
@@ -47,6 +47,10 @@ Solo assets, music, sound effects and decoder are bundled for offline play. Mult
 Client-led transform/vehicle replication is not authoritative, cheat-resistant, or synchronized NPC/police/combat simulation. No persistent accounts or world saves.
 
 ## Tests
+
+`npm run inspect:vehicles` (`tools/inspect-vehicles.mjs`) loads every vehicle GLB through three's loader and asserts each is grounded to y=0 and faces +Z — this is what caught the floating police car (+0.80 m) and the taxi being authored facing -Z.
+
+`npm run test:smoke` (`smoke-test.cjs`) runs the real game in headless Chromium and asserts no page errors, grounded vehicles, taxi throttle direction via the on-screen pedals, police light-bar placement, minimap redraw cost, world bounds, districts and mobile pixel/shadow caps; it also captures district screenshots. `.github/workflows/verify.yml` runs it on every push.
 
 `npm run test:citylife` (`v15-test.cjs`) checks keyboard/joystick directions, changing walk poses, punch/jump/fire, car entry/exit, 3 bike cycles and fixed scale, collision predicates, one-star attacked-civilian retaliation, two-star police melee/no firearm shots, three-star firearm shots, five-star officer/heavy-weapon/car counts, 24 appearance IDs/4 models/body widths, distinct speed/sound profiles, first/front/third cameras, actor bounds and errors/failed requests.
 
