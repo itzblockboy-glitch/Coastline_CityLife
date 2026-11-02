@@ -89,26 +89,32 @@
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 688,
-      "triangles": 1579708
+      "calls": 804,
+      "triangles": 1912541
     },
     "shadow map no larger than 1024 on mobile": {
       "renderScale": 1,
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 688,
-      "triangles": 1579708
+      "calls": 804,
+      "triangles": 1912541
     },
     "taxi accelerates forward, not backward": {
       "forwardFraction": 1,
-      "travelled": 2.12,
-      "alongForward": 2.12,
-      "speed": 3.77
+      "travelled": 2.02,
+      "alongForward": 2.02,
+      "speed": 3.6
     },
     "steering right turns right (heading decreases)": {
       "FAILED": {
-        "headingDelta": -0.032
+        "headingDelta": -0.031,
+        "speed": 3.84,
+        "heading": [
+          3.14,
+          3.14,
+          3.11
+        ]
       }
     },
     "police light bars sit on the roof": {
@@ -205,18 +211,19 @@
     },
     "car accelerates forward and steers right": {
       "FAILED": {
-        "forwardFraction": 0.02,
+        "forwardFraction": 0,
         "lateral": 0,
         "headingDelta": 0,
-        "pitch": -0.011,
+        "pitch": 0,
         "roll": 0,
-        "speed": 0.23,
-        "type": "car-concept",
-        "hp": 100,
-        "wrecked": false,
+        "speed": 0,
+        "type": "sedan",
+        "hp": 0,
+        "wrecked": true,
+        "wedged": false,
         "dead": false,
         "transition": false,
-        "drivingType": "car-concept",
+        "drivingType": "sedan",
         "keys": {
           "Gas": false,
           "Steer": false
@@ -224,21 +231,24 @@
       }
     },
     "suspension responds (pitch/roll move away from zero)": {
-      "forwardFraction": 0.02,
-      "lateral": 0,
-      "headingDelta": 0,
-      "pitch": -0.011,
-      "roll": 0,
-      "speed": 0.23,
-      "type": "car-concept",
-      "hp": 100,
-      "wrecked": false,
-      "dead": false,
-      "transition": false,
-      "drivingType": "car-concept",
-      "keys": {
-        "Gas": false,
-        "Steer": false
+      "FAILED": {
+        "forwardFraction": 0,
+        "lateral": 0,
+        "headingDelta": 0,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 0,
+        "type": "sedan",
+        "hp": 0,
+        "wrecked": true,
+        "wedged": false,
+        "dead": false,
+        "transition": false,
+        "drivingType": "sedan",
+        "keys": {
+          "Gas": false,
+          "Steer": false
+        }
       }
     },
     "no frame errors during the whole run": {
@@ -391,11 +401,11 @@
     "taxi": [
       {
         "id": 8,
-        "rotY": 3.121,
-        "angle": 3.109,
+        "rotY": 3.122,
+        "angle": 3.11,
         "traffic": false,
-        "z": 197.6,
-        "roofDzWorld": 0.433,
+        "z": 197.7,
+        "roofDzWorld": 0.434,
         "bounds": {
           "minY": 0.03
         }
@@ -405,7 +415,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": -156.7,
+        "z": -155.3,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -416,7 +426,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 62,
+        "z": 63.7,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -427,7 +437,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 280.8,
+        "z": 282.6,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -439,8 +449,8 @@
         "id": 11,
         "rotY": 0,
         "angle": 0,
-        "traffic": true,
-        "z": -196.2,
+        "traffic": false,
+        "z": -204.9,
         "roofDzWorld": -0.343,
         "bounds": {
           "minY": 0.09
@@ -451,7 +461,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 2.3,
+        "z": 3.7,
         "roofDzWorld": -0.469,
         "bounds": {
           "minY": 0.12
@@ -462,7 +472,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 221,
+        "z": 222.7,
         "roofDzWorld": -0.469,
         "bounds": {
           "minY": 0.12
@@ -473,8 +483,8 @@
   "errors": [],
   "platform": "Linux x86_64",
   "state": {
-    "drawCalls": 638,
-    "triangles": 1425595,
+    "drawCalls": 696,
+    "triangles": 1585490,
     "quality": "high"
   }
 }
