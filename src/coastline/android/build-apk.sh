@@ -20,7 +20,13 @@ javac -source 8 -target 8 -bootclasspath "$JAR:$TOOLS/core-lambda-stubs.jar" -d 
 (cd android/work/dex && zip -q -u ../unsigned.apk classes.dex)
 "$TOOLS/zipalign" -f -p 4 android/work/unsigned.apk android/work/aligned.apk
 KEY="${COASTLINE_KEYSTORE:-$HOME/.coastline-signing.keystore}"
-if [ ! -f "$KEY" ]; then keytool -genkeypair -keystore "$KEY" -alias coastline -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=Coastline Development, O=Coastline Prototype, C=IN'; fi
-"$TOOLS/apksigner" sign --ks "$KEY" --ks-key-alias coastline --ks-pass pass:android --key-pass pass:android --out /home/user/Coastline-CityLife-v1.5.apk android/work/aligned.apk
-"$TOOLS/apksigner" verify --verbose /home/user/Coastline-CityLife-v1.5.apk
-"$TOOLS/aapt" dump badging /home/user/Coastline-CityLife-v1.5.apk | head -8
+ALIAS="${COASTLINE_KEY_ALIAS:-coastline}"
+STOREPASS="${COASTLINE_KEYSTORE_PASS:-android}"
+KEYPASS="${COASTLINE_KEY_PASS:-$STOREPASS}"
+OUT="${APK_OUT:-/home/user/Coastline-CityLife-v1.5.apk}"
+mkdir -p "$(dirname "$OUT")"
+if [ ! -f "$KEY" ]; then keytool -genkeypair -keystore "$KEY" -alias "$ALIAS" -storepass "$STOREPASS" -keypass "$KEYPASS" -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=Coastline Development, O=Coastline Prototype, C=IN'; fi
+"$TOOLS/apksigner" sign --ks "$KEY" --ks-key-alias "$ALIAS" --ks-pass "pass:$STOREPASS" --key-pass "pass:$KEYPASS" --out "$OUT" android/work/aligned.apk
+"$TOOLS/apksigner" verify --verbose "$OUT"
+"$TOOLS/aapt" dump badging "$OUT" | sed -n '1,8p'
+sha256sum "$OUT"
