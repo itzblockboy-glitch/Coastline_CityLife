@@ -2829,6 +2829,24 @@ if (new URLSearchParams(location.search).has("test"))
       districts: [...DISTRICTS.entries()],
     }),
     // --- combat / physics probes -------------------------------------------------------
+    /** Leave the current vehicle without playing the enter/exit animation (test convenience). */
+    dismount: () => {
+      if (!driving) return true;
+      const c = driving;
+      c.speed = 0; c.vx = 0; c.vz = 0; c.obj.rotation.z = 0;
+      driving = null;
+      transition = null;
+      speed = vy = 0;
+      document.body.classList.remove("driving");
+      player.visible = true;
+      pos.y = 0;
+      player.position.copy(pos);
+      player.rotation.set(0, heading, 0);
+      mixer.stopAllAction();
+      activeAction = "";
+      playAction("idle");
+      return true;
+    },
     weaponList: () => WEAPON_DEFS.map((w, i) => ({
       index: i, id: w.id, name: w.name, melee: !!w.melee,
       damage: w.damage, ammo: ammo[i], max: maxAmmo[i],

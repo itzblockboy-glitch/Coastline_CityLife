@@ -113,6 +113,9 @@ function check(name, ok, detail) {
   });
 
   // --- 8. Weapons, knife, melee, NPC retaliation, death, car damage ---------------------
+  // Combat is on foot: leave any vehicle carried over from the driving checks.
+  await page.evaluate(() => coastlineTest.dismount());
+  await page.waitForFunction(() => !coastlineTest.getState().vehicle, null, { timeout: 30000 });
   const weapons = await page.evaluate(() => coastlineTest.weaponList());
   const ids = weapons.map((w) => w.id);
   check("weapon table includes a knife and several firearms",
@@ -243,4 +246,14 @@ function check(name, ok, detail) {
     process.exit(1);
   }
   console.log("\nAll smoke checks passed.");
-})().catch((e) => { console.error(e); process.exit(1); });
+})().catch((e) => {
+  // Always leave a record: the CI log host is not reachable from every environment, so the
+  // committed JSON is the only reliable way to see where a run stopped.
+  results.error = String((e && e.stack) || e);
+  try {
+    fs.mkdirSync(SHOT_DIR, { recursive: true });
+    fs.writeFileSync("smoke-results.json", JSON.stringify(results, null, 2));
+  } catch { /* best effort */ }
+  console.error(e);
+  process.exit(1);
+});
