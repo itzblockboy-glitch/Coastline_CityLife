@@ -1,6 +1,7 @@
 {
   "checks": {
     "loads without a fatal error": "ok",
+    "no runtime errors": [],
     "every vehicle grounded (no floating police cars)": {
       "worst": [
         {
@@ -37,7 +38,7 @@
       "police": false
     },
     "minimap redraw is cheap (<3 ms/frame)": {
-      "ms": 0.027
+      "ms": 0.023
     },
     "world extends past the old 211 m wall": {
       "xMin": -120,
@@ -88,16 +89,44 @@
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 554,
-      "triangles": 1901453
+      "calls": 567,
+      "triangles": 1909617
     },
     "shadow map no larger than 1024 on mobile": {
       "renderScale": 1,
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 554,
-      "triangles": 1901453
+      "calls": 567,
+      "triangles": 1909617
+    },
+    "taxi accelerates forward, not backward": {
+      "FAILED": {
+        "alongForward": 1.37,
+        "dx": 0,
+        "dz": -1.37,
+        "speed": 5.431124376198399
+      }
+    },
+    "steering right turns right (heading decreases)": {
+      "headingDelta": -0.065
+    },
+    "police light bars sit on the roof": {
+      "sample": [
+        {
+          "roof": 1.68,
+          "light": 1.57
+        },
+        {
+          "roof": 1.68,
+          "light": 1.57
+        },
+        {
+          "roof": 1.68,
+          "light": 1.57
+        }
+      ],
+      "bad": 0
     }
   },
   "shots": [
@@ -107,112 +136,8 @@
     "screenshots/v1.6-construction-222_217.png",
     "screenshots/v1.6-downtown.png"
   ],
-  "errors": [
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined",
-    "pageerror: dir is not defined"
-  ],
+  "errors": [],
+  "platform": "Linux x86_64",
   "state": {
     "drawCalls": 506,
     "triangles": 1747186,
