@@ -216,19 +216,23 @@ function check(name, ok, detail) {
   const noseT = await page.evaluate(() => coastlineTest.noseInfo("taxi"));
   const noseS = await page.evaluate(() => coastlineTest.noseInfo("sedan"));
   results.orientation = { taxi: noseT, sedan: noseS };
-  for (const [label, type] of [["taxi", "taxi"], ["sedan-control", "sedan"]]) {
+  // The truck and the coupe are the two shapes the old roof/heuristic disagreed about, so shoot
+  // them too: their cabins are not clearly behind centre and the front/rear read has to be eyeballed.
+  for (const [label, type] of [["taxi", "taxi"], ["sedan-control", "sedan"], ["truck", "truck"], ["coupe", "car-concept"]]) {
     const info = await page.evaluate((t) => {
       const car = coastlineTest.noseInfo(t).find((c) => c.traffic);
       return car || coastlineTest.noseInfo(t)[0];
     }, type);
     const target = await page.evaluate((id) => { const c = coastlineTest.carAt(id); return c; }, info.id);
     if (target) {
-      await page.evaluate(([x, z]) => {
+      await page.evaluate(([x, z, rotY]) => {
         // Stand the player beside the car first (traffic cars are culled beyond 260 m), then put
-        // the camera 7 m ahead of the nose looking back at it.
-        coastlineTest.setPosition(x, z + 3);
-        coastlineTest.setFreeCam([x, 2.2, z + 7], [x, 0.8, z]);
-      }, [target.x, target.z]);
+        // the camera 7 m ahead of the nose - along the car's own travel direction, not +Z, because
+        // half the fleet drives east-west lanes - looking back at it.
+        const nx = Math.sin(rotY), nz = Math.cos(rotY);
+        coastlineTest.setPosition(x - nx * 3, z - nz * 3);
+        coastlineTest.setFreeCam([x + nx * 7, 2.2, z + nz * 7], [x, 0.8, z]);
+      }, [target.x, target.z, target.rotY]);
       await page.waitForTimeout(900);
       const file = `${SHOT_DIR}/orient-${label}.png`;
       await page.screenshot({ path: file, timeout: 90000 });

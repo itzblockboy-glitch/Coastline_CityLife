@@ -1,4 +1,4 @@
-# Coastline 1.6 — game detection, open world, mobile performance
+# Coastline 1.7 — weapons, vehicle physics, player health
 
 Original Three.js/WebGL2 coastal sandbox; signed offline Android APK, optional six-player rooms and WebRTC voice. High graphics is now the default at the user's request. It is more GPU-intensive: use Balanced/Low when needed. RAM capacity alone does not predict performance, and no physical-device FPS/thermal claim is made.
 
@@ -10,7 +10,7 @@ npm run bundle
 npm start
 ```
 
-Server binds to `0.0.0.0:3000`. `public/main.js` is readable client code; `public/app.js` is the prebuilt offline bundle. Android: follow `android/bootstrap-tools.sh`, then `npm run build:apk`. Requires JDK/Android build tools; SDK binaries and private signing key are not included. Default output `/home/user/Coastline-CityLife-v1.5.apk`; change for your workspace. Android package `ai.arena.coastline`, version 1.6.0/code 7, min 26/target 35. The manifest declares `android:appCategory="game"` **and** `android:isGame="true"` (the attribute AOSP's own game classifier reads), plus the Android 13+ `android.game_mode_config` meta-data with `res/xml/game_mode_config.xml`. `MainActivity` reads `GameManager.getGameMode()` reflectively and passes it to the page, so battery game mode selects Low graphics. The extra `android.intent.category.GAME` category is harmless but is *not* read by AOSP for classification. Same development signing certificate as delivered v1.4; source rebuilds without that original private key cannot update an installed APK directly.
+Server binds to `0.0.0.0:3000`. `public/main.js` is readable client code; `public/app.js` is the prebuilt offline bundle. Android: follow `android/bootstrap-tools.sh`, then `npm run build:apk`. Requires JDK/Android build tools; SDK binaries and private signing key are not included. Default output `/home/user/Coastline-CityLife-v1.5.apk`; change for your workspace. Android package `ai.arena.coastline`, version 1.7.0/code 8, min 26/target 35. The manifest declares `android:appCategory="game"` **and** `android:isGame="true"` (the attribute AOSP's own game classifier reads), plus the Android 13+ `android.game_mode_config` meta-data with `res/xml/game_mode_config.xml`. `MainActivity` reads `GameManager.getGameMode()` reflectively and passes it to the page, so battery game mode selects Low graphics. The extra `android.intent.category.GAME` category is harmless but is *not* read by AOSP for classification. Same development signing certificate as delivered v1.4; source rebuilds without that original private key cannot update an installed APK directly.
 
 ## What's new
 
@@ -34,7 +34,21 @@ Server binds to `0.0.0.0:3000`. `public/main.js` is readable client code; `publi
 
 Two street patrol cars remain in addition to response cars. Cruisers navigate the existing road-intersection grid with collision-aware movement; responders prefer to appear beside nearby deployed cruisers. Attacking a police officer raises at least two stars. Crime heat escalates further. Escape range/sight and stop offending to reduce wanted level. Bystanders are not all magically armed or hostile.
 
-AI is **simple local pursuit**, not production navigation/vehicle tactics. Officers/cars can get stuck; there is no full vehicle physics, roadblock planning, arrest/cuff simulation or synchronized multiplayer combat. Civilian retaliation lasts a limited grace period.
+AI is **simple local pursuit**, not production navigation/vehicle tactics. Officers/cars can get stuck; there is no roadblock planning, arrest/cuff simulation or synchronized multiplayer combat. Civilian retaliation lasts a limited grace period.
+
+## What's new in 1.7
+
+**Vehicle physics.** Speed is integrated separately from heading. Steering is rate-limited and speed-sensitive (a parked car cannot pivot on the spot, a fast one turns lazily), and velocity is a free vector that is pulled back toward the nose by a grip budget, so hard braking or a very sharp turn now *slides* the car instead of snapping it. Pitch and roll are damped springs: the body dives under braking, squats under throttle and leans out of corners, plus a small road rumble. Above ~16 m/s the car can hop on a road seam and the suspension absorbs the landing. Everything is per-car state, so a wrecked car drives worse than a fresh one.
+
+**Car damage.** Every car carries `hp`. Kerb scrapes, wall hits, landings, gunfire and grenades all subtract. Below 45 % it smokes, below 30 % it loses power, and at 0 it is wrecked: it stops driving, burns and the wreck stays in the world.
+
+**Weapons (7).** Fists, sidearm, carbine, **knife**, SMG, shotgun and grenades. Firearms have their own rate, damage, spread and pellet count, all from one `WEAPON_DEFS` table; the knife is melee with bleed, faster than a punch and lethal at short range. Grenades are thrown, bounce, and explode with falloff damage against both people and cars. Each firearm has a distinct synthesized report. Firing while driving is refused, ammo is per-weapon and refilled on respawn (grenades are capped to 1 after a death).
+
+**Melee.** The old punch was rebuilt: alternating left/right two-handed combos with a chest/hip twist, a guard arm and a follow-through. (Note: the "very first version" punch clip does not exist in any shipped source — the native rigs only carry Idle/Walk/Run/Sit — so this is a rebuilt animation, not a restored one.) The knife uses its own slash clip.
+
+**Health and death.** The player has 100 hp, a damage flash, camera shake and 4 s of invulnerability after respawning at Palm Beach. At 0 hp the player falls, the HUD dims, and the respawn message names the cause ("Killed by a heavy hit", "Shot by police", ...). Deaths are counted.
+
+**Retaliation.** A civilian you punch turns and fights back: melee at low heat, gunfire if they are armed and you are at 3+ stars. Police escalate as before, but their punches now hurt properly. Retaliation no longer needs a wanted level first — the person you hit reacts immediately.
 
 ## Preserved controls / features
 

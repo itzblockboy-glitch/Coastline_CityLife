@@ -63,7 +63,7 @@ jobs:
       - name: Build APK
         working-directory: src/coastline
         env:
-          APK_OUT: ${{ github.workspace }}/dist/Coastline-CityLife-v1.6-game.apk
+          APK_OUT: ${{ github.workspace }}/dist/Coastline-CityLife-v1.7-game.apk
           COASTLINE_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || 'coastline' }}
           COASTLINE_KEYSTORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || 'android' }}
           COASTLINE_KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD || 'android' }}
@@ -75,7 +75,7 @@ jobs:
         continue-on-error: true
         working-directory: src/coastline
         run: |
-          APK=../../dist/Coastline-CityLife-v1.6-game.apk
+          APK=../../dist/Coastline-CityLife-v1.7-game.apk
           TOOLS=android-tools/android-11
           OUT=../../dist/verification.txt
           {
@@ -103,7 +103,7 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: coastline-v1.5-game-apk
+          name: coastline-v1.7-game-apk
           path: |
             ${{ github.workspace }}/dist/*.apk
             ${{ github.workspace }}/dist/verification.txt
@@ -117,7 +117,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f dist/Coastline-CityLife-v1.6-game.apk dist/verification.txt
+          git add -f dist/Coastline-CityLife-v1.7-game.apk dist/verification.txt
           if git diff --cached --quiet; then
             echo "APK unchanged; nothing to commit."
           else

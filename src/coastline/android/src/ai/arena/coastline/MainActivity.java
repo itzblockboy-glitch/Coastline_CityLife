@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
  @Override public void onPermissionRequestCanceled(PermissionRequest r){if(pending==r)pending=null;}
  @Override public boolean onJsAlert(WebView v,String u,String m,JsResult r){new AlertDialog.Builder(MainActivity.this).setMessage(m).setPositiveButton("OK",(d,w)->r.confirm()).setOnCancelListener(d->r.cancel()).show();return true;}
  @Override public boolean onJsPrompt(WebView v,String u,String m,String val,JsPromptResult r){android.widget.EditText input=new android.widget.EditText(MainActivity.this);input.setText(val);new AlertDialog.Builder(MainActivity.this).setMessage(m).setView(input).setPositiveButton("OK",(d,w)->r.confirm(input.getText().toString())).setNegativeButton("Cancel",(d,w)->r.cancel()).setOnCancelListener(d->r.cancel()).show();return true;}
- });web.loadUrl("https://"+HOST+"/index.html?v=7&gm="+gm);}
+ });web.loadUrl("https://"+HOST+"/index.html?v=8&gm="+gm);}
  private WebResourceResponse error(){return new WebResourceResponse("text/plain","UTF-8",404,"Not found",new HashMap<>(),new ByteArrayInputStream("Not found".getBytes()));}
  @Override public void onRequestPermissionsResult(int c,String[] p,int[] g){super.onRequestPermissionsResult(c,p,g);if(c==14&&pending!=null){if(g.length>0&&g[0]==PackageManager.PERMISSION_GRANTED)pending.grant(new String[]{PermissionRequest.RESOURCE_AUDIO_CAPTURE});else pending.deny();pending=null;}}
  private void immersive(){getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY|View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_LAYOUT_STABLE);}

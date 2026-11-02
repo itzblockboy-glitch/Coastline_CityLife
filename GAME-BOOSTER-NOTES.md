@@ -1,3 +1,64 @@
+# Coastline v1.7 — weapons, vehicle physics, car damage, player health
+
+Scope: the driving-feel request ("add some good physics"), a much larger weapon roster plus a
+knife, car damage, player health/death, and civilians who hit back.
+
+Built artifact: `dist/Coastline-CityLife-v1.7-game.apk` (versionCode 8 / versionName 1.7.0).
+
+---
+
+## 1. What shipped
+
+| Area | Detail |
+|---|---|
+| Vehicle physics | Rate-limited, speed-sensitive steering; free velocity vector pulled to the nose by a grip budget (slide/skid above the limit); spring pitch/roll (dive, squat, lean); road rumble; airborne hops with landing impact; per-car `vx/vz`, `pitch/roll`, `lift`, `steer` state |
+| Car damage | Per-car `hp`. Impacts, kerbs, landings, bullets and grenades subtract. Smoke < 45 %, power loss < 30 %, wrecked at 0 (burns, cannot drive, stays in the world) |
+| Weapons | 7: fists, sidearm, carbine, **knife**, SMG, shotgun, grenade. One `WEAPON_DEFS` table drives damage, rate, spread, pellets, reach, ammo. Grenades bounce and explode with falloff |
+| Melee | Rebuilt two-handed alternating combo (`Punch_Left`/`Punch_Right`, chest+hip twist, guard arm) and a dedicated `Knife_Slash`. Fists are melee, so they never consume ammo |
+| Player life | 100 hp, hit flash, camera shake, 4 s respawn invulnerability, death fall, cause-of-death message, death counter, ammo refill on respawn |
+| Retaliation | A punched civilian turns and hits back immediately (no wanted level required); armed civilians shoot at 3+ stars; police punches deal real damage |
+| Render loop | A thrown frame error no longer kills the loop — it is recorded and rendering continues (this was freezing the world while the HUD still looked alive) |
+| Facing | Correction now comes from the authoring convention (a pure 180° root rotation = model authored nose -Z) rather than a cabin-position guess, which had started flipping the truck and the coupe |
+
+Honest note on the punch: the user asked for "the very first version" punch animation back. No such
+clip exists in any shipped source — the bundled rigs only carry Idle/Walk/Run/Sit, and the original
+first-version punch was procedural, not mocap. The current punch is a *rebuilt* two-handed combo
+built to look closer to what was asked for; it is not the old animation restored verbatim.
+
+## 2. Verification
+
+`Verify game build` runs the headless smoke test: **23/23 checks pass**, `errors: []`, no frame
+errors. Highlights from the committed `src/coastline/smoke-results.json`:
+
+- taxi drives forward `forwardFraction 1.0` (7.98 m along the nose in 1.2 simulated seconds) and
+  "steer right" decreases heading by `-0.986 rad`;
+- sedan physics probe: `headingDelta -0.977`, `pitch 0.025`, `roll -0.257` — suspension is visibly
+  working, and `wedged: false` proves the car was not simply stuck;
+- knife strike takes an NPC from `hp 100 → 66` and sets `aggro/stunned`;
+- punching an NPC costs the player health (`100 → 98`) with no wanted level;
+- carbine/SMG/shotgun each spend exactly 1 round per shot;
+- a car goes `hp 100 → 45` then to `0` and `wrecked: true`;
+- the player dies and respawns at `health 100` with `deaths: 1`;
+- only the taxi is rotated (`3.14159`); every other car is exactly `0`;
+- 0.027 ms minimap redraw, 1024 px shadow map, pixel ratio 1.0 on mobile.
+
+Screenshot ground truth (committed): `src/coastline/screenshots/orient-taxi.png`,
+`orient-sedan-control.png`, `orient-truck.png`, `orient-coupe.png` — each shot from 7 m ahead of the
+car along its own travel direction, so a backwards mesh would show its boot instead of its bonnet.
+
+## 3. Test-harness lessons (kept so they are not relearned)
+
+- The harness originally drove with `page.waitForTimeout`: CI renders through SwiftShader at a few
+  fps, so 1.2 s of wall clock was only a couple of physics frames and every car looked stuck. Probes
+  now wait on the **simulation** clock (`elapsed`).
+- Traffic cars spawn nose-first into kerbs, so `aimOpenRoad()` scans 16 directions with the car's own
+  collider and faces the clearest lane before a drive probe.
+- A failed run now always writes `smoke-results.json` including the stack, because the CI log host
+  (`results-receiver.actions.githubusercontent.com`) intermittently returns `EOF` and the artifacts
+  are not downloadable from every environment.
+
+---
+
 # Coastline v1.6 — game detection, vehicle fixes, open world, mobile performance
 
 Scope: the Game Booster/Game Turbo detection problem, the flying-car and taxi-control bugs, the
@@ -203,17 +264,19 @@ gives a false negative.
 
 A bug this process caught: an earlier camera refactor left a stale `dir` reference, which threw
 *before* `renderer.render()` — the game looked alive but no frame was ever drawn again. The smoke test
-now fails on any page error, which is what exposed it.
+now fails on any page error, which is what exposed it. The same class of bug came back in v1.7 as an
+undefined `dragF` in the new physics block: speed climbed but the car never moved. The frame loop now
+catches and reports the first error instead of dying, and the v1.7 table above records it.
 
 ## 8. Install
 
 ```
-https://github.com/itzblockboy-glitch/Coastline_CityLife/raw/arena/dc2dfb50-coastline-citylife/dist/Coastline-CityLife-v1.6-game.apk
+https://github.com/itzblockboy-glitch/Coastline_CityLife/raw/arena/dc2dfb50-coastline-citylife/dist/Coastline-CityLife-v1.7-game.apk
 ```
 
 - Signed with the same **generated development key** as before (no release keystore exists in the
   repo). It will not update an install signed with your delivery key — uninstall first, or rebuild
   with `ANDROID_KEYSTORE_BASE64` / `COASTLINE_KEYSTORE`.
-- `versionCode` is now **7**, so it does install over the previous development-key build.
+- `versionCode` is now **8**, so it does install over the previous development-key build.
 - Verified here by parsing the packaged manifest and running the game headless; **not** installed on a
   physical device, so on-device booster behaviour and thermal numbers remain unconfirmed.
