@@ -72,6 +72,10 @@ function check(name, ok, detail) {
   // the car along +forward and "steer right" must decrease heading.
   await page.evaluate(() => coastlineTest.board("taxi"));
   await page.waitForFunction(() => coastlineTest.getState().vehicle === "taxi", null, { timeout: 60000 });
+  // Traffic spawns nose-first into kerbs and junction furniture. Face the open lane first so the
+  // check measures the steering model instead of the scenery the taxi happens to be parked against.
+  const aim = await page.evaluate(() => coastlineTest.aimOpenRoad(60));
+  results.taxiAim = aim;
   const drive = await (async () => {
     const before = await page.evaluate(() => coastlineTest.getState());
     const gas = await page.locator("#touchGas").boundingBox();
@@ -102,6 +106,7 @@ function check(name, ok, detail) {
   });
   const dHeading = drive.turned.heading - drive.moving.heading;
   check("steering right turns right (heading decreases)", dHeading < -0.05, {
+    aim,
     headingDelta: +dHeading.toFixed(3),
     speed: +drive.turned.speed.toFixed(2),
     heading: [+drive.before.heading.toFixed(2), +drive.moving.heading.toFixed(2), +drive.turned.heading.toFixed(2)],
@@ -158,8 +163,8 @@ function check(name, ok, detail) {
     fired.every((f) => f.spent >= 1), fired);
 
   // Car damage: a heavy hit wrecks a car and marks it damaged.
-  const dmg1 = await page.evaluate(() => coastlineTest.damageCarOfType("sedan", 55));
-  const dmg2 = await page.evaluate(() => coastlineTest.damageCarOfType("sedan", 60));
+  const dmg1 = await page.evaluate(() => coastlineTest.damageCarOfType("hatchback-sports", 55));
+  const dmg2 = await page.evaluate(() => coastlineTest.damageCarOfType("hatchback-sports", 60));
   check("cars take damage and can be wrecked",
     dmg1 && dmg1.hp < 100 && dmg2 && dmg2.wrecked, { after55: dmg1, afterMore: dmg2 });
 
@@ -176,7 +181,9 @@ function check(name, ok, detail) {
   // --- 9. Vehicle physics probe -------------------------------------------------------
   await page.evaluate(() => coastlineTest.board("sedan"));
   await page.waitForFunction(() => coastlineTest.getState().vehicle === "sedan", null, { timeout: 60000 });
+  const probeAim = await page.evaluate(() => coastlineTest.aimOpenRoad(60));
   const probe = await page.evaluate(() => coastlineTest.driveProbe());
+  if (probe) probe.aim = probeAim;
   if (!probe || !(probe.forwardFraction > 3)) console.error("drive probe:", JSON.stringify(probe));
   check("car accelerates forward and steers right", probe && probe.forwardFraction > 3 && probe.headingDelta < -0.05, probe);
   check("suspension responds (pitch/roll move away from zero)",

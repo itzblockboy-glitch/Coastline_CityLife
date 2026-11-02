@@ -2853,6 +2853,27 @@ if (new URLSearchParams(location.search).has("test"))
       districts: [...DISTRICTS.entries()],
     }),
     // --- combat / physics probes -------------------------------------------------------
+    /** Face the most open direction from where the car is standing (test convenience). */
+    aimOpenRoad: (need = 50) => {
+      if (!driving) return null;
+      const c = driving;
+      const clear = (h) => {
+        for (let d = 2; d <= need; d += 2) {
+          const p = { x: pos.x + Math.sin(h) * d, z: pos.z + Math.cos(h) * d };
+          if (blocked(p, 0.55, c, { angle: h, hw: c.hw, hl: c.hl })) return d - 2;
+        }
+        return need;
+      };
+      let best = heading, bestClear = -1;
+      for (let k = 0; k < 16; k++) {
+        const h = (k * Math.PI) / 8, cl = clear(h);
+        if (cl > bestClear) { bestClear = cl; best = h; }
+      }
+      heading = best;
+      c.angle = best;
+      c.obj.rotation.y = best;
+      return { heading: +best.toFixed(3), clear: bestClear };
+    },
     /** Leave the current vehicle without playing the enter/exit animation (test convenience). */
     dismount: () => {
       if (!driving) return true;
