@@ -219,7 +219,11 @@ function check(name, ok, detail) {
     { fixes, report });
 
   // --- 10. Vehicle orientation diagnostics (visual ground truth) -------------------------
-  // Capture a traffic taxi and a traffic sedan from in front of their travel direction (+Z).
+  // On foot again: setPosition() is a no-op while driving, and traffic more than 260 m from the
+  // player is culled, so framing a distant car while still sitting in the probe car shoots empty road.
+  await page.evaluate(() => coastlineTest.dismount());
+  await page.waitForFunction(() => !coastlineTest.getState().vehicle, null, { timeout: 60000 });
+  // Capture a traffic taxi and a traffic sedan from in front of their travel direction.
   // If the mesh faced backwards, the shot would show the boot/rear window instead of the bonnet.
   const noseT = await page.evaluate(() => coastlineTest.noseInfo("taxi"));
   const noseS = await page.evaluate(() => coastlineTest.noseInfo("sedan"));
