@@ -2,3 +2,6 @@ src/coastline/node_modules/
 src/coastline/android/work/
 src/coastline/android/assets/www/
 src/coastline/android-tools/
+dist/
+!dist/Coastline-CityLife-v1.5-game.apk
+!dist/verification.txt
