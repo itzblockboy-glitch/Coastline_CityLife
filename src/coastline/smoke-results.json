@@ -38,7 +38,7 @@
       "police": false
     },
     "minimap redraw is cheap (<3 ms/frame)": {
-      "ms": 0.027
+      "ms": 0.033
     },
     "world extends past the old 211 m wall": {
       "xMin": -120,
@@ -89,34 +89,34 @@
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 696,
-      "triangles": 1585490
+      "calls": 768,
+      "triangles": 1831683
     },
     "shadow map no larger than 1024 on mobile": {
       "renderScale": 1,
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 696,
-      "triangles": 1585490
+      "calls": 768,
+      "triangles": 1831683
     },
     "taxi accelerates forward, not backward": {
       "forwardFraction": 1,
-      "travelled": 8.25,
-      "alongForward": 8.25,
-      "speed": 7.48
+      "travelled": 7.76,
+      "alongForward": 7.76,
+      "speed": 7.28
     },
     "steering right turns right (heading decreases)": {
       "aim": {
         "heading": 0,
         "clear": 60
       },
-      "headingDelta": -0.989,
-      "speed": 9.32,
+      "headingDelta": -1.029,
+      "speed": 9.25,
       "heading": [
         0,
         0,
-        -0.99
+        -1.03
       ]
     },
     "police light bars sit on the roof": {
@@ -209,17 +209,17 @@
       "dead": false,
       "deaths": 1,
       "cause": "Killed by a heavy hit",
-      "invulnerable": 3.9333
+      "invulnerable": 3.8832000000000013
     },
     "car accelerates forward and steers right": {
-      "forwardFraction": 12.05,
-      "lateral": 2.38,
-      "headingDelta": -1.041,
+      "forwardFraction": 11.71,
+      "lateral": 2.15,
+      "headingDelta": -0.988,
       "pitch": 0.025,
       "roll": -0.257,
       "speed": 4.96,
-      "gasSpeed": 7.22,
-      "simSeconds": 2.72,
+      "gasSpeed": 7.14,
+      "simSeconds": 2.63,
       "overlay": false,
       "type": "sedan",
       "hp": 100,
@@ -238,14 +238,14 @@
       }
     },
     "suspension responds (pitch/roll move away from zero)": {
-      "forwardFraction": 12.05,
-      "lateral": 2.38,
-      "headingDelta": -1.041,
+      "forwardFraction": 11.71,
+      "lateral": 2.15,
+      "headingDelta": -0.988,
       "pitch": 0.025,
       "roll": -0.257,
       "speed": 4.96,
-      "gasSpeed": 7.22,
-      "simSeconds": 2.72,
+      "gasSpeed": 7.14,
+      "simSeconds": 2.63,
       "overlay": false,
       "type": "sedan",
       "hp": 100,
@@ -419,13 +419,13 @@
     "taxi": [
       {
         "id": 8,
-        "rotY": -0.929,
-        "angle": -1.027,
+        "rotY": -0.969,
+        "angle": -1.068,
         "traffic": false,
-        "z": 215.5,
-        "roofDzWorld": -0.2,
+        "z": 215,
+        "roofDzWorld": -0.193,
         "bounds": {
-          "minY": 0.08
+          "minY": 0.09
         }
       },
       {
@@ -433,7 +433,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": -129.4,
+        "z": -130,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -444,7 +444,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 93.9,
+        "z": 93.2,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -455,7 +455,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 317.2,
+        "z": 316.4,
         "roofDzWorld": -0.274,
         "bounds": {
           "minY": 0.12
@@ -465,11 +465,11 @@
     "sedan": [
       {
         "id": 11,
-        "rotY": -0.955,
-        "angle": -1.041,
+        "rotY": -0.94,
+        "angle": -1.01,
         "traffic": false,
-        "z": -178.6,
-        "roofDzWorld": -0.371,
+        "z": -178.7,
+        "roofDzWorld": -0.374,
         "bounds": {
           "minY": -0.14
         }
@@ -479,7 +479,7 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 29.6,
+        "z": 29.4,
         "roofDzWorld": -0.469,
         "bounds": {
           "minY": 0.12
@@ -490,13 +490,43 @@
         "rotY": 0,
         "angle": 0,
         "traffic": true,
-        "z": 252.9,
+        "z": 252.7,
         "roofDzWorld": -0.469,
         "bounds": {
           "minY": 0.12
         }
       }
     ]
+  },
+  "orientationShots": {
+    "taxi": {
+      "id": 12,
+      "type": "taxi",
+      "x": 8,
+      "z": -129.6,
+      "rotY": 0
+    },
+    "sedan-control": {
+      "id": 15,
+      "type": "sedan",
+      "x": 194,
+      "z": 36.7,
+      "rotY": 0
+    },
+    "truck": {
+      "id": 5,
+      "type": "truck",
+      "x": 72,
+      "z": 135,
+      "rotY": 0
+    },
+    "coupe": {
+      "id": 0,
+      "type": "car-concept",
+      "x": -61,
+      "z": 72,
+      "rotY": 3.14
+    }
   },
   "errors": [],
   "platform": "Linux x86_64",
