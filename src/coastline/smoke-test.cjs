@@ -112,6 +112,36 @@ function check(name, ok, detail) {
     sample: lights.slice(0, 3), bad: badLights.length,
   });
 
+  // --- 8. Vehicle orientation diagnostics (visual ground truth) -------------------------
+  // Capture a traffic taxi and a traffic sedan from in front of their travel direction (+Z).
+  // If the mesh faced backwards, the shot would show the boot/rear window instead of the bonnet.
+  await page.evaluate(() => coastlineTest.board("taxi"));
+  await page.waitForFunction(() => coastlineTest.getState().vehicle === "taxi", null, { timeout: 60000 });
+  const noseT = await page.evaluate(() => coastlineTest.noseInfo("taxi"));
+  const noseS = await page.evaluate(() => coastlineTest.noseInfo("sedan"));
+  results.orientation = { taxi: noseT, sedan: noseS };
+  for (const [label, type] of [["taxi", "taxi"], ["sedan-control", "sedan"]]) {
+    const info = await page.evaluate((t) => {
+      const car = coastlineTest.noseInfo(t).find((c) => c.traffic);
+      return car || coastlineTest.noseInfo(t)[0];
+    }, type);
+    const target = await page.evaluate((id) => {
+      const c = coastlineTest.carAt(id);
+      return c;
+    }, info.id);
+    if (target) {
+      await page.evaluate(([x, z, ry]) => {
+        // 7 m in front (+Z of travel), 2.2 m up, looking back at the car
+        coastlineTest.setFreeCam([x, 2.2, z + 7], [x, 0.8, z]);
+      }, [target.x, target.z, info.rotY]);
+      await page.waitForTimeout(900);
+      const file = `${SHOT_DIR}/orient-${label}.png`;
+      await page.screenshot({ path: file, timeout: 90000 });
+      results.shots.push(file);
+    }
+  }
+  await page.evaluate(() => coastlineTest.setFreeCam(null, null));
+
   // --- Screenshots of the new districts -------------------------------------------------
   fs.mkdirSync(SHOT_DIR, { recursive: true });
   const centers = await page.evaluate(() => window.coastlineTest.districtsCenters());

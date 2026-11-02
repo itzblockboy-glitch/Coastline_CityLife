@@ -2361,6 +2361,38 @@ if (new URLSearchParams(location.search).has("test"))
     setFreeCam: (eye, target) => {
       freeCam = { eye: new T.Vector3(...eye), target: new T.Vector3(...target) };
     },
+    // Diagnostic: world-space nose direction of a vehicle, using the same roof-vs-body geometry
+    // signal the loader fix was derived from. Reported relative to the car's travel direction.
+    carAt: (id) => {
+      const c = cars[id];
+      return c ? { x: c.obj.position.x, z: c.obj.position.z, rotY: c.obj.rotation.y, type: c.type } : null;
+    },
+    setFreeCam: (eye, target) => {
+      freeCam = eye ? { eye: new T.Vector3(...eye), target: new T.Vector3(...target) } : null;
+    },
+    noseInfo: (type) => cars.filter((c) => c.type === type).map((c) => {
+      const pts = [];
+      c.obj.updateMatrixWorld(true);
+      c.obj.traverse((n) => {
+        if (!n.isMesh || !n.geometry?.attributes?.position) return;
+        const p = n.geometry.attributes.position, v = new T.Vector3();
+        const stride = Math.max(1, Math.floor(p.count / 400));
+        for (let i = 0; i < p.count; i += stride) {
+          v.fromBufferAttribute(p, i).applyMatrix4(n.matrixWorld);
+          pts.push(v.clone());
+        }
+      });
+      const ys = pts.map((p) => p.y);
+      const ymin = Math.min(...ys), ymax = Math.max(...ys), h = ymax - ymin;
+      const roof = pts.filter((p) => p.y > ymin + 0.72 * h);
+      const mean = (a) => a.reduce((s, p) => s + p.z, 0) / a.length;
+      return {
+        id: c.id, rotY: +c.obj.rotation.y.toFixed(3), angle: +c.angle.toFixed(3),
+        traffic: !!c.traffic, z: +c.obj.position.z.toFixed(1),
+        roofDzWorld: +(mean(roof) - mean(pts)).toFixed(3),
+        bounds: { minY: +new T.Box3().setFromObject(c.obj).min.y.toFixed(2) },
+      };
+    }),
     policeLightHeights: () => cars.filter((c) => c.police).map((c) => {
       const roof = new T.Box3().setFromObject(c.obj).max.y;
       const light = c.strobe[0].getWorldPosition(new T.Vector3()).y;
