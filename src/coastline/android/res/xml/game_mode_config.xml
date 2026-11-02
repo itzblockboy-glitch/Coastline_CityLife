@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 13+ (API 33) Game Mode configuration, read by AOSP GameManagerService through the
+     android.game_mode_config meta-data. Root tag must be <game-mode-config>.
+       supportsPerformanceGameMode / supportsBatteryGameMode: the game handles both modes itself
+         (Coastline switches quality from the mode it reads in MainActivity).
+       allowGameDownscaling: let the platform lower render resolution when thermally constrained.
+       allowGameAngleDriver: allow the platform to use ANGLE for GLES translation.
+       allowGameFpsOverride: let the platform cap the frame rate instead of throttling clocks.
+     Older platforms ignore all of it; MainActivity reads getGameMode() defensively. -->
+<game-mode-config xmlns:android="http://schemas.android.com/apk/res/android"
+    android:supportsPerformanceGameMode="true"
+    android:supportsBatteryGameMode="true"
+    android:allowGameDownscaling="true"
+    android:allowGameAngleDriver="true"
+    android:allowGameFpsOverride="true" />

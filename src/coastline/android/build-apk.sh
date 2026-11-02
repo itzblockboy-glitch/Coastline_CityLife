@@ -13,7 +13,21 @@ npm run bundle
 cp public/{index.html,style.css,app.js,credits.html,v2-notes.html,v3-notes.html,v4-notes.html,v5-notes.html,third-party-licenses.txt} android/assets/www/
 cp -r public/assets android/assets/www/
 cp -r public/licenses android/assets/www/
-"$TOOLS/aapt" package -f -M android/AndroidManifest.xml -S android/res -A android/assets -I "$JAR" -F android/work/unsigned.apk
+# The game_mode_config meta-data needs API 33+ attribute definitions in android.jar. If the jar is
+# older, stage a manifest/res pair without it rather than failing the whole build.
+STAGE=android/work
+rm -rf "$STAGE/res" "$STAGE/AndroidManifest.xml"
+cp -r android/res "$STAGE/res"
+cp android/AndroidManifest.xml "$STAGE/AndroidManifest.xml"
+if unzip -p "$JAR" resources.arsc 2>/dev/null | strings | grep -q supportsPerformanceGameMode; then
+  echo "android.jar knows the Game Mode attributes: shipping game_mode_config"
+else
+  echo "android.jar predates API 33: dropping optional game_mode_config"
+  rm -rf "$STAGE/res/xml"
+  sed -i.bak '/android.game_mode_config/d' "$STAGE/AndroidManifest.xml"
+  rm -f "$STAGE/AndroidManifest.xml.bak"
+fi
+"$TOOLS/aapt" package -f -M "$STAGE/AndroidManifest.xml" -S "$STAGE/res" -A android/assets -I "$JAR" -F android/work/unsigned.apk
 javac -source 8 -target 8 -bootclasspath "$JAR:$TOOLS/core-lambda-stubs.jar" -d android/work/classes android/src/ai/arena/coastline/MainActivity.java
 (cd android/work/classes && zip -q -r ../classes.jar .)
 "$TOOLS/d8" --release --min-api 26 --lib "$JAR" --output android/work/dex android/work/classes.jar

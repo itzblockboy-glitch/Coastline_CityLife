@@ -59,30 +59,45 @@ function mat(c) {
     roughness: 0.86,
   }));
 }
-function box(x, y, z, w, h, d, c) {
+function box(x, y, z, w, h, d, c, cast = false) {
   let m = new T.Mesh(unitBox, mat(c));
   m.scale.set(w, h, d);
+  if (cast) m.userData.cast = true;
   staticBoxes.push(m);
   m.position.set(x, y + h / 2, z);
   m.receiveShadow = true;
   scene.add(m);
   return m;
 }
+// A box that also blocks movement and camera. Used sparingly: every entry is walked by blocked().
+function solid(x, y, z, w, h, d, c, cast = true) {
+  box(x, y, z, w, h, d, c, cast);
+  obstacles.push(new T.Box3(
+    new T.Vector3(x - w / 2, 0, z - d / 2),
+    new T.Vector3(x + w / 2, h, z + d / 2),
+  ));
+}
 // Terrain and road surfaces are generated; all placed buildings, vehicles and characters are downloaded GLBs.
-box(85, -1, 0, 340, 1, 660, "#b9b99e");
+box(90, -1, 0, 400, 1, 760, "#b9b99e");
 box(-105, -0.4, 0, 45, 0.4, 690, "#e5d2a1");
 box(-75, 0, 0, 12, 0.17, 660, "#d9cfb7");
-const roadsX = [-57, 5, 67, 129, 191],
-  roadsZ = [-248, -186, -124, -62, 0, 62, 124, 186, 248];
+const roadsX = [-57, 5, 67, 129, 191, 253],
+  roadsZ = [-310, -248, -186, -124, -62, 0, 62, 124, 186, 248, 310];
+const WORLD = { xMin: -120, xMax: 305, zMin: -375, zMax: 375 };
+// Which city blocks become industrial land, keyed "xi:zi" against the road grid.
+const DISTRICTS = new Map([
+  ["4:2", "factories"], ["4:6", "factories"],
+  ["1:9", "construction"], ["4:8", "construction"],
+]);
 for (const x of roadsX) {
-  box(x, 0.01, 0, 17, 0.04, 580, "#4f5f62");
-  for (let z = -281; z < 282; z += 13)
+  box(x, 0.01, 0, 17, 0.04, 740, "#4f5f62");
+  for (let z = -370; z < 372; z += 13)
     box(x, 0.065, z, 0.16, 0.015, 5, "#e3d9ac");
-  for (let a of [-1, 1]) box(x + a * 8, 0.06, 0, 0.13, 0.02, 580, "#c3cdc2");
+  for (let a of [-1, 1]) box(x + a * 8, 0.06, 0, 0.13, 0.02, 740, "#c3cdc2");
 }
 for (const z of roadsZ) {
-  box(67, 0.025, z, 264, 0.04, 15, "#4f5f62");
-  for (let x = -60; x < 199; x += 13)
+  box(100, 0.025, z, 420, 0.04, 15, "#4f5f62");
+  for (let x = -95; x < 304; x += 13)
     box(x, 0.08, z, 5, 0.015, 0.15, "#e3d9ac");
   for (let x of roadsX)
     for (let dir of [-1, 1])
@@ -162,11 +177,26 @@ function normalize(obj, height) {
   obj.position.y -= q.min.y;
   return obj;
 }
+const VEHICLE_TYPES = ["car-concept", "suv-luxury", "delivery", "truck", "milk-truck",
+  "sedan", "sedan-sports", "hatchback-sports", "taxi", "police-car"];
+// Per-model corrections measured from the shipped GLBs (tools/inspect-vehicles.mjs).
+// The taxi is authored facing -Z: its cabin sits forward of centre and its root nodes carry a
+// 180° Y rotation the other cars do not have, so it reversed and steered the wrong way.
+const VEHICLE_MODEL_FIX = { taxi: { yaw: Math.PI } };
+function groundModel(o) {
+  o.updateMatrixWorld(true);
+  const b = new T.Box3().setFromObject(o);
+  if (Math.abs(b.min.y) > 0.001) o.position.y -= b.min.y;
+}
 function instance(name, x, z, height, rot = 0) {
   let o = assets[name].scene.clone();
+  const fix = VEHICLE_MODEL_FIX[name];
   if (name === "motorcycle") o.rotation.y = -Math.PI / 2;
-  if (["car-concept","suv-luxury","delivery","truck","milk-truck","sedan","sedan-sports","hatchback-sports","taxi","police-car"].includes(name)) {
-    // Vehicle GLBs are pre-normalized to real-world meter dimensions.
+  if (VEHICLE_TYPES.includes(name)) {
+    // Vehicle GLBs are pre-normalized to real-world meter dimensions, but their pivots are not
+    // at ground level (police-car floats 0.80 m, car-concept sinks 0.15 m), so ground every one.
+    if (fix?.yaw) o.rotation.y += fix.yaw;
+    groundModel(o);
   } else if (name === "motorcycle") {
     const b = new T.Box3().setFromObject(o), size = b.getSize(new T.Vector3());
     o.scale.multiplyScalar(2.22 / Math.max(size.x, size.z));
@@ -275,11 +305,15 @@ try {
     }
   }
   await prepareMaterials();
-  for (let xi = 0; xi < 4; xi++)
-    for (let zi = 0; zi < 8; zi++) {
+  for (let xi = 0; xi < roadsX.length - 1; xi++)
+    for (let zi = 0; zi < roadsZ.length - 1; zi++) {
       let cx = (roadsX[xi] + roadsX[xi + 1]) / 2,
         cz = (roadsZ[zi] + roadsZ[zi + 1]) / 2;
       box(cx, 0.02, cz, 44, 0.22, 44, "#d4cfbc");
+      // Outer blocks carry the industrial districts instead of residential towers.
+      const district = DISTRICTS.get(xi + ":" + zi);
+      if (district === "factories") { buildFactory(cx, cz); continue; }
+      if (district === "construction") { buildConstructionSite(cx, cz); continue; }
       for (let a of [-1, 1])
         for (let b of [-1, 1]) {
           const downtown = zi < 4 && xi > 0;
@@ -298,13 +332,13 @@ try {
           buildings.push(o);
         }
     }
-  for (let z = -280; z < 280; z += 19) {
+  for (let z = -360; z < 370; z += 19) {
     plantTree("palm", -72, z, 8 + rand() * 2, rand() * 6.28);
     plantTree("palm", -43, z, 6.5);
   }
-  for (let i = 0; i < 75; i++) {
-    const x = roadsX[1 + Math.floor(rand() * 3)] + (rand() > 0.5 ? 11 : -11),
-      z = -270 + rand() * 540;
+  for (let i = 0; i < 95; i++) {
+    const x = roadsX[1 + Math.floor(rand() * (roadsX.length - 2))] + (rand() > 0.5 ? 11 : -11),
+      z = -350 + rand() * 700;
     plantTree("palm", x, z, 6 + rand() * 2);
   }
   const carPlaces = [
@@ -413,18 +447,21 @@ try {
   ring.position.y = 0.3;
   scene.add(ring);
   ring.visible = false;
-  for (let z = -265; z < 270; z += 62) {
-    for (const x of [-68.5, 16.5, 140.5]) {
+  for (let z = -340; z < 350; z += 62) {
+    for (const x of [-68.5, 16.5, 140.5, 202.5, 264.5]) {
       if (blocked(new T.Vector3(x, 0, z), .3)) continue;
       const light = instance("street-lamp", x, z, 6.5, Math.PI / 2);
       staticProps.push(light);
       treeColliders.push({ x, z, r: .22, prop: "lamp" });
     }
   }
+  decorateCity();
   batchRoads();
   batchCity();
   if (mobile) {
-    $("quality").value = "high";
+    // Battery game mode (or an explicit low-power choice) wins; otherwise High stays the default.
+    $("quality").value = gameModeHint() || "high";
+    $("framerate").value = "30";
     $("locationhint").textContent = "DRAG RIGHT TO LOOK · LEFT STICK TO MOVE";
   }
   started = true;
@@ -433,6 +470,123 @@ try {
 } catch (e) {
   console.error(e);
   $("loadtext").textContent = "Unable to load city assets. Please reload.";
+}
+// --- Construction sites and factories ------------------------------------------------------
+// Built from instanced primitives (one draw call per colour after batchRoads), so the extra
+// districts cost geometry, not state changes.
+function buildConstructionSite(cx, cz) {
+  box(cx, 0.03, cz, 42, 0.06, 42, "#8d7a5f"); // levelled dirt
+  // hoarding: low enough to see over, no collider so you can walk onto the site
+  for (let a of [-1, 1]) {
+    box(cx + a * 20, 0.02, cz, 0.4, 1.5, 42, "#c9a227", true);
+    box(cx, 0.02, cz + a * 20, 42, 1.5, 0.4, "#c9a227", true);
+  }
+  // half-finished concrete frame with exposed rebar
+  solid(cx - 7, 0.05, cz - 5, 13, 9, 12, "#9aa0a6");
+  box(cx - 7, 9.05, cz - 5, 13.4, 0.5, 12.4, "#8d9399", true);
+  for (let i = -5; i <= 5; i += 2.5) {
+    box(cx - 7 + i, 9.3, cz - 10.5, 0.16, 1.8, 0.16, "#6d5a4a", true);
+    box(cx - 7 + i, 9.3, cz + 0.5, 0.16, 1.8, 0.16, "#6d5a4a", true);
+  }
+  // scaffolding around the frame
+  for (let lvl = 1; lvl <= 3; lvl++) {
+    box(cx - 7, lvl * 2.4, cz - 11.4, 13.6, 0.12, 0.12, "#8b949c", true);
+    box(cx - 7, lvl * 2.4, cz + 1.4, 13.6, 0.12, 0.12, "#8b949c", true);
+  }
+  for (let p of [-13.6, -11.4, -0.6, 1.4])
+    for (let lvl = 0; lvl < 3; lvl++)
+      box(cx - 7 + p / 2, lvl * 2.4, cz - 5 + (p < 0 ? -6.4 : 6.4), 0.12, 2.4, 0.12, "#8b949c", true);
+  // tower crane
+  solid(cx + 12, 0.05, cz + 11, 1.6, 26, 1.6, "#d9862f");
+  box(cx + 12, 26, cz + 11, 1.2, 1.4, 1.2, "#2f3a40", true); // cab
+  box(cx + 2, 26.6, cz + 11, 21, 0.7, 1.1, "#d9862f", true); // jib
+  box(cx + 18.5, 26.6, cz + 11, 7, 0.7, 1.1, "#d9862f", true); // counter-jib
+  box(cx + 21.5, 25.6, cz + 11, 2.2, 1.6, 1.4, "#5d666d", true); // counterweight
+  box(cx - 6, 12, cz + 11, 0.14, 26, 0.14, "#4a5257"); // hook cable
+  box(cx - 6, 11.6, cz + 11, 1.1, 0.9, 1.1, "#2f3a40", true); // hook block
+  // materials
+  for (let i = 0; i < 4; i++) {
+    box(cx + 4 + i * 2.6, 0.05, cz - 14, 2.2, 0.7, 3.2, "#7a4b2a", true);
+    box(cx + 4 + i * 2.6, 0.75, cz - 14, 2.2, 0.7, 3.2, "#8a5a33", true);
+  }
+  for (let i = 0; i < 3; i++)
+    box(cx - 16, 0.05 + i * 0.9, cz + 6, 5, 0.85, 1.6, "#b8bcc0", true); // pipe stack
+  for (let i = 0; i < 6; i++)
+    box(cx + 14 - i * 3.2, 0.05, cz - 2, 0.9, 1, 0.5, i % 2 ? "#e8e4dc" : "#d9862f", true); // barriers
+}
+
+function buildFactory(cx, cz) {
+  box(cx, 0.03, cz, 44, 0.06, 42, "#3d4449"); // asphalt apron
+  // two sheds with clerestory roofs
+  for (let s of [-1, 1]) {
+    const sz = cz + s * 10;
+    solid(cx - 4, 0.05, sz, 30, 8, 13, "#8b9096");
+    box(cx - 4, 8.05, sz, 31, 0.6, 14, "#5d666d", true);
+    for (let i = 0; i < 5; i++) {
+      box(cx - 18 + i * 6, 9.2, sz, 3.4, 1.8, 12, "#9aa0a6", true);
+      box(cx - 18 + i * 6, 10.1, sz, 3.4, 0.2, 12.4, "#c9cfd4", true);
+    }
+    // loading doors
+    for (let i = 0; i < 4; i++)
+      box(cx - 17 + i * 7.5, 0.06, sz + 6.4, 5, 5.2, 0.35, "#2b3237", true);
+  }
+  // chimneys
+  for (let i = 0; i < 3; i++) {
+    solid(cx + 17, 0.05, cz - 12 + i * 9, 3, 22 + i * 3, 3, "#a8523f");
+    box(cx + 17, 22 + i * 3, cz - 12 + i * 9, 3.4, 0.5, 3.4, "#c9c2b6", true);
+  }
+  // storage tanks
+  for (let i = 0; i < 4; i++) {
+    solid(cx - 17, 0.05, cz - 15 + i * 7, 6, 5.5, 6, "#b8bcc0");
+    box(cx - 17, 5.55, cz - 15 + i * 7, 6.4, 0.4, 6.4, "#8b9096", true);
+  }
+  // shipping containers, stacked
+  const cols = ["#3f6f8a", "#b7412f", "#5c7a4a", "#c9a227"];
+  for (let i = 0; i < 6; i++) {
+    const x = cx + 6 + (i % 3) * 6.4, z = cz + 15 - Math.floor(i / 3) * 3.2;
+    box(x, 0.05, z, 6, 2.6, 2.8, cols[i % cols.length], true);
+    if (i % 2 === 0) box(x, 2.7, z, 6, 2.6, 2.8, cols[(i + 1) % cols.length], true);
+  }
+  // pipe rack over the apron
+  for (let i = 0; i < 5; i++)
+    box(cx - 19 + i * 9.5, 0.05, cz + 20, 0.35, 5, 0.35, "#6d7b84", true);
+  box(cx - 4, 5, cz + 20, 38, 0.35, 0.35, "#6d7b84", true);
+}
+
+// Street furniture and rooftop clutter: the cheap things that stop a block looking empty.
+function decorateCity() {
+  // traffic lights at alternating intersections
+  for (let xi = 0; xi < roadsX.length; xi++)
+    for (let zi = 0; zi < roadsZ.length; zi++) {
+      if ((xi + zi) % 2) continue;
+      const x = roadsX[xi] + 10, z = roadsZ[zi] + 10;
+      if (blocked(new T.Vector3(x, 0, z), 0.4)) continue;
+      box(x, 0.05, z, 0.22, 5.2, 0.22, "#3d4449", true);
+      box(x, 5.25, z - 1.6, 0.16, 0.16, 3.4, "#3d4449", true);
+      for (let l = 0; l < 3; l++)
+        box(x, 4.15 - l * 0.42, z - 3.1, 0.3, 0.3, 0.14,
+          ["#c0392b", "#d4a017", "#2e8b57"][l], true);
+    }
+  // benches and planters along block edges
+  for (let xi = 0; xi < roadsX.length - 1; xi++)
+    for (let zi = 0; zi < roadsZ.length - 1; zi++) {
+      const cx = (roadsX[xi] + roadsX[xi + 1]) / 2,
+        cz = (roadsZ[zi] + roadsZ[zi + 1]) / 2;
+      if (blocked(new T.Vector3(cx + 18, 0, cz + 18), 0.6)) continue;
+      box(cx + 18, 0.05, cz + 18, 2.2, 0.45, 0.7, "#7a4b2a", true);
+      box(cx + 18, 0.5, cz + 18, 2.2, 0.7, 0.14, "#8a5a33", true);
+      box(cx - 18, 0.05, cz + 18, 1.4, 0.6, 1.4, "#7d7f72", true);
+      box(cx - 18, 0.65, cz + 18, 1.1, 0.5, 1.1, "#4a5a3a", true);
+    }
+  // rooftop water tanks and air-conditioning on the generated blocks
+  for (const b of buildings) {
+    const bb = new T.Box3().setFromObject(b), top = bb.max.y, size = bb.getSize(new T.Vector3());
+    if (top < 7 || size.x < 5) continue;
+    const x = (bb.min.x + bb.max.x) / 2, z = (bb.min.z + bb.max.z) / 2;
+    box(x + size.x * 0.24, top, z - size.z * 0.2, 1.7, 1.5, 1.7, "#8b9096", true);
+    box(x - size.x * 0.26, top, z + size.z * 0.18, 1.5, 0.9, 1.2, "#b8bcc0", true);
+    box(x, top + 1.5, z - size.z * 0.2, 0.1, 1.6, 0.1, "#6d7b84", true);
+  }
 }
 function batchCity() {
   const groups = new Map();
@@ -477,11 +631,14 @@ function batchRoads() {
   }
   for (let [material, list] of groups) {
     let mesh = new T.InstancedMesh(unitBox, material, list.length);
+    let casts = false;
     for (let i = 0; i < list.length; i++) {
       mesh.setMatrixAt(i, list[i].matrixWorld);
+      if (list[i].userData.cast) casts = true;
       scene.remove(list[i]);
     }
     mesh.receiveShadow = true;
+    mesh.castShadow = casts;
     mesh.computeBoundingSphere();
     scene.add(mesh);
   }
@@ -528,7 +685,8 @@ function animatePlayer(moving, running, punching) {
   playAction(name, name === "p_jump" || name === "punch_right");
 }
 function blocked(p, r = 0.55, ignore = null, shape = null) {
-  if (p.x < -120 + r || p.x > 211 - r || Math.abs(p.z) > 290 - r) return true;
+  if (p.x < WORLD.xMin + r || p.x > WORLD.xMax - r ||
+      p.z < WORLD.zMin + r || p.z > WORLD.zMax - r) return true;
   for (const b of obstacles) {
     if (shape) {
       if (
@@ -596,6 +754,7 @@ function move(p, dx, dz, r, ignore = null, shape = null) {
   return !hit;
 }
 let nearest = null;
+const audioNear = [], dirVec = new T.Vector3(), rayHit = new T.Vector3(), EMPTY = [];
 function enter(forced) {
   if (transition) return;
   if (driving) {
@@ -856,18 +1015,46 @@ $("reset").onclick = () => {
   camera.position.set(-53, 5, 87);
   $("settingsmodal").classList.remove("open");
 };
-$("quality").onchange = () => {
-  let q = $("quality").value;
-  renderer.setPixelRatio(
-    Math.min(devicePixelRatio, q === "low" ? 1 : q === "high" ? 2 : 1.5),
-  );
+// Resolution and shadow budget. Phones get a much lower ceiling: a 2048px shadow map plus a
+// 1.5x device pixel ratio is what made the WebView hot and stuttery on a handset.
+let dprCap = 1.5;
+function applyQuality() {
+  const q = $("quality").value;
+  dprCap = mobile
+    ? q === "high" ? 1.0 : q === "balanced" ? 0.85 : 0.7
+    : q === "high" ? 1.5 : q === "balanced" ? 1.25 : 1.0;
+  const shadowSize = q === "high" ? (mobile ? 1024 : 2048) : 1024;
   renderer.shadowMap.enabled = q !== "low";
-  sun.shadow.mapSize.set(q === "high" ? 2048 : 1024, q === "high" ? 2048 : 1024);
-  if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; }
+  if (sun.shadow.mapSize.x !== shadowSize) {
+    sun.shadow.mapSize.set(shadowSize, shadowSize);
+    if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; }
+  }
   scene.environmentIntensity = q === "low" ? 0.4 : 0.65;
+  applyPixelRatio();
+  renderer.setSize(innerWidth, innerHeight);
+}
+// renderScale is the adaptive multiplier; applyPixelRatio folds it into the device ratio.
+let renderScale = 1;
+function applyPixelRatio() {
+  renderer.setPixelRatio(Math.min(devicePixelRatio, dprCap) * renderScale);
+}
+// Android 12+ Game Dashboard / Game Mode hint, injected by MainActivity as window.__coastlineGameMode.
+// 2 = performance, 3 = battery saving; battery mode drops us to Low automatically.
+function gameModeHint() {
+  // MainActivity appends ?gm=<GameManager mode> and also exposes coastlinePlatform.mode().
+  const fromUrl = Number(new URLSearchParams(location.search).get("gm") || 0);
+  let fromBridge = 0;
+  try { fromBridge = Number(window.coastlinePlatform?.mode?.() || 0); } catch (e) { /* no bridge */ }
+  const gm = fromBridge || fromUrl || Number(window.__coastlineGameMode || 0);
+  if (gm === 2) return "high"; // GAME_MODE_PERFORMANCE
+  if (gm === 3) return "low"; // GAME_MODE_BATTERY
+  return null;
+}
+$("quality").onchange = () => {
+  applyQuality();
   renderer.setSize(innerWidth, innerHeight);
 };
-$("quality").value = "high";
+$("quality").value = gameModeHint() || "high";
 $("quality").onchange();
 let mode = "day";
 $("time").onchange = () => {
@@ -891,8 +1078,37 @@ function updateLight() {
   $("clock").textContent = night ? "22:10" : sunset ? "18:42" : "14:32";
   $("weather").textContent = night ? " ☾ 21°" : sunset ? " ☀ 25°" : " ☀ 28°";
 }
-const map = $("map").getContext("2d");
-let bigMap = false;
+const map = $("map").getContext("2d"),
+  mapNeedle = document.querySelector(".mapn");
+let bigMap = false,
+  mapNeedleRot = null,
+  mapDrawnX = NaN,
+  mapDrawnZ = NaN,
+  mapDrawnHeading = NaN,
+  mapStaticReady = false,
+  mapLastDraw = -1e9;
+// World rectangle covered by the cached map layer, in metres (1 px per metre).
+const MAP_X0 = -140, MAP_Z0 = -330, MAP_W = 420, MAP_H = 700;
+const mapStatic = document.createElement("canvas");
+function buildMapStatic() {
+  mapStatic.width = MAP_W;
+  mapStatic.height = MAP_H;
+  const g = mapStatic.getContext("2d");
+  g.setTransform(1, 0, 0, 1, -MAP_X0, -MAP_Z0); // draw in world metres
+  g.fillStyle = "#14505f";
+  g.fillRect(MAP_X0, MAP_Z0, MAP_W, MAP_H);
+  g.fillStyle = "#6b716b";
+  g.fillRect(-95, -1000, 520, 2000);
+  g.fillStyle = "#c4b08a";
+  g.fillRect(-125, -1000, 43, 2000);
+  g.fillStyle = "#283239";
+  for (let x of roadsX) g.fillRect(x - 8, -330, 16, 660);
+  for (let z of roadsZ) g.fillRect(-95, z - 7, 520, 14);
+  g.fillStyle = "#9b9c90";
+  for (let b of obstacles)
+    g.fillRect(b.min.x, b.min.z, b.max.x - b.min.x, b.max.z - b.min.z);
+  mapStaticReady = true;
+}
 $("mapToggle").onclick = () => {
   bigMap = !bigMap;
   document.querySelector(".bottomleft").classList.toggle("expanded", bigMap);
@@ -902,25 +1118,21 @@ function drawMap() {
   const w = 224,
     h = 176,
     s = bigMap ? 0.48 : 0.95;
+  // Big map only changes the zoom, so a rebuild is unnecessary; the cached layer covers the
+  // whole reachable world at 1 canvas pixel per metre.
+  if (!mapStaticReady) buildMapStatic();
   map.setTransform(2, 0, 0, 2, 0, 0);
   map.clearRect(0, 0, w, h);
-  map.fillStyle = "#1c5869";
+  map.fillStyle = "#123d4a";
   map.fillRect(0, 0, w, h);
   map.save();
   map.translate(w / 2, h / 2);
   map.rotate(mapHeading - Math.PI);
   map.scale(s, s);
   map.translate(-pos.x, -pos.z);
-  map.fillStyle = "#6b716b";
-  map.fillRect(-82, -1000, 330, 2000);
-  map.fillStyle = "#c4b08a";
-  map.fillRect(-125, -1000, 43, 2000);
-  map.fillStyle = "#283239";
-  for (let x of roadsX) map.fillRect(x - 8, -290, 16, 580);
-  for (let z of roadsZ) map.fillRect(-65, z - 7, 265, 14);
-  map.fillStyle = "#9b9c90";
-  for (let b of obstacles)
-    map.fillRect(b.min.x, b.min.z, b.max.x - b.min.x, b.max.z - b.min.z);
+  // One blit of the pre-rendered ground, roads and buildings instead of ~80 fillRect calls
+  // per frame, which is what made the rotating map stutter on phones.
+  map.drawImage(mapStatic, MAP_X0, MAP_Z0, MAP_W, MAP_H);
   for (let c of cars) {
     map.fillStyle = c.bike ? "#c99bff" : "#d6d4bc";
     map.fillRect(c.obj.position.x - 1.7, c.obj.position.z - 2, 3.4, 4);
@@ -964,8 +1176,12 @@ function drawMap() {
   map.fill();
   map.stroke();
   map.restore();
-  document.querySelector(".mapn").style.transform =
-    `rotate(${mapHeading - Math.PI}rad)`;
+  const rot = mapHeading - Math.PI;
+  // Writing style each frame thrashed layout; only touch the DOM when the needle actually moves.
+  if (mapNeedleRot !== rot) {
+    mapNeedle.style.transform = `rotate(${rot}rad)`;
+    mapNeedleRot = rot;
+  }
 }
 // Room networking: fixed 10 Hz, quantized transforms, peer-to-peer optional audio.
 const nativeApp = location.hostname === "appassets.androidplatform.net";
@@ -1245,6 +1461,32 @@ camera.position.set(-51, 5.5, 85);
 const desiredCam = new T.Vector3(),
   look = new T.Vector3(),
   ray = new T.Raycaster();
+// Keeps the frame budget by trading resolution, then shadows, before the player sees stutter.
+// Only relaxes when well below target and only recovers slowly, so it cannot oscillate.
+let stableFps = 60, adaptCooldown = 0;
+function adaptiveFrameRate(fps) {
+  if (!started) return;
+  stableFps = stableFps * 0.6 + fps * 0.4;
+  const now = elapsed;
+  if (now < adaptCooldown) return;
+  const target = Number($("framerate").value) || 30;
+  if (stableFps < target * 0.72) {
+    if (renderScale > 0.62) {
+      renderScale = Math.max(0.6, renderScale - 0.1);
+      applyPixelRatio();
+      adaptCooldown = now + 2.5;
+    } else if (renderer.shadowMap.enabled && $("quality").value !== "low") {
+      // Still short of budget at the lowest scale: drop shadows rather than resolution again.
+      renderer.shadowMap.enabled = false;
+      scene.traverse((o) => { if (o.isMesh && o.material) o.material.needsUpdate = true; });
+      adaptCooldown = now + 4;
+    }
+  } else if (stableFps > target * 0.97 && renderScale < 1) {
+    renderScale = Math.min(1, renderScale + 0.05);
+    applyPixelRatio();
+    adaptCooldown = now + 4;
+  }
+}
 function tick(now) {
   requestAnimationFrame(tick);
   if (document.hidden || nativePaused) {
@@ -1380,13 +1622,27 @@ function tick(now) {
   updatePoliceCars(dialogOpen ? 0 : dt);
   updatePolice(dialogOpen ? 0 : dt);
   updateCitizens(dialogOpen ? 0 : dt);
-  const nearbyAudio = cars.filter(c => c.obj.visible && c !== driving).map(c => ({...c, distance:c.obj.position.distanceTo(pos)})).filter(c => c.distance < 45).sort((a,b)=>a.distance-b.distance).slice(0,driving?2:3);
-  sfx.update([...(driving ? [{...driving,speed,distance:0}] : []), ...nearbyAudio], elapsed, wanted);
+  // Reuse two preallocated buffers: this ran every frame with filter/map/sort/slice, i.e. several
+  // arrays and object spreads per frame, which showed up as GC stutter on phones.
+  const want = 3;
+  audioNear.length = 0;
+  audioNear.push(...(driving ? [{ ...driving, speed, distance: 0 }] : []));
+  for (const c of cars) {
+    if (!c.obj.visible || c === driving) continue;
+    const d = c.obj.position.distanceTo(pos);
+    if (d >= 45) continue;
+    if (audioNear.length < want) audioNear.push({ ...c, distance: d });
+    else {
+      let worst = 0;
+      for (let i = 1; i < audioNear.length; i++)
+        if (audioNear[i].distance > audioNear[worst].distance) worst = i;
+      if (d < audioNear[worst].distance) audioNear[worst] = { ...c, distance: d };
+    }
+  }
+  sfx.update(audioNear, elapsed, wanted);
   for (const c of cars) {
     if (c === driving || transition?.car === c || !c.traffic) continue;
     if (!c.cruise) c.cruise = 6 + (c.id % 3);
-    const forward = c.obj.position.clone();
-    forward.z += c.cruise * dt;
     if (
       move(c.obj.position, 0, c.cruise * dt, 0.8, c, {
         angle: 0,
@@ -1396,9 +1652,9 @@ function tick(now) {
     )
       c.speed = c.cruise;
     else c.speed = 0;
-    if (c.obj.position.z > 280) {
+    if (c.obj.position.z > WORLD.zMax - 8) {
       const q = c.obj.position.clone();
-      q.z = -278;
+      q.z = WORLD.zMin + 8;
       if (!blocked(q, 0.8, c, { angle: 0, hw: c.hw, hl: c.hl }))
         c.obj.position.copy(q);
     }
@@ -1433,12 +1689,13 @@ function tick(now) {
     const forward = new T.Vector3(-Math.sin(yaw), -Math.sin(pitch), -Math.cos(yaw)).normalize();
     desiredCam.addScaledVector(forward,.12); look.copy(desiredCam).addScaledVector(forward,10);
   }
-  let dir = desiredCam.clone().sub(look),
-    len = dir.length();
-  ray.set(look, dir.normalize());
+  dirVec.copy(desiredCam).sub(look);
+  let len = dirVec.length();
+  ray.set(look, dirVec.normalize());
   let nearestHit = len;
-  for (let b of (cameraMode === "first" ? [] : obstacles)) {
-    let hit = ray.ray.intersectBox(b, new T.Vector3());
+  for (let b of (cameraMode === "first" ? EMPTY : obstacles)) {
+    // Shared scratch vector: this loop ran per obstacle per frame and allocated each time.
+    let hit = ray.ray.intersectBox(b, rayHit);
     if (hit) nearestHit = Math.min(nearestHit, look.distanceTo(hit) - 0.5);
   }
   if (nearestHit < len)
@@ -1545,13 +1802,26 @@ function tick(now) {
       document.querySelector(".missiontop small").textContent =
         String(checkpoint).padStart(2, "0") + " / 03";
     }
-    drawMap();
     if (mode === "cycle") updateLight();
+  }
+  // 20 Hz, and only when the player actually moved or turned: a static map costs nothing.
+  if (
+    now - mapLastDraw > 50 &&
+    (Math.abs(pos.x - mapDrawnX) > 0.35 ||
+      Math.abs(pos.z - mapDrawnZ) > 0.35 ||
+      Math.abs(mapHeading - mapDrawnHeading) > 0.02)
+  ) {
+    mapLastDraw = now;
+    mapDrawnX = pos.x;
+    mapDrawnZ = pos.z;
+    mapDrawnHeading = mapHeading;
+    drawMap();
   }
   frames++;
   fpsTime += wallDt;
   if (fpsTime > 1) {
     $("fps").textContent = Math.round(frames / fpsTime) + " FPS";
+    adaptiveFrameRate(frames / fpsTime);
     fpsTime = 0;
     frames = 0;
   }
@@ -2011,6 +2281,30 @@ if (new URLSearchParams(location.search).has("test"))
       const c=cops[0];c.g.position.set(-52,0,106);c.g.rotation.y=Math.PI;c.stun=20;c.m.stopAllAction();c.actions.Idle.reset().play();c.m.update(.1);c.actions.Idle.paused=true;
     },
     vehicleSpecs: () => cars.map(c=>({id:c.id,type:c.type,max:c.max,hw:c.hw,hl:c.hl,sound:c.soundId,police:!!c.police,dimensions:c.obj.userData.meterDimensions})),
+    // Regression hooks for the "cars flying" and "minimap stutters while rotating" reports.
+    vehicleBounds: () => cars.map((c) => {
+      const b = new T.Box3().setFromObject(c.obj);
+      return { id: c.id, type: c.type, minY: +b.min.y.toFixed(3),
+        width: +(b.max.x - b.min.x).toFixed(2), length: +(b.max.z - b.min.z).toFixed(2) };
+    }),
+    mapCost: () => {
+      const t = performance.now();
+      for (let i = 0; i < 30; i++) drawMap();
+      return +((performance.now() - t) / 30).toFixed(3);
+    },
+    perf: () => ({
+      renderScale, pixelRatio: +renderer.getPixelRatio().toFixed(3),
+      shadowMap: sun.shadow.mapSize.x, shadows: renderer.shadowMap.enabled,
+      calls: renderer.info.render.calls, triangles: renderer.info.render.triangles,
+    }),
+    worldInfo: () => ({
+      ...WORLD, obstacles: obstacles.length, buildings: buildings.length,
+      districts: [...DISTRICTS.entries()],
+    }),
+    districtsCenters: () => [...DISTRICTS.entries()].map(([k, kind]) => {
+      const [xi, zi] = k.split(":").map(Number);
+      return { kind, x: (roadsX[xi] + roadsX[xi + 1]) / 2, z: (roadsZ[zi] + roadsZ[zi + 1]) / 2 };
+    }),
     cycleWeapon,
     setWanted: (v) => {
       wanted = v;
@@ -2085,9 +2379,9 @@ function enforceActorScale(model) {
 }
 function isRoad(x, z, pad = 1.5) {
   return (
-    (Math.abs(z) < 292 && roadsX.some((v) => Math.abs(x - v) < 8.5 + pad)) ||
-    (x > -65 - pad &&
-      x < 200 + pad &&
+    (Math.abs(z) < 372 && roadsX.some((v) => Math.abs(x - v) < 8.5 + pad)) ||
+    (x > -95 - pad &&
+      x < 304 + pad &&
       roadsZ.some((v) => Math.abs(z - v) < 7.5 + pad))
   );
 }
@@ -2344,7 +2638,11 @@ function initPoliceCars() {
     const obj=instance('police-car',roadsX[xi]+3,roadsZ[zi],1.7,0);
     const c={obj,id:cars.length,type:'police-car',police:true,response:i>=2,patrol:i<2,deployed:i<2,traffic:false,bike:false,speed:0,angle:0,max:47,xi,zi,goal:null,wait:0,strobe:[]};
     const lights=new T.Group();
-    for(let side of [-1,1]){const light=new T.Mesh(new T.SphereGeometry(.105,6,4),new T.MeshBasicMaterial({color:side<0?0xe03131:0x227bff}));light.position.set(side*.28,1.7,-.1);lights.add(light);c.strobe.push(light);}
+    // Sit the light bar on the measured roof instead of a hard-coded height, so it stays
+    // attached after the model is grounded to y=0.
+    obj.updateMatrixWorld(true);
+    const roof=new T.Box3().setFromObject(obj).max.y-obj.position.y;
+    for(let side of [-1,1]){const light=new T.Mesh(new T.SphereGeometry(.105,6,4),new T.MeshBasicMaterial({color:side<0?0xe03131:0x227bff}));light.position.set(side*.28,roof-.1,-.1);lights.add(light);c.strobe.push(light);}
     obj.add(lights);obj.visible=c.deployed;cars.push(c);
   }
 }

@@ -1,0 +1,75 @@
+name: Verify game build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, 'arena/**']
+    paths:
+      - 'src/coastline/public/**'
+      - 'src/coastline/smoke-test.cjs'
+      - '.github/workflows/verify.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      # Full history: the publish step rebases onto the branch tip, which is unsafe on a shallow clone.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: src/coastline
+        run: npm install --no-audit --no-fund --ignore-scripts
+
+      - name: Install Chromium for Playwright
+        working-directory: src/coastline
+        run: npx playwright install --with-deps chromium
+
+      - name: Bundle client
+        working-directory: src/coastline
+        run: npm run bundle
+
+      - name: Run smoke test
+        working-directory: src/coastline
+        run: |
+          node server.cjs &
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:3000/ && break
+            sleep 1
+          done
+          node smoke-test.cjs
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coastline-v1.6-screenshots
+          path: |
+            src/coastline/screenshots/*.png
+            src/coastline/smoke-results.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      # Results and screenshots are committed so the branch carries the visual evidence.
+      - name: Publish results to branch
+        if: always() && github.ref != 'refs/heads/main'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f src/coastline/smoke-results.json src/coastline/screenshots/
+          if git diff --cached --quiet; then
+            echo "No changes to publish."
+          else
+            git commit -m "Update smoke test results (from ${GITHUB_SHA:0:7})"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
