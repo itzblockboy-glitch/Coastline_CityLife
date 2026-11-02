@@ -2838,6 +2838,19 @@ if (new URLSearchParams(location.search).has("test"))
       for(let i=0;i<4;i++){const n=npcs[i*5];n.g.position.set(-63+i*2.3,0,106);n.g.rotation.y=Math.PI;n.stun=20;n.m.stopAllAction();n.actions.Idle.reset().play();n.m.update(.1);n.actions.Idle.paused=true;}
       const c=cops[0];c.g.position.set(-52,0,106);c.g.rotation.y=Math.PI;c.stun=20;c.m.stopAllAction();c.actions.Idle.reset().play();c.m.update(.1);c.actions.Idle.paused=true;
     },
+    /** How far each car's rendered body is from the point it actually drives/collides at. */
+    vehicleOffsets: () => cars.map((c) => {
+      const b = new T.Box3().setFromObject(c.obj), ctr = b.getCenter(new T.Vector3());
+      const nx = Math.sin(c.obj.rotation.y), nz = Math.cos(c.obj.rotation.y);
+      const dx = ctr.x - c.obj.position.x, dz = ctr.z - c.obj.position.z;
+      return {
+        id: c.id, type: c.type, traffic: !!c.traffic,
+        along: +(dx * nx + dz * nz).toFixed(2),
+        across: +(dx * nz - dz * nx).toFixed(2),
+        length: +(b.max.z - b.min.z).toFixed(2),
+        width: +(b.max.x - b.min.x).toFixed(2),
+      };
+    }),
     vehicleSpecs: () => cars.map(c=>({id:c.id,type:c.type,max:c.max,hw:c.hw,hl:c.hl,sound:c.soundId,police:!!c.police,dimensions:c.obj.userData.meterDimensions})),
     // Regression hooks for the "cars flying" and "minimap stutters while rotating" reports.
     vehicleBounds: () => cars.map((c) => {

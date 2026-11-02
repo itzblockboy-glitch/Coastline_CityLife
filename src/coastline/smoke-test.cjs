@@ -53,6 +53,14 @@ function check(name, ok, detail) {
   });
   check("taxi exists in the fleet", !!taxi, taxi);
 
+  // Every car must render where it collides and drives: a body offset from its origin means the
+  // mesh (and the camera framing) sits metres away from the position the physics uses.
+  const offsets = await page.evaluate(() => window.coastlineTest.vehicleOffsets());
+  const shifted = offsets.filter((o) => Math.abs(o.along) > 0.6 || Math.abs(o.across) > 0.6);
+  check("vehicle bodies sit on their own origin", shifted.length === 0, {
+    shifted, worst: offsets.slice().sort((a, b) => Math.abs(b.along) - Math.abs(a.along)).slice(0, 4),
+  });
+
   // --- 3. Map redraw cost --------------------------------------------------------------
   const mapMs = await page.evaluate(() => window.coastlineTest.mapCost());
   check("minimap redraw is cheap (<3 ms/frame)", mapMs < 3, { ms: mapMs });
