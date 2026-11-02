@@ -80,7 +80,7 @@ N: android=http://schemas.android.com/apk/res/android
             A: android:name(0x01010003)="android.intent.category.GAME" (Raw: "android.intent.category.GAME")
 --- signature ---
 Signer #1 certificate DN: CN=Coastline Development, O=Coastline Prototype, C=IN
-Signer #1 certificate SHA-256 digest: 2af49af3a56134eaebff3325761f86bb50b21fc734eff722c313fa151da9f6a9
-Signer #1 certificate SHA-1 digest: 49e6d7d8516932b3d3bb7c7aa1f49d88f054afe7
-Signer #1 certificate MD5 digest: 6d022059a509c9d5a93a13a3421bb97c
+Signer #1 certificate SHA-256 digest: 512e8f168b37329517979e715da2b1f7b0dd827f29ed8d600e6d8607bfe511f3
+Signer #1 certificate SHA-1 digest: 5fe8acc47d7c42a0a13196fe91dd18de500ebec6
+Signer #1 certificate MD5 digest: e41927042e8100177c398f3320fc013f
 ```
