@@ -27,24 +27,33 @@ built to look closer to what was asked for; it is not the old animation restored
 
 ## 2. Verification
 
-`Verify game build` runs the headless smoke test: **23/23 checks pass**, `errors: []`, no frame
+`Verify game build` runs the headless smoke test: **24/24 checks pass**, `errors: []`, no frame
 errors. Highlights from the committed `src/coastline/smoke-results.json`:
 
-- taxi drives forward `forwardFraction 1.0` (7.98 m along the nose in 1.2 simulated seconds) and
-  "steer right" decreases heading by `-0.986 rad`;
-- sedan physics probe: `headingDelta -0.977`, `pitch 0.025`, `roll -0.257` — suspension is visibly
-  working, and `wedged: false` proves the car was not simply stuck;
+- taxi drives forward `forwardFraction 1.0` (7.68 m along the nose in 1.2 simulated seconds) and
+  "steer right" decreases heading by `-1.031 rad`;
+- sedan physics probe: `headingDelta -0.942`, `pitch 0.025`, `roll -0.257` — the suspension is
+  visibly working — with `wedged: false`, so the car was not simply stuck against scenery;
 - knife strike takes an NPC from `hp 100 → 66` and sets `aggro/stunned`;
 - punching an NPC costs the player health (`100 → 98`) with no wanted level;
 - carbine/SMG/shotgun each spend exactly 1 round per shot;
 - a car goes `hp 100 → 45` then to `0` and `wrecked: true`;
 - the player dies and respawns at `health 100` with `deaths: 1`;
 - only the taxi is rotated (`3.14159`); every other car is exactly `0`;
-- 0.027 ms minimap redraw, 1024 px shadow map, pixel ratio 1.0 on mobile.
+- every vehicle body renders on its own origin (offset `0.00 m` along and across) — a body drifting
+  from the point it drives at was the reason the orientation shots framed empty road;
+- 0.027 ms minimap redraw, 1024 px shadow map, pixel ratio 1.0 on mobile, `calls 768`.
 
-Screenshot ground truth (committed): `src/coastline/screenshots/orient-taxi.png`,
-`orient-sedan-control.png`, `orient-truck.png`, `orient-coupe.png` — each shot from 7 m ahead of the
-car along its own travel direction, so a backwards mesh would show its boot instead of its bonnet.
+Screenshot ground truth (all committed under `src/coastline/screenshots/`):
+
+| Shot | What it proves |
+|---|---|
+| `orient-taxi.png` | taxi shot from 6.5 m ahead of its nose along its travel direction: bonnet, grille, headlights and roof sign face the camera |
+| `orient-sedan-control.png` | control: an uncorrected car reads the same way |
+| `orient-truck.png` | pickup front (chrome grille, hood) faces the camera even though the old cabin-position heuristic called it reversed |
+| `orient-coupe.png` | coupe nose-on |
+| `profile-truck.png` | profile: bonnet on the nose side, open bed behind — nose matches `rotY 0` (= +Z) |
+| `profile-coupe.png` | profile: bonnet on the nose side — nose matches `rotY π` (= -Z) |
 
 ## 3. Test-harness lessons (kept so they are not relearned)
 
@@ -56,6 +65,16 @@ car along its own travel direction, so a backwards mesh would show its boot inst
 - A failed run now always writes `smoke-results.json` including the stack, because the CI log host
   (`results-receiver.actions.githubusercontent.com`) intermittently returns `EOF` and the artifacts
   are not downloadable from every environment.
+- Screenshots capture the last *presented* frame, and this renderer runs at 1-3 fps under SwiftShader:
+  a 700 ms wait can span zero frames and shoot the view from before the camera moved. The test now
+  waits on a render counter (`getState().frameCount`).
+- `setPosition()` is a no-op while driving, and traffic beyond 260 m from the player is culled, so
+  framing a distant car while still sitting in the probe car photographs empty road. The orientation
+  section dismounts first.
+- The facing fix is driven by the authoring convention (a pure 180 deg Y rotation on the model root),
+  not by cabin-vs-centre geometry: the roof test had started flipping the pickup and the coupe, both
+  of which the profile shots above show are authored correctly. The roof signal is still collected in
+  `facingReport()` for diagnostics but no longer decides anything.
 
 ---
 
