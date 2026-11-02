@@ -38,7 +38,7 @@
       "police": false
     },
     "minimap redraw is cheap (<3 ms/frame)": {
-      "ms": 0.027
+      "ms": 0.05
     },
     "world extends past the old 211 m wall": {
       "xMin": -120,
@@ -89,16 +89,16 @@
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 818,
-      "triangles": 1921434
+      "calls": 800,
+      "triangles": 1910801
     },
     "shadow map no larger than 1024 on mobile": {
       "renderScale": 1,
       "pixelRatio": 1,
       "shadowMap": 1024,
       "shadows": true,
-      "calls": 818,
-      "triangles": 1921434
+      "calls": 800,
+      "triangles": 1910801
     },
     "taxi accelerates forward, not backward": {
       "FAILED": {
@@ -197,17 +197,294 @@
       }
     },
     "player dies and respawns with full health": {
+      "died": true,
+      "revived": true,
+      "health": 100,
+      "dead": false,
+      "deaths": 1,
+      "cause": "Killed by a heavy hit",
+      "invulnerable": 3.9333
+    },
+    "car accelerates forward and steers right": {
       "FAILED": {
-        "died": true,
-        "revived": false,
-        "health": 0,
-        "dead": true,
-        "deaths": 1,
-        "cause": "Killed by a heavy hit",
-        "invulnerable": 0
+        "forwardFraction": 0,
+        "lateral": 0,
+        "headingDelta": 0,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 0,
+        "type": "car-concept",
+        "hp": 100,
+        "wrecked": false,
+        "dead": false,
+        "transition": false,
+        "drivingType": "car-concept",
+        "keys": {
+          "Gas": false,
+          "Steer": false
+        }
+      }
+    },
+    "suspension responds (pitch/roll move away from zero)": {
+      "FAILED": {
+        "forwardFraction": 0,
+        "lateral": 0,
+        "headingDelta": 0,
+        "pitch": 0,
+        "roll": 0,
+        "speed": 0,
+        "type": "car-concept",
+        "hp": 100,
+        "wrecked": false,
+        "dead": false,
+        "transition": false,
+        "drivingType": "car-concept",
+        "keys": {
+          "Gas": false,
+          "Steer": false
+        }
+      }
+    },
+    "no frame errors during the whole run": {
+      "FAILED": {
+        "tickErr": "ReferenceError: dragF is not defined\n    at KS (http://localhost:3000/app.js:4229:126220)\n    at B0 (http://localhost:3000/app.js:4229:133103)",
+        "errors": [
+          "console: frame error: ReferenceError: dragF is not defined\n    at KS (http://localhost:3000/app.js:4229:126220)\n    at B0 (http://localhost:3000/app.js:4229:133103)"
+        ]
+      }
+    },
+    "taxi is rotated 180 deg, and every correction is exactly 0 or 180": {
+      "fixes": {
+        "car-concept": 0,
+        "suv-luxury": 0,
+        "delivery": 0,
+        "truck": 0,
+        "milk-truck": 0,
+        "hatchback-sports": 0,
+        "taxi": 3.141592653589793,
+        "sedan-sports": 0,
+        "sedan": 0,
+        "police-car": 0
+      },
+      "report": {
+        "car-concept": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": 0.713
+        },
+        "suv-luxury": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.449
+        },
+        "delivery": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.261
+        },
+        "truck": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": 0.229
+        },
+        "milk-truck": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.267
+        },
+        "hatchback-sports": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.484
+        },
+        "taxi": {
+          "yaw": 3.141592653589793,
+          "pureYFlip": true,
+          "roofDz": 0.322
+        },
+        "sedan-sports": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.251
+        },
+        "sedan": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.353
+        },
+        "police-car": {
+          "yaw": 0,
+          "pureYFlip": false,
+          "roofDz": -0.284
+        }
       }
     }
   },
-  "shots": [],
-  "error": "page.waitForFunction: Timeout 60000ms exceeded.\n    at /home/runner/work/Coastline_CityLife/Coastline_CityLife/src/coastline/smoke-test.cjs:176:14"
+  "shots": [
+    "screenshots/orient-taxi.png",
+    "screenshots/orient-sedan-control.png",
+    "screenshots/v1.6-factories-222_-155.png",
+    "screenshots/v1.6-factories-222_93.png",
+    "screenshots/v1.6-construction-36_279.png",
+    "screenshots/v1.6-construction-222_217.png",
+    "screenshots/v1.6-downtown.png"
+  ],
+  "facing": {
+    "fixes": {
+      "car-concept": 0,
+      "suv-luxury": 0,
+      "delivery": 0,
+      "truck": 0,
+      "milk-truck": 0,
+      "hatchback-sports": 0,
+      "taxi": 3.141592653589793,
+      "sedan-sports": 0,
+      "sedan": 0,
+      "police-car": 0
+    },
+    "report": {
+      "car-concept": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": 0.713
+      },
+      "suv-luxury": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.449
+      },
+      "delivery": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.261
+      },
+      "truck": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": 0.229
+      },
+      "milk-truck": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.267
+      },
+      "hatchback-sports": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.484
+      },
+      "taxi": {
+        "yaw": 3.141592653589793,
+        "pureYFlip": true,
+        "roofDz": 0.322
+      },
+      "sedan-sports": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.251
+      },
+      "sedan": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.353
+      },
+      "police-car": {
+        "yaw": 0,
+        "pureYFlip": false,
+        "roofDz": -0.284
+      }
+    }
+  },
+  "orientation": {
+    "taxi": [
+      {
+        "id": 8,
+        "rotY": 3.142,
+        "angle": 3.142,
+        "traffic": false,
+        "z": 200,
+        "roofDzWorld": 0.274,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 12,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": -161.7,
+        "roofDzWorld": -0.274,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 16,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": 56.2,
+        "roofDzWorld": -0.274,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 20,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": 274.1,
+        "roofDzWorld": -0.274,
+        "bounds": {
+          "minY": 0.12
+        }
+      }
+    ],
+    "sedan": [
+      {
+        "id": 11,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": -202.9,
+        "roofDzWorld": -0.343,
+        "bounds": {
+          "minY": 0.09
+        }
+      },
+      {
+        "id": 15,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": -2.7,
+        "roofDzWorld": -0.469,
+        "bounds": {
+          "minY": 0.12
+        }
+      },
+      {
+        "id": 19,
+        "rotY": 0,
+        "angle": 0,
+        "traffic": true,
+        "z": 215.2,
+        "roofDzWorld": -0.469,
+        "bounds": {
+          "minY": 0.12
+        }
+      }
+    ]
+  },
+  "errors": [
+    "console: frame error: ReferenceError: dragF is not defined\n    at KS (http://localhost:3000/app.js:4229:126220)\n    at B0 (http://localhost:3000/app.js:4229:133103)"
+  ],
+  "platform": "Linux x86_64",
+  "state": {
+    "drawCalls": 638,
+    "triangles": 1425595,
+    "quality": "high"
+  }
 }
